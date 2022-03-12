@@ -10,6 +10,9 @@ This is an example plugin app for [Alliance Auth](https://gitlab.com/allianceaut
 
 _(These badges are examples, you can and should replace them with your own)_
 
+For the GitLab version of this example app, please have a look over here, Erik
+Kalkoken was so friendly to provide it » [Alliance Auth Example App (GitLab Version)](https://gitlab.com/ErikKalkoken/allianceauth-example-plugin)
+
 
 ## Features
 
