@@ -53,7 +53,7 @@ Finally, enable [pre-commit](https://pre-commit.com) to enable automatic code st
 checking.
 
 ```bash
-git clone https://gitlab.com/YourName/aa-example-plugin.git aa-your-app-name
+git clone https://github.com/YourName/aa-example-plugin.git aa-your-app-name
 cd aa-your-app-name
 rm -rf .git
 git init
@@ -152,7 +152,7 @@ To install your plugin into a production AA run this command within the virtual
 Python environment of your AA installation:
 
 ```bash
-pip install git+https://gitlab.com/YourName/aa-your-app-name
+pip install git+https://github.com/YourName/aa-your-app-name
 ```
 
 Alternatively you can create a package file and manually upload it to your
