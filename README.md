@@ -94,6 +94,8 @@ unless you know exactly what you are doing.
 | `./README.md`                            | Clear content                                                                          |
 | `./LICENSE`                              | Replace with your own license                                                          |
 | `./tox.ini`                              | App name                                                                               |
+| `./.isort.cfg`                           | App name for `import_heading_firstparty`                                               |
+| `./Makefile`                             | App name and package name                                                              |
 
 
 ## Clearing migrations
