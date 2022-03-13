@@ -81,7 +81,6 @@ unless you know exactly what you are doing.
 | `./example/`                             | Folder name                                                                            |
 | `./example/templates/example/`           | Folder name                                                                            |
 | `./setup.cfg`                            | Update module name for version import, update package name, update title, author, etc. |
-| `./MANIFEST.IN`                          | Path of files to include / exclude for PyInstaller                                     |
 | `./example/apps.py`                      | App name                                                                               |
 | `./example/__init__.py`                  | App name                                                                               |
 | `./example/auth_hooks.py`                | Menu hook config incl. icon and label of your app's menu item appearing in the sidebar |
