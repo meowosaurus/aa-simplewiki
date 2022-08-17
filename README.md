@@ -91,6 +91,7 @@ unless you know exactly what you are doing.
 | `./example/templates/example/index.html` | Template path                                                                          |
 | `./testauth/settings.py`                 | App name in `PACKAGE` and `INSTALLED_APPS` constants                                   |
 | `./.coveragerc`                          | App name                                                                               |
+| `./MANIFEST.in`                          | App name                                                                               |
 | `./README.md`                            | Clear content                                                                          |
 | `./LICENSE`                              | Replace with your own license                                                          |
 | `./tox.ini`                              | App name                                                                               |
