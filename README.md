@@ -89,7 +89,7 @@ unless you know exactly what you are doing.
 | `./example/views.py`                     | Permission name and template path                                                      |
 | `./example/templates/example/base.html`  | Title of your app to be shown in all views and as title in the browser tab             |
 | `./example/templates/example/index.html` | Template path                                                                          |
-| `./testauth/settings.py`                 | App name                                                                               |
+| `./testauth/settings.py`                 | App name in `PACKAGE` and `INSTALLED_APPS` constants                                   |
 | `./.coveragerc`                          | App name                                                                               |
 | `./README.md`                            | Clear content                                                                          |
 | `./LICENSE`                              | Replace with your own license                                                          |
