@@ -8,9 +8,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [In Development] - Unreleased
 
+
+## [0.0.2] - 2022-08-17
+
 ### Added
 
 - Build artifact to GitHub workflows
+- `MANIFEST.in` re-added
 
 ### Changed
 
