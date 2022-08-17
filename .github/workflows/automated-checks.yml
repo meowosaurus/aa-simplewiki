@@ -41,10 +41,7 @@ jobs:
       # Set Python and Django version to test for the stable release of AllianceAuth
       matrix:
         # Don't forget to change the Python version for [upload-coverage] as well
-        python-version: [ '3.8', '3.9', '3.10', '3.11-dev' ]
-
-    # Allowed failing as long as it's in dev
-    continue-on-error: ${{ matrix.python-version == '3.11-dev' }}
+        python-version: [ '3.8', '3.9', '3.10' ]
 
     steps:
       - name: Checkout
@@ -69,8 +66,6 @@ jobs:
       - name: Run Tox
         # Run tox using the version of Python in `PATH`
         run: tox -v
-#        env:
-#          DJANGO: ${{ matrix.django-version }}
 
       - name: Upload Coverage Artifacts
         uses: actions/upload-artifact@v2
@@ -141,3 +136,10 @@ jobs:
           STACKMANAGER_VERSION: 9999
         run: |
           python -m build
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: dist
+          if-no-files-found: ignore

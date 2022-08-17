@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [In Development] - Unreleased
 
+### Added
+
+- Build artifact to GitHub workflows
+
 ### Changed
 
 - Test settings updated for Alliance Auth v3
