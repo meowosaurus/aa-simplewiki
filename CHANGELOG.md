@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 - Test settings updated for Alliance Auth v3
+- Package name in setup.cfg for PyPi
 
 
 ## [0.0.1] - 2022-03-12
