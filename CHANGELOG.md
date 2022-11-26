@@ -9,6 +9,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [In Development] - Unreleased
 
 
+## [0.0.4] - 2022-11-26
+
+### Added
+
+- Directory for static files
+
+### Changed
+
+- GitHub actions updated
+- `pre-commit` config updated and applied
+- Example test improved
+
+
 ## [0.0.3] - 2022-09-15
 
 ### Added
