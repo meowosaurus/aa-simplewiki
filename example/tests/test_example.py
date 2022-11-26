@@ -27,4 +27,4 @@ class TestExample(TestCase):
         :rtype:
         """
 
-        self.assertEquals(True, True)
+        self.assertEqual(True, True)
