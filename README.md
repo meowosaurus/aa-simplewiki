@@ -79,6 +79,7 @@ unless you know exactly what you are doing.
 | Location                                 | Description                                                                            |
 |------------------------------------------|----------------------------------------------------------------------------------------|
 | `./example/`                             | Folder name                                                                            |
+| `./example/static/example/`              | Folder name                                                                            |
 | `./example/templates/example/`           | Folder name                                                                            |
 | `./setup.cfg`                            | Update module name for version import, update package name, update title, author, etc. |
 | `./example/apps.py`                      | App name                                                                               |
