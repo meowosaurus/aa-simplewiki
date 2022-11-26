@@ -1,4 +1,4 @@
-# Example plugin app for Alliance Auth (GitHub Version)
+# Example Plugin App for Alliance Auth (GitHub Version)
 
 This is an example plugin app for [Alliance Auth](https://gitlab.com/allianceauth/allianceauth)
 (AA) that can be used as starting point to develop custom plugins.
@@ -22,7 +22,7 @@ Kalkoken was so friendly to provide it » [Alliance Auth Example App (GitLab Ver
 - It has one view that shows a panel and some text
 
 
-## How to use it
+## How to Use It
 
 To use this example as basis for your own development just fork this repo and then
 clone it on your dev machine.
@@ -31,7 +31,7 @@ You then should rename the app, and then you can install it into your AA dev
 installation.
 
 
-### Cloning from repo
+### Cloning From Repo
 
 For this app we are assuming that you have all your AA projects, your virtual
 environment and your AA installation under one top folder (e.g. aa-dev).
@@ -60,7 +60,7 @@ git init
 pre-commit install
 ```
 
-### Renaming the app
+### Renaming the App
 
 Before installing this app into your dev AA you need to rename it to something
 suitable for your development project. Otherwise, you risk not being able to install
@@ -99,7 +99,7 @@ unless you know exactly what you are doing.
 | `./Makefile`                             | App name and package name                                                              |
 
 
-## Clearing migrations
+## Clearing Migrations
 
 Instead of renaming your app in the migrations it's easier to just recreate them
 later in the process. For this to work you need to delete the old migration files in
@@ -111,7 +111,13 @@ rm -rf your-app-name/migrations/_pycache
 ```
 
 
-## Installing into your dev AA
+## Writing Unit Tests
+
+Write your unit tests in `your-app-name/tests/` and make sure that you use a "test_"
+prefix for files with your unit tests.
+
+
+## Installing Into Your Dev AA
 
 Once you have cloned or copied all files into place and finished renaming the app
 you are ready to install it to your dev AA instance.
@@ -148,7 +154,7 @@ python manage.py migrate
 Finally, restart your AA server and that's it.
 
 
-## Installing into production AA
+## Installing Into Production AA
 
 To install your plugin into a production AA run this command within the virtual
 Python environment of your AA installation:
