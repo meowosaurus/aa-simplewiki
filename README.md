@@ -2,6 +2,8 @@
 
 A simple wiki system for alliance auth.
 
+![Showcase](https://i.imgur.com/ALZZ7Bs.png)
+
 ### Current Features
 
 * Create custom wiki menus
