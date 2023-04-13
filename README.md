@@ -17,14 +17,18 @@ A simple wiki system for alliance auth.
 
 ### Active devs:
 
-* Meowosaurus
+* [Meowosaurus](https://github.com/meowosaurus)
 
 ## Installation
 
 1.) Download the repo `git clone https://github.com/meowosaurus/aa-simplewiki`
+
 2.) Run `pip install -e aa-simplewiki`
+
 3.) Add `simplewiki` to your `INSTALLED_APPS` in your projects `local.py`
+
 4.) Run migrations and restart auth
+
 
 ## Usage
 
