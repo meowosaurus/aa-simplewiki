@@ -1,6 +1,6 @@
 # SimpleWiki
 
-A simple wiki system for alliance auth.
+A simple wiki system for alliance auth. It supports multiple pages with different subsections. Every page and every subsection can have their own icon.
 
 ![Showcase](https://i.imgur.com/ALZZ7Bs.png)
 
