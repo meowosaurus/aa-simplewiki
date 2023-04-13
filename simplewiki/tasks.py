@@ -8,9 +8,6 @@ from celery import shared_task
 
 logger = logging.getLogger(__name__)
 
-# Create your tasks here
-
-
 # simplewiki Task
 @shared_task
 def simplewiki_task():
