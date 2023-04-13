@@ -1,6 +1,6 @@
 [run]
 branch = True
-source = example
+source = simplewiki
 
 [report]
 exclude_lines =

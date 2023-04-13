@@ -1,0 +1,21 @@
+{% extends 'simplewiki/base.html' %}
+{% load i18n %}
+{% load humanize %}
+
+{% block details %}
+    {% for menu_item in menu_items %}
+    {% empty %}
+        <div class="alert alert-danger" role="alert">
+            You see this error because there are no menus. Please go to the admin settings and create one.
+        </div>
+    {% endfor %}
+{% endblock %}
+
+{% block extra_javascript %}
+{% endblock %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}

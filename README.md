@@ -1,6 +1,6 @@
-# Example Plugin App for Alliance Auth (GitHub Version)
+# simplewiki Plugin App for Alliance Auth (GitHub Version)
 
-This is an example plugin app for [Alliance Auth](https://gitlab.com/allianceauth/allianceauth)
+This is an simplewiki plugin app for [Alliance Auth](https://gitlab.com/allianceauth/allianceauth)
 (AA) that can be used as starting point to develop custom plugins.
 
 ![License](https://img.shields.io/badge/license-GPLv3-green)
@@ -8,10 +8,10 @@ This is an example plugin app for [Alliance Auth](https://gitlab.com/allianceaut
 ![django](https://img.shields.io/badge/django-3.2-informational)
 ![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)
 
-_(These badges are examples, you can and should replace them with your own)_
+_(These badges are simplewiki, you can and should replace them with your own)_
 
-For the GitLab version of this example app, please have a look over here, Erik
-Kalkoken was so friendly to provide it » [Alliance Auth Example App (GitLab Version)](https://gitlab.com/ErikKalkoken/allianceauth-example-plugin)
+For the GitLab version of this simplewiki app, please have a look over here, Erik
+Kalkoken was so friendly to provide it » [Alliance Auth simplewiki App (GitLab Version)](https://gitlab.com/ErikKalkoken/allianceauth-simplewiki-plugin)
 
 
 ## Features
@@ -24,7 +24,7 @@ Kalkoken was so friendly to provide it » [Alliance Auth Example App (GitLab Ver
 
 ## How to Use It
 
-To use this example as basis for your own development just fork this repo and then
+To use this simplewiki as basis for your own development just fork this repo and then
 clone it on your dev machine.
 
 You then should rename the app, and then you can install it into your AA dev
@@ -42,7 +42,7 @@ This should look something like this:
 aa-dev
 |- venv/
 |- myauth/
-|- aa-example-plugin
+|- aa-simplewiki-plugin
 |- (other AA projects ...)
 ```
 
@@ -53,7 +53,7 @@ Finally, enable [pre-commit](https://pre-commit.com) to enable automatic code st
 checking.
 
 ```bash
-git clone https://github.com/YourName/aa-example-plugin.git aa-your-app-name
+git clone https://github.com/YourName/aa-simplewiki-plugin.git aa-your-app-name
 cd aa-your-app-name
 rm -rf .git
 git init
@@ -64,11 +64,11 @@ pre-commit install
 
 Before installing this app into your dev AA you need to rename it to something
 suitable for your development project. Otherwise, you risk not being able to install
-additional apps that might also be called example.
+additional apps that might also be called simplewiki.
 
 Here is an overview of the places that you need to edit to adopt the name.
 
-Easiest is to just find & replace `example` with your new app name in all files
+Easiest is to just find & replace `simplewiki` with your new app name in all files
 listed below.
 
 One small warning about picking names: Python is a bit particular about what special

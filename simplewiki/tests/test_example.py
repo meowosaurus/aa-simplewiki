@@ -1,14 +1,14 @@
 """
-Example Test
+simplewiki Test
 """
 
 # Django
 from django.test import TestCase
 
 
-class TestExample(TestCase):
+class Testsimplewiki(TestCase):
     """
-    TestExample
+    Testsimplewiki
     """
 
     @classmethod
@@ -21,7 +21,7 @@ class TestExample(TestCase):
 
         super().setUpClass()
 
-    def test_example(self):
+    def test_simplewiki(self):
         """
         Dummy test function
         :return:

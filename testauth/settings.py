@@ -30,7 +30,7 @@ INSTALLED_APPS = [
     "allianceauth.thirdparty.navhelper",
 ]
 
-PACKAGE = "example"
+PACKAGE = "simplewiki"
 
 SECRET_KEY = "wow I'm a really bad default secret key"
 
@@ -167,7 +167,7 @@ DATABASES = {
 }
 
 SITE_NAME = "Alliance Auth"
-SITE_URL = "https://example.com"
+SITE_URL = "https://simplewiki.com"
 CSRF_TRUSTED_ORIGINS = [SITE_URL]
 
 LOGIN_URL = "auth_login_user"  # view that handles login logic
@@ -178,7 +178,7 @@ LOGOUT_REDIRECT_URL = "authentication:dashboard"  # destination after logging ou
 # https://docs.djangoproject.com/en/1.11/topics/http/shortcuts/#redirect
 # - url names eg 'authentication:dashboard'
 # - relative urls eg '/dashboard'
-# - absolute urls eg 'http://example.com/dashboard'
+# - absolute urls eg 'http://simplewiki.com/dashboard'
 
 # scopes required on new tokens when logging in. Cannot be blank.
 LOGIN_TOKEN_SCOPES = ["publicData"]
@@ -259,11 +259,11 @@ SITE_NAME = "testauth"
 DEBUG = False
 
 # Add any additional apps to this list.
-INSTALLED_APPS += ["example"]
+INSTALLED_APPS += ["simplewiki"]
 
 # Register an application at https://developers.eveonline.com for Authentication
 # & API Access and fill out these settings. Be sure to set the callback URL
-# to https://example.com/sso/callback substituting your domain for example.com
+# to https://simplewiki.com/sso/callback substituting your domain for simplewiki.com
 # Logging in to auth requires the publicData scope (can be overridden through the
 # LOGIN_TOKEN_SCOPES setting). Other apps may require more (see their docs).
 ESI_SSO_CLIENT_ID = "dummy"
@@ -274,7 +274,7 @@ ESI_SSO_CALLBACK_URL = "http://localhost:8000"
 # It's recommended to use a free service like SparkPost or Elastic Email to send email.
 # https://www.sparkpost.com/docs/integrations/django/
 # https://elasticemail.com/resources/settings/smtp-api/
-# Set the default from email to something like 'noreply@example.com'
+# Set the default from email to something like 'noreply@simplewiki.com'
 # Email validation can be turned off by uncommenting the line below. This can break some services.
 REGISTRATION_VERIFY_EMAIL = False
 EMAIL_HOST = ""

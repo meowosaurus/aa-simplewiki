@@ -1,5 +1,5 @@
-appname = example
-package = example
+appname = simplewiki
+package = simplewiki
 
 help:
 	@echo "Makefile for $(appname)"
