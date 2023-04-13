@@ -28,7 +28,7 @@ class MenuItem(models.Model):
                             unique=False, 
                             null=True, 
                             blank=True,
-                            help_text='Go to https://fontawesome.com/v5/search to find matching icons. We only support free icons.')
+                            help_text='Go to https://fontawesome.com/v5/search to find matching icons. We only support free icons. Format example: fas fa-hand-spock')
     name = models.CharField(max_length=255, 
                             unique=True,
                             help_text='The name of the URL. You will find that page under https://{your_auth_domain}/simplewiki/{name}.')
@@ -36,24 +36,24 @@ class MenuItem(models.Model):
     def __str__(self):
         return self.name
 
-class PageItem(models.Model):
-    page_title = models.CharField(max_length=255, 
+class SectionItem(models.Model):
+    section_title = models.CharField(max_length=255, 
                                   null=True)
     menu_name = models.CharField(max_length=255, 
                                  unique=False,
-                                 help_text='Menu under which this page should be displayed.')
+                                 help_text='Menu under which this section should be displayed.')
     index = models.IntegerField(default=0, 
                                 unique=True,
-                                help_text='The entire wiki page is sorted by this index. The lower the value, the further to the top is the page.')
+                                help_text='The entire wiki page is sorted by this index. The lower the value, the further to the top is the section.')
     icon = models.CharField(max_length=255, 
                             unique=False, 
                             null=True, 
                             blank=True,
-                            help_text='Go to https://fontawesome.com/v5/search to find matching icons. We only support free icons.')
+                            help_text='Go to https://fontawesome.com/v5/search to find matching icons. We only support free icons. Format example: fas fa-hand-spock')
     content = models.TextField(blank=True, 
                                null=True,
                                help_text='You can use HTML.')
 
     def __str__(self):
-        return self.menu_name + ": " + self.page_title
+        return self.menu_name + ": " + self.section_title
 

@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
-from .models import MenuItem, PageItem
+from .models import MenuItem, SectionItem
 
 
 @login_required
@@ -31,7 +31,7 @@ def dynamic_menus(request, menu_name):
     menuNavItem = get_object_or_404(MenuItem, name=menu_name)
     allMenuItems = MenuItem.objects.all().order_by('index')
 
-    filtered_pages = PageItem.objects.filter(menu_name=menu_name).order_by('index')
+    filtered_pages = SectionItem.objects.filter(menu_name=menu_name).order_by('index')
     
     return render(request, 'simplewiki/dynamic_page.html', {'menuNavItem': menuNavItem, 'menu_items': allMenuItems, 'filtered_pages': filtered_pages})
 

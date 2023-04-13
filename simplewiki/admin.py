@@ -3,11 +3,11 @@
 # Django
 from django.contrib import admin  # noqa: F401
 from .models import MenuItem
-from .models import PageItem
+from .models import SectionItem
 
 # Register your models here.
 admin.site.register(MenuItem)
 
-admin.site.register(PageItem)
+admin.site.register(SectionItem)
 
 
