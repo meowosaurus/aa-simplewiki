@@ -1,4 +1,5 @@
 {% extends 'allianceauth/base.html' %}
+
 {% load i18n %}
 
 {% block page_title %}{% translate "simplewiki Plugin" %}{% endblock %}
@@ -24,13 +25,21 @@
             </div>
     
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                {% for menu_item in menu_items %}
                 <ul class="nav navbar-nav">
-                    {% for menu_item in menu_items %}
-                    <li class="">
-                        <a class="" href="{% url 'simplewiki:dynamic_menu' menu_name=menu_item.name %}">{{ menu_item.title }}</a>
+                    <li class="navbar-text">
+                        <a href="{% url 'simplewiki:dynamic_menu' menu_name=menu_item.name %}" style="display: inline-block;">
+                        <i class="{{ menu_item.icon }}" style="display: inline-block;"></i>
+                        {{ menu_item.title }}
+                        </a>
                     </li>
-                    {% endfor %} 
-                    {% if False %} 
+                  </ul>
+                  {% endfor %} 
+                  
+                  {% if False %} 
+                <ul class="nav navbar-nav">
+
+                    
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>
                         <ul class="dropdown-menu">
@@ -38,8 +47,9 @@
                             <li><a href="{% url 'simplewiki:admin_menu' %}">Menu</a></li>
                         </ul>
                     </li>     
-                    {% endif %}
+                    
                 </ul>
+                {% endif %}
             </div>
         </div>
     </nav>

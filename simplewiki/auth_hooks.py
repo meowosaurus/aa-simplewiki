@@ -19,7 +19,7 @@ class simplewikiMenuItem(MenuItemHook):
         MenuItemHook.__init__(
             self,
             _("Wiki"),
-            "fas fa-cube fa-fw",
+            "fas fa-book-reader fa-fw",
             "simplewiki:index",
             navactive=["simplewiki:"],
         )

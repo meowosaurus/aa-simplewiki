@@ -6,10 +6,13 @@
 {% for item in filtered_pages %}
     <div class="panel panel-primary">
         <div class="panel-heading">
-            <div class="panel-title">{{ item.page_title }}</div>
+            <div class="panel-title">
+                <i class="{{ item.icon }}"></i>
+                {{ item.page_title }}
+            </div>
         </div>
         <div class="panel-body">
-            <p>{{ item.content }}</p>
+            <p>{{ item.content|safe }}</p>
         </div>
     </div>
 {% empty %}
@@ -26,6 +29,7 @@
 {% endblock %}
 
 {% block extra_css %}
+{% include 'simplewiki/_extra_css.html' %}
 {% endblock %}
 
 {% block extra_script %}
