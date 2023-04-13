@@ -6,8 +6,9 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 
 ### Current Features
 
-* Create custom wiki menus with icons
-* Create custom wiki pages with icons
+* Create custom wiki pages with different subsections
+* Add an icon next to a menu or a subsection
+* Edit pages on the admin panel with HTML.
 
 ### ToDo:
 
