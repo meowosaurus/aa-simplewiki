@@ -1,11 +1,13 @@
 # SimpleWiki
 
-A simple wiki system for alliance auth.
+A simple wiki system for alliance auth. It supports multiple pages with different subsections. Every page and every subsection can have their own icon.
+
+![Showcase](https://i.imgur.com/ALZZ7Bs.png)
 
 ### Current Features
 
-* Create custom wiki menus
-* Create custom wiki pages
+* Create custom wiki menus with icons
+* Create custom wiki pages with icons
 
 ### ToDo:
 
@@ -13,7 +15,6 @@ A simple wiki system for alliance auth.
 * Add html editor without accessing admin panel
 * Create editor roles so non-superadmin users can create pages
 * Add dropdown menues
-* Add the option to add icons to menu titles
 
 ### Active devs:
 
