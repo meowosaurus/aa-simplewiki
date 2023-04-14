@@ -49,5 +49,5 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 ## Permissions
 Perm | Admin Site | Auth Site 
  --- | --- | --- 
-corpstats basic_access | None | Can view all wiki pages
-corpstats editor | None | Can create, edit and delete wiki pages and menus
+basic_access | None | Can view all wiki pages
+editor | None | Can create, edit and delete wiki pages and menus
