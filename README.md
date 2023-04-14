@@ -1,6 +1,6 @@
 # SimpleWiki
 
-A simple wiki system for alliance auth. It supports multiple pages with different subsections. Every page and every subsection can have their own icon.
+A simple wiki system for alliance auth. It supports multiple pages with different sections. Every page and every section can have their own icon.
 
 ![Showcase](https://i.imgur.com/ALZZ7Bs.png)
 
@@ -21,7 +21,6 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 * Add html editor without accessing admin panel
 * Extend permission system:
   * Add support for having multiple groups accessing a page 
-
 
 ### Active devs:
 
@@ -91,3 +90,8 @@ Perm | Admin Site | Auth Site
  --- | --- | --- 
 basic_access | None | Can view all wiki pages
 editor | None | Can create, edit and delete wiki pages and menus
+
+## Support
+* On Discord: Meowlicious#7045
+* Check out our wiki on GitHub: https://github.com/meowosaurus/aa-simplewiki/wiki
+

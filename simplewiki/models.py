@@ -62,5 +62,5 @@ class SectionItem(models.Model):
                                help_text='Optional: This will be displayed as your main content of the section. You can use HTML.')
 
     def __str__(self):
-        return self.menu_name + ": " + self.section_title
+        return self.menu_path + ": " + self.title
 
