@@ -11,6 +11,7 @@
 
               <span class="pull-right">
                 <button type="button" class="btn btn-success btn-sm">
+                  <i class="fas fa-plus-square"></i>
                   Create new menu
                 </button>
               </span>
@@ -28,28 +29,28 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    {% for menu_item in menu_items %}
-                        <td>{{ menu_item.index }}</td>
-                        <td>
-                            <i class="{{ menu_item.icon }}"></i>
-                            {{ menu_item.title }}
-                        </td>
-                        <td>
-                          <a href="{% url 'simplewiki:dynamic_menu' menu_name=menu_item.path %}">
-                            {{ menu_item.path }}
-                          </a>
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-primary btn-sm">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button type="button" class="btn btn-danger btn-sm">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </td>
-                    {% endfor %}
-                  </tr>
+                  {% for menu_item in menu_items %}
+                    <tr>
+                      <td>{{ menu_item.index }}</td>
+                      <td>
+                        <i class="{{ menu_item.icon }}"></i>
+                        {{ menu_item.title }}
+                      </td>
+                      <td>
+                        <a href="{% url 'simplewiki:dynamic_menu' menu_name=menu_item.path %}">
+                          {{ menu_item.path }}
+                        </a>
+                      </td>
+                      <td>
+                        <button type="button" class="btn btn-primary btn-sm">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button type="button" class="btn btn-danger btn-sm">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  {% endfor %}
                 </tbody>
               </table>
             

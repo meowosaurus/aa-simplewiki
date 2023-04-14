@@ -69,7 +69,7 @@ def dynamic_menus(request, menu_name):
 
     # Order all sections by their index to display them from left to right from low to hight
     # Also only show sections that are related to the currently selected menu
-    filtered_pages = SectionItem.objects.filter(menu_name=menu_name).order_by('index')
+    filtered_pages = SectionItem.objects.filter(menu_path=menu_name).order_by('index')
 
     context = {'menu_items': allMenuItems, 
                'filtered_pages': filtered_pages,
@@ -85,17 +85,6 @@ def dynamic_menus(request, menu_name):
 
 @login_required
 @permission_required("simplewiki.editor")
-def admin_pages(request: WSGIRequest) -> HttpResponse:
-    """
-    Admin pages view
-    :param request:
-    :return:
-    """
-
-    return render(request, "simplewiki/admin_sections.html", genContext(request))
-
-@login_required
-@permission_required("simplewiki.editor")
 def admin_menu(request: WSGIRequest) -> HttpResponse:
     """
     Admin Menu view
@@ -104,4 +93,15 @@ def admin_menu(request: WSGIRequest) -> HttpResponse:
     """
 
     return render(request, "simplewiki/admin_menus.html", genContext(request))
+
+@login_required
+@permission_required("simplewiki.editor")
+def admin_pages(request: WSGIRequest) -> HttpResponse:
+    """
+    Admin pages view
+    :param request:
+    :return:
+    """
+
+    return render(request, "simplewiki/admin_sections.html", genContext(request))
 

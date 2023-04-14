@@ -11,6 +11,7 @@
 
           <span class="pull-right">
             <button type="button" class="btn btn-success btn-sm">
+              <i class="fas fa-plus-square"></i>
               Create new section
             </button>
           </span>
@@ -33,11 +34,11 @@
                     <td>{{ section_item.index }}</td>
                     <td>
                         <i class="{{ section_item.icon }}"></i>
-                        {{ section_item.section_title }}
+                        {{ section_item.title }}
                     </td>
                     <td>
-                        <a href="{% url 'simplewiki:dynamic_menu' menu_name=section_item.menu_name %}">
-                            {{ section_item.menu_name }}
+                        <a href="{% url 'simplewiki:dynamic_menu' menu_name=section_item.menu_path %}">
+                            {{ section_item.menu_path }}
                         </a>
                     </td>
                     <td>

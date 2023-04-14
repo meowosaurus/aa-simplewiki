@@ -20,7 +20,7 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 * Add editor interface to create, edit and delete menus and sections
 * Add html editor without accessing admin panel
 * Extend permission system:
-  * Add support for having multiple groups access a page 
+  * Add support for having multiple groups accessing a page 
 
 
 ### Active devs:
