@@ -4,9 +4,10 @@
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, redirect
 from .models import MenuItem, SectionItem
 
+# Standard context for a normal view, required by base.html
 def genContext(request):
 
     menu_items = MenuItem.objects.all()
@@ -49,18 +50,20 @@ def dynamic_menus(request, menu_name):
     :param request:
     :return:
     """
-    menuNavItem = get_object_or_404(MenuItem, path=menu_name)
+    # Order all menus by their index from low to high
     allMenuItems = MenuItem.objects.all().order_by('index')
 
+    # isEditor is needed to show or hide the admin menu in the header panel
     if request.user.has_perm('simplewiki.editor'):
         isEditor = True
     else:
         isEditor = False
 
-    # Order all menus by their index to display them from left to right from low to hight
+    # Order all sections by their index to display them from left to right from low to hight
+    # Also only show sections that are related to the currently selected menu
     filtered_pages = SectionItem.objects.filter(menu_name=menu_name).order_by('index')
 
-    context = {'menuNavItem': menuNavItem, 'menu_items': allMenuItems, 'filtered_pages': filtered_pages, 'permission': isEditor}
+    context = {'menu_items': allMenuItems, 'filtered_pages': filtered_pages, 'permission': isEditor}
     
     return render(request, 'simplewiki/dynamic_page.html', context)
 
