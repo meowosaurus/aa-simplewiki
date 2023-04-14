@@ -2,6 +2,7 @@
 
 # Django
 from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.models import Group
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -20,9 +21,16 @@ def genContext(request):
 
     context = {'menu_items': menu_items, 
                'permission': isEditor, 
-               'section_items': section_items}
+               'section_items': section_items,
+               'user_groups': list(request.user.groups.values_list('name', flat=True))}
 
     return context
+
+# Check if the requester has a specific group
+def checkGroup(request, group):
+    srp_group = Group.objects.get(name='srp')
+
+    return srp_group in request.user.groups.all()
 
 @login_required
 @permission_required("simplewiki.basic_access")
@@ -63,9 +71,17 @@ def dynamic_menus(request, menu_name):
     # Also only show sections that are related to the currently selected menu
     filtered_pages = SectionItem.objects.filter(menu_name=menu_name).order_by('index')
 
-    context = {'menu_items': allMenuItems, 'filtered_pages': filtered_pages, 'permission': isEditor}
+    context = {'menu_items': allMenuItems, 
+               'filtered_pages': filtered_pages,
+               'permission': isEditor,
+               'user_groups': list(request.user.groups.values_list('name', flat=True))}
     
-    return render(request, 'simplewiki/dynamic_page.html', context)
+    # Check if the user has the permission to see the requested page. If not, send an error
+    requestedMenu = MenuItem.objects.get(path=menu_name)
+    if not requestedMenu.group or requestedMenu.group in list(request.user.groups.values_list('name', flat=True)):
+        return render(request, 'simplewiki/dynamic_page.html', context)
+    else:
+        return render(request, 'simplewiki/group_error.html', context)
 
 @login_required
 @permission_required("simplewiki.editor")

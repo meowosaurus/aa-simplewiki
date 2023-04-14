@@ -9,7 +9,9 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 * Create custom wiki pages with different sections
 * Add an icon next to menus or sections
 * Edit pages on the admin panel with HTML
-* Basic permission system
+* Basic permission system:
+  * Editor permissions can be added to single user or groups via the admin panel
+  * Certain pages can only be seen by a specific user-created auth group
 
 ### ToDo:
 
@@ -17,6 +19,8 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 * Add dropdown menues
 * Add editor interface to create, edit and delete menus and sections
 * Add html editor without accessing admin panel
+* Extend permission system:
+  * Add support for having multiple groups access a page 
 
 
 ### Active devs:

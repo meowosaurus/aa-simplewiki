@@ -34,6 +34,10 @@ class MenuItem(models.Model):
                             unique=True,
                             null=True,
                             help_text='The path of the URL. You will find that page under https://{your_auth_domain}/simplewiki/{name}.')
+    group = models.CharField(max_length=255, 
+                             null=True,
+                             blank=True,
+                             help_text='Do you only want to show this page to one group of people? Insert the group name here and only they will be able to see the post and all of it\'s sections.')
 
     def __str__(self):
         return self.path

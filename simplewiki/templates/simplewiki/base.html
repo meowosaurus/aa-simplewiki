@@ -29,6 +29,7 @@
     
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 {% for menu_item in menu_items %}
+                    {% if not menu_item.group or menu_item.group in user_groups%}
                     <ul class="nav navbar-nav">
                         <li class="navbar-text">
                             <a href="{% url 'simplewiki:dynamic_menu' menu_name=menu_item.path %}" style="display: inline-block;">
@@ -37,6 +38,7 @@
                             </a>
                         </li>
                     </ul>
+                    {% endif %}
                 {% endfor %} 
                   
                 {% if permission is True %}

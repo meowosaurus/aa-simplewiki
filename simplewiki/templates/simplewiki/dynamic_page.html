@@ -4,7 +4,7 @@
 {% load static %}
 
 {% block details %}
-{% for item in filtered_pages %}
+    {% for item in filtered_pages %}
     <div class="panel panel-primary">
         <div class="panel-heading">
             <div class="panel-title">
@@ -16,14 +16,13 @@
             <p>{{ item.content|safe }}</p>
         </div>
     </div>
-{% empty %}
+    {% empty %}
     <div class="alert alert-warning" role="alert">
         No wiki pages found. You can add them under Admin -> SimpleWiki -> Page Items.<br /><br />
 
         If you created page items and they are not showing, please make sure your "menu name" is the same as the menu you want it to assign to.
     </div>
-{% endfor %}
-    
+    {% endfor %}    
 {% endblock %}
 
 {% block extra_javascript %}
