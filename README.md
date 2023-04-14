@@ -10,8 +10,8 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 * Add an icon next to menus or sections
 * Edit pages on the admin panel with HTML
 * Basic permission system:
-  * Editor permissions can be added to single user or groups via the admin panel
-  * Certain pages can only be seen by a specific user-created auth group
+  * Editor permissions can be added to single users or groups via the admin panel
+  * Alliance Auth groups are synced to simplewiki: Certain pages can only be seen by a specific group
 
 ### ToDo:
 
