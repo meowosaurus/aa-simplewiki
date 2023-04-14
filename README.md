@@ -45,3 +45,9 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 4.) Give it a title, a menu page (this is the menu page it will be under), an index (ordered from low to high) and a content description. This description will be the main content and you can use HTML. Hit save.
 
 5.) Go back to your main auth page, go under Wiki and you've created your first menu and page.
+
+## Permissions
+Perm | Admin Site | Auth Site 
+ --- | --- | --- 
+corpstats basic_access | None | Can view all wiki pages
+corpstats editor | None | Can create, edit and delete wiki pages and menus
