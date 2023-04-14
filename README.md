@@ -8,14 +8,16 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 
 * Create custom wiki pages with different subsections
 * Add an icon next to a menu or a subsection
-* Edit pages on the admin panel with HTML.
+* Edit pages on the admin panel with HTML
+* Basic permission system
 
 ### ToDo:
 
 * Add repo to pip
-* Add html editor without accessing admin panel
-* Create editor roles so non-superadmin users can create pages
 * Add dropdown menues
+* Add editor interface to create, edit and delete menus and sections
+* Add html editor without accessing admin panel
+
 
 ### Active devs:
 

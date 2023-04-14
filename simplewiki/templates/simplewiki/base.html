@@ -19,36 +19,50 @@
                 
                 {% for menu_item in menu_items %}
                 {% empty %}
-                    <a class="navbar-brand" href="#">Wiki</a>
+                    <a class="navbar-brand" href="{% url 'simplewiki:index' %}">
+                        <i class="fas fa-book"></i>
+                        Wiki
+                    </a>
                 {% endfor %}
                 
             </div>
     
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 {% for menu_item in menu_items %}
-                <ul class="nav navbar-nav">
-                    <li class="navbar-text">
-                        <a href="{% url 'simplewiki:dynamic_menu' menu_name=menu_item.name %}" style="display: inline-block;">
-                        <i class="{{ menu_item.icon }}" style="display: inline-block;"></i>
-                        {{ menu_item.title }}
-                        </a>
-                    </li>
-                  </ul>
-                  {% endfor %} 
+                    <ul class="nav navbar-nav">
+                        <li class="navbar-text">
+                            <a href="{% url 'simplewiki:dynamic_menu' menu_name=menu_item.name %}" style="display: inline-block;">
+                                <i class="{{ menu_item.icon }}" style="display: inline-block;"></i>
+                                {{ menu_item.title }}
+                            </a>
+                        </li>
+                    </ul>
+                {% endfor %} 
                   
-                  {% if False %} 
-                <ul class="nav navbar-nav">
-
-                    
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{% url 'simplewiki:admin_pages' %}">Pages</a></li>
-                            <li><a href="{% url 'simplewiki:admin_menu' %}">Menu</a></li>
-                        </ul>
-                    </li>     
-                    
-                </ul>
+                {% if permission is True %}
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-user-cog"></i>
+                                Admin 
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="{% url 'simplewiki:admin_pages' %}">
+                                        <i class="fas fa-pen"></i>
+                                        Pages
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'simplewiki:admin_menu' %}">
+                                        <i class="fas fa-folder-open"></i>
+                                        Menu
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>     
+                    </ul>
                 {% endif %}
             </div>
         </div>
