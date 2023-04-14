@@ -1,0 +1,63 @@
+{% extends 'simplewiki/base.html' %}
+{% load i18n %}
+{% load humanize %}
+
+{% block details %}
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <div class="panel-title" style="padding-bottom: 1rem;">
+          {% translate "Section Administration" %}
+
+          <span class="pull-right">
+            <button type="button" class="btn btn-success btn-sm">
+              Create new section
+            </button>
+          </span>
+        </div>
+    </div>
+
+    <div class="panel-body">
+        <table class="table table-striped">
+            <thead>
+              <tr>
+                <th width="25%">Index</th>
+                <th width="25%">Section Title</th>
+                <th width="25%">Menu</th>
+                <th width="25%">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for section_item in section_items %}
+                <tr>
+                    <td>{{ section_item.index }}</td>
+                    <td>
+                        <i class="{{ section_item.icon }}"></i>
+                        {{ section_item.section_title }}
+                    </td>
+                    <td>{{ section_item.menu_name }}</td>
+                    <td>
+                        <button type="button" class="btn btn-primary btn-sm">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button type="button" class="btn btn-danger btn-sm">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_javascript %}
+{% endblock %}
+
+{% block extra_css %}
+{% include 'simplewiki/_extra_css.html' %}
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}

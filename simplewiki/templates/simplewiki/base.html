@@ -31,7 +31,7 @@
                 {% for menu_item in menu_items %}
                     <ul class="nav navbar-nav">
                         <li class="navbar-text">
-                            <a href="{% url 'simplewiki:dynamic_menu' menu_name=menu_item.name %}" style="display: inline-block;">
+                            <a href="{% url 'simplewiki:dynamic_menu' menu_name=menu_item.path %}" style="display: inline-block;">
                                 <i class="{{ menu_item.icon }}" style="display: inline-block;"></i>
                                 {{ menu_item.title }}
                             </a>
@@ -49,15 +49,15 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="{% url 'simplewiki:admin_pages' %}">
+                                    <a href="{% url 'simplewiki:admin_sections' %}">
                                         <i class="fas fa-pen"></i>
-                                        Pages
+                                        Sections
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{% url 'simplewiki:admin_menu' %}">
+                                    <a href="{% url 'simplewiki:admin_menus' %}">
                                         <i class="fas fa-folder-open"></i>
-                                        Menu
+                                        Menus
                                     </a>
                                 </li>
                             </ul>

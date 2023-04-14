@@ -30,12 +30,13 @@ class MenuItem(models.Model):
                             null=True, 
                             blank=True,
                             help_text='Go to https://fontawesome.com/v5/search to find matching icons. We only support free icons. Format example: fas fa-hand-spock')
-    name = models.CharField(max_length=255, 
+    path = models.CharField(max_length=255, 
                             unique=True,
-                            help_text='The name of the URL. You will find that page under https://{your_auth_domain}/simplewiki/{name}.')
+                            null=True,
+                            help_text='The path of the URL. You will find that page under https://{your_auth_domain}/simplewiki/{name}.')
 
     def __str__(self):
-        return self.name
+        return self.title
 
 class SectionItem(models.Model):
     section_title = models.CharField(max_length=255, 

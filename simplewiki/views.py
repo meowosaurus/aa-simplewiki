@@ -10,13 +10,16 @@ from .models import MenuItem, SectionItem
 def genContext(request):
 
     menu_items = MenuItem.objects.all()
+    section_items = SectionItem.objects.all()
 
     if request.user.has_perm('simplewiki.editor'):
         isEditor = True
     else:
         isEditor = False
 
-    context = {'menu_items': menu_items, 'permission': isEditor}
+    context = {'menu_items': menu_items, 
+               'permission': isEditor, 
+               'section_items': section_items}
 
     return context
 
@@ -46,7 +49,7 @@ def dynamic_menus(request, menu_name):
     :param request:
     :return:
     """
-    menuNavItem = get_object_or_404(MenuItem, name=menu_name)
+    menuNavItem = get_object_or_404(MenuItem, path=menu_name)
     allMenuItems = MenuItem.objects.all().order_by('index')
 
     if request.user.has_perm('simplewiki.editor'):
@@ -65,21 +68,21 @@ def dynamic_menus(request, menu_name):
 @permission_required("simplewiki.editor")
 def admin_pages(request: WSGIRequest) -> HttpResponse:
     """
-    Index view
+    Admin pages view
     :param request:
     :return:
     """
 
-    return render(request, "simplewiki/admin_pages.html", genContext(request))
+    return render(request, "simplewiki/admin_sections.html", genContext(request))
 
 @login_required
 @permission_required("simplewiki.editor")
 def admin_menu(request: WSGIRequest) -> HttpResponse:
     """
-    Index view
+    Admin Menu view
     :param request:
     :return:
     """
 
-    return render(request, "simplewiki/admin_menu.html", genContext(request))
+    return render(request, "simplewiki/admin_menus.html", genContext(request))
 
