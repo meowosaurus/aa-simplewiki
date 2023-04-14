@@ -1,6 +1,7 @@
 {% extends 'simplewiki/base.html' %}
 {% load i18n %}
 {% load humanize %}
+{% load static %}
 
 {% block details %}
 <div class="panel panel-primary">
@@ -34,7 +35,11 @@
                         <i class="{{ section_item.icon }}"></i>
                         {{ section_item.section_title }}
                     </td>
-                    <td>{{ section_item.menu_name }}</td>
+                    <td>
+                        <a href="{% url 'simplewiki:dynamic_menu' menu_name=section_item.menu_name %}">
+                            {{ section_item.menu_name }}
+                        </a>
+                    </td>
                     <td>
                         <button type="button" class="btn btn-primary btn-sm">
                             <i class="fas fa-edit"></i>
@@ -56,7 +61,7 @@
 {% endblock %}
 
 {% block extra_css %}
-{% include 'simplewiki/_extra_css.html' %}
+<link rel="stylesheet" type="text/css" href="{% static 'simplewiki/custom.css' %}" />
 {% endblock %}
 
 {% block extra_script %}

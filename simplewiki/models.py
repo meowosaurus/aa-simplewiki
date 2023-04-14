@@ -36,7 +36,7 @@ class MenuItem(models.Model):
                             help_text='The path of the URL. You will find that page under https://{your_auth_domain}/simplewiki/{name}.')
 
     def __str__(self):
-        return self.title
+        return self.path
 
 class SectionItem(models.Model):
     section_title = models.CharField(max_length=255, 
