@@ -5,17 +5,17 @@
 {% load markdown_filters %}
 
 {% block details %}
-<form class="form-inline" method="GET" action="{% url 'simplewiki:search' %}"></form>
-      <div class="input-group">
-        <input type="text" class="form-control" type="search" name="query" placeholder="Search for...">
-        <span class="input-group-btn">
-          <button class="btn btn-default" type="submit">
-            <i class="fas fa-search"></i>
-            Go!
-            </button>
-        </span>
-      </div>
-    </form>
+<form method="GET" action="{% url 'simplewiki:search' %}">
+    <div class="input-group">
+      <input type="text" class="form-control" type="search" name="query" placeholder="{{ oldQuery|default:'Search..' }}" id="searchInput" style="width: 100%;">
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="submit">
+          <i class="fas fa-search"></i>
+          Go!
+          </button>
+      </span>
+    </div>
+  </form>
     <br />
     {% for item in searchResults %}
     <div class="panel panel-primary">
@@ -33,14 +33,16 @@
             </p>
         </div>
     </div>
+    {% empty %}
+        {% if oldQuery %}
+            <div class="alert alert-warning" role="alert">
+                Nothing found for "<b>{{ oldQuery }}</b>"
+            </div>
+        {% endif %}
     {% endfor %}
 {% endblock %}
 
 {% block extra_javascript %}
-{% endblock %}
-
-{% block extra_css %}
-<link rel="stylesheet" type="text/css" href="{% static 'simplewiki/custom.css' %}" />
 {% endblock %}
 
 {% block extra_script %}

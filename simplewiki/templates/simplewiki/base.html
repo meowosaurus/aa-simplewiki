@@ -1,6 +1,7 @@
 {% extends 'allianceauth/base.html' %}
 
 {% load i18n %}
+{% load static %}
 
 {% block page_title %}{% translate "Wiki" %}{% endblock %}
 
@@ -73,7 +74,11 @@
             </div>
         </div>
     </nav>
-
     {% block details %}{% endblock %}
 </div>
 {% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'simplewiki/custom.css' %}" />
+{% endblock %}
+

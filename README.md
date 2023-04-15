@@ -1,11 +1,9 @@
 # SimpleWiki
-
 A simple wiki system for alliance auth. It supports multiple pages with different sections. Every page and every section can have their own icon.
 
 ![Showcase](https://i.imgur.com/ALZZ7Bs.png)
 
 ### Current Features
-
 * Create custom wiki pages with different sections
 * Add an icon next to menus or sections
 * Edit pages on the admin panel with [markdown](https://commonmark.org/help/)
@@ -15,26 +13,22 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 * Search function: Search across all wiki menus and sections
 
 ### ToDo:
-
 * Add repo to pip
 * Add dropdown menues
 * Add editor interface to create, edit and delete menus and sections
-* Add html editor without accessing admin panel
+* Add markdown editor without accessing admin panel
 * Extend permission system:
   * Add support for having multiple groups accessing a page 
 
 ### Active devs:
-
 * [Meowosaurus](https://github.com/meowosaurus)
 
 ## Installation
-
 * Pip requirements: `pip install commonmark`
 
 ### Alliance Auth Production
 
 #### Non-Docker Version
-
 1.) Install the pip package via `pip install git+https://github.com/meowosaurus/aa-simplewiki`
 
 2.) Add `simplewiki` to your `INSTALLED_APPS` in your projects `local.py`
@@ -42,12 +36,11 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 3.) Make migrations and migrate, then restart your server
 
 #### Docker Version
-
 1.) Edit your `conf/requirements` and add the following line `git+https://github.com/meowosaurus/aa-simplewiki`
 
 2.) Add `simplewiki` to your `INSTALLED_APPS` in your projects `local.py`
 
-3.) Start your server `docker-compose --env-file=.env up -d`
+3.) Start your server `docker compose --env-file=.env up -d`
 
 3.) Run `docker compose exec allianceauth bash`
 
@@ -77,7 +70,6 @@ Make sure you have installed alliance auth in the correct way: https://alliancea
 8.) Restart auth with `python manage.py runserver`
 
 ## Usage
-
 1.) Go to `{your_auth_url}/admin` -> SimpleWiki -> Add Menu Item
 
 2.) Give it a title, an index (menu items are sorted by their index from low to high) and a name (the name is the name in the url) and hit save.

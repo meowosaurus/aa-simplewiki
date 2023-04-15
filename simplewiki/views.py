@@ -8,6 +8,8 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from .models import MenuItem, SectionItem
 
+### Helper Functions ###
+
 # Standard context for a normal view, required by base.html
 def genContext(request):
 
@@ -31,6 +33,8 @@ def checkGroup(request, group):
     srp_group = Group.objects.get(name='srp')
 
     return srp_group in request.user.groups.all()
+
+### User Views ###
 
 @login_required
 @permission_required("simplewiki.basic_access")
@@ -82,7 +86,9 @@ def dynamic_menus(request, menu_name):
         return render(request, 'simplewiki/dynamic_page.html', context)
     else:
         return render(request, 'simplewiki/group_error.html', context)
-    
+
+@login_required
+@permission_required("simplewiki.basic_access") 
 def search(request: WSGIRequest) -> HttpResponse:
     """
     Search Menu view
@@ -95,11 +101,12 @@ def search(request: WSGIRequest) -> HttpResponse:
     query = request.GET.get('query')
     if query:
         searchResults = SectionItem.objects.filter(content__icontains=query)
+        context.update({'oldQuery': query})
         context.update({'searchResults': searchResults})
 
     return render(request, "simplewiki/search.html", context)
 
-### Admin ###
+### Admin Views ###
 
 @login_required
 @permission_required("simplewiki.editor")
