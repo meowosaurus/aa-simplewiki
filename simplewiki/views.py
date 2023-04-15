@@ -182,13 +182,13 @@ def admin_menu(request: WSGIRequest) -> HttpResponse:
         elif edit:
             selectedMenu = MenuItem.objects.get(path=edit)
             context.update({'selectedMenu': selectedMenu})
-            context.update({'user_action': 'edit'}) # 1 = edit
+            context.update({'user_action': 'edit'})
         elif delete:
             selectedMenu = MenuItem.objects.get(path=delete)
             context.update({'selectedMenu': selectedMenu})
-            context.update({'user_action': 'delete'}) # 2 = delete
+            context.update({'user_action': 'delete'})
         else:
-            context.update({'user_action': 'none'}) # 0 = nothing, show list
+            context.update({'user_action': 'none'})
 
     return render(request, "simplewiki/admin/admin_menus.html", context)
 
@@ -202,6 +202,75 @@ def admin_pages(request: WSGIRequest) -> HttpResponse:
     """
 
     context = genContext(request)
+
+    create = request.GET.get('create')
+    edit = request.GET.get('edit')
+    delete = request.GET.get('delete')
+    
+    if request.method == 'POST':
+        if create:
+            # if do create operation
+            if request.POST['confirm_create'] == '1':
+                newSectionItem = SectionItem()
+
+                newSectionItem.title = request.POST['title']
+                newSectionItem.menu_path = request.POST['menu_path']
+                newSectionItem.index = request.POST['index']
+                newSectionItem.icon = request.POST['icon']
+                newSectionItem.content = request.POST['content']
+
+                newSectionItem.save()
+                return redirect('simplewiki:admin_sections')
+            # if cancel create operation
+            else:
+                return redirect('simplewiki:admin_sections')
+        if edit:
+            # if do edit operation
+            if request.POST['confirm_edit'] == '1':
+                selectedSection = SectionItem.objects.get(title=edit)
+
+                # Check if user changed a value. If they did, save the new one.
+                if request.POST['title']:
+                    selectedSection.title = request.POST['title']
+                if request.POST['menu_path']:
+                    selectedSection.menu_path = request.POST['menu_path']
+                if request.POST['index']:
+                    selectedSection.index = request.POST['index']
+                if request.POST['icon']:
+                    selectedSection.icon = request.POST['icon']
+                if request.POST['content']:
+                    selectedSection.content = request.POST['content']
+
+                selectedSection.save()
+
+                return redirect('simplewiki:admin_sections')
+            # if cancel edit operation
+            elif request.POST['confirm_edit'] == '0':
+                return redirect('simplewiki:admin_sections')
+        if delete:
+            # if do delete operation
+            if request.POST['confirm_delete'] == '1':
+                selectedSection = SectionItem.objects.get(title=delete)
+                selectedSection.delete()
+                return redirect('simplewiki:admin_sections')
+            # if cancel delete operation
+            elif request.POST['confirm_delete'] == '0':
+                return redirect('simplewiki:admin_sections')
+
+    # Used to determine which button the user clicked on to load the correct form
+    if request.method == 'GET':
+        if create:
+            context.update({'user_action': 'create'})
+        elif edit:
+            selectedSection = SectionItem.objects.get(title=edit)
+            context.update({'selectedSection': selectedSection})
+            context.update({'user_action': 'edit'})
+        elif delete:
+            selectedSection = SectionItem.objects.get(title=delete)
+            context.update({'selectedSection': selectedSection})
+            context.update({'user_action': 'delete'})
+        else:
+            context.update({'user_action': 'none'})
 
     return render(request, "simplewiki/admin/admin_sections.html", context)
 

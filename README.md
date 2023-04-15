@@ -11,12 +11,15 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
   * Editor permissions can be added to single users or groups via the admin panel
   * Alliance Auth groups are synced to simplewiki: Certain pages can only be seen by a specific group
 * Search function: Search across all wiki menus and sections
+* Editor interface
+  * Non-superadmin users can create, edit and delete custom menus (editor)
+  * Non-superadmin users can create, edit and delete custom sections (editor)
 
 ### ToDo:
 * Add repo to pip
 * Add dropdown menues
-* Add editor interface to create, edit and delete menus and sections
 * Add markdown editor without accessing admin panel
+* Add buttons for ediots to every section to edit or delete it
 * Extend permission system:
   * Add support for having multiple groups accessing a page 
 
@@ -24,31 +27,34 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 * [Meowosaurus](https://github.com/meowosaurus)
 
 ## Installation
-* Pip requirements: `pip install commonmark`
 
 ### Alliance Auth Production
 
 #### Non-Docker Version
-1.) Install the pip package via `pip install git+https://github.com/meowosaurus/aa-simplewiki`
+1.) Install `pip install commonmark`
 
-2.) Add `simplewiki` to your `INSTALLED_APPS` in your projects `local.py`
+2.) Install the pip package via `pip install git+https://github.com/meowosaurus/aa-simplewiki`
 
-3.) Make migrations and migrate, then restart your server
+3.) Add `simplewiki` to your `INSTALLED_APPS` in your projects `local.py`
+
+4.) Make migrations and migrate, then restart your server
 
 #### Docker Version
-1.) Edit your `conf/requirements` and add the following line `git+https://github.com/meowosaurus/aa-simplewiki`
+1.) Please make sure you followed the custom docker-image tutorial [here](https://gitlab.com/allianceauth/allianceauth/-/tree/master/docker#using-a-custom-docker-image): 
 
-2.) Add `simplewiki` to your `INSTALLED_APPS` in your projects `local.py`
+2.) Edit your `conf/requirements` and add the following lines `git+https://github.com/meowosaurus/aa-simplewiki` and `commonmark` Important: Please make sure you add both!
 
-3.) Start your server `docker compose --env-file=.env up -d`
+3.) Add `simplewiki` to your `INSTALLED_APPS` in your projects `local.py`
 
-3.) Run `docker compose exec allianceauth bash`
+4.) Start your server `docker compose --env-file=.env up -d`
 
-4.) Run `allianceauth update myauth`
+5.) Run `docker compose exec allianceauth bash`
 
-5.) Run `auth migrate`
+6.) Run `allianceauth update myauth`
 
-6.) Run `auth collectstatic`
+7.) Run `auth migrate`
+
+8.) Run `auth collectstatic`
 
 ### Alliance Auth Development 
 Make sure you have installed alliance auth in the correct way: https://allianceauth.readthedocs.io/en/latest/development/dev_setup/index.html

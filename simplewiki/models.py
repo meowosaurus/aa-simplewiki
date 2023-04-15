@@ -44,8 +44,9 @@ class MenuItem(models.Model):
 
 class SectionItem(models.Model):
     title = models.CharField(max_length=255, 
-                                     null=True,
-                                     help_text='Required: This title will be displayed above the content.')
+                             null=True,
+                             unique=True,
+                             help_text='Required: This title will be displayed above the content.')
     menu_path = models.CharField(max_length=255, 
                                  unique=False,
                                  help_text='Required: Menu under which this section should be displayed.')
