@@ -6,7 +6,6 @@ from django.contrib.auth.models import Group
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django import forms
 from .models import MenuItem, SectionItem
 
 ### Helper Functions ###
@@ -179,17 +178,17 @@ def admin_menu(request: WSGIRequest) -> HttpResponse:
     # Used to determine which button the user clicked on to load the correct form
     elif request.method == 'GET':
         if create:
-            context.update({'act': 3})
+            context.update({'user_action': 'create'})
         elif edit:
             selectedMenu = MenuItem.objects.get(path=edit)
             context.update({'selectedMenu': selectedMenu})
-            context.update({'act': 1}) # 1 = edit
+            context.update({'user_action': 'edit'}) # 1 = edit
         elif delete:
             selectedMenu = MenuItem.objects.get(path=delete)
             context.update({'selectedMenu': selectedMenu})
-            context.update({'act': 2}) # 2 = delete
+            context.update({'user_action': 'delete'}) # 2 = delete
         else:
-            context.update({'act': 0}) # 0 = nothing, show list
+            context.update({'user_action': 'none'}) # 0 = nothing, show list
 
     return render(request, "simplewiki/admin/admin_menus.html", context)
 

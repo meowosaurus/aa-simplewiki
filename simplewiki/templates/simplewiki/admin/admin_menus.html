@@ -9,7 +9,7 @@
             <div class="panel-title" style="padding-bottom: 1rem;">
               {% translate "Menu Administration" %}
 
-              {% if act == 0 %}
+              {% if user_action == 'none' %}
               <span class="pull-right">
                 <form method="GET" action="{% url 'simplewiki:admin_menus' %}">
                   <button type="submit" name="create" value="1" class="btn btn-success btn-sm">
@@ -22,7 +22,7 @@
             </div>
         </div>
 
-        {% if act == 0 %}
+        {% if user_action == 'none' %}
         <div class="panel-body">
             <table class="table table-striped">
                 <thead>
@@ -61,7 +61,7 @@
                 </tbody>
               </table>
         </div>
-        {% elif act == 1 %}
+        {% elif user_action == 'edit' %}
         <div class="panel-body">
           <div class="text-center h4">
             Edit menu 
@@ -75,38 +75,10 @@
           </div>
           <form method="post" id="my_form">
             {% csrf_token %}
-            <div class="form-group">
-              <label for="exampleInputEmail1">Index:</label>
-              <input type="text" class="form-control" name="index" placeholder="{{ selectedMenu.index }}">
-              <p class="help-block">Required: The navbar is sorted by this index. The lower the value, the further to the left is the menu.</p>
-            </div>
-            <div class="form-group">
-              <label for="exampleInputPassword1">Title:</label>
-              <input type="text" class="form-control" name="title" placeholder="{{ selectedMenu.title }}">
-              <p class="help-block">Required: The navbar title for the menu.</p>
-            </div>
-            <div class="form-group">
-              <label for="exampleInputPassword1">Icon:</label>
-              <input type="text" class="form-control" name="icon" placeholder="{{ selectedMenu.icon }}">
-              <p class="help-block">Optional: Go to <a href="https://fontawesome.com/v5/search">https://fontawesome.com/v5/search</a> to find matching icons. We only support free icons. Format example: fas fa-hand-spock</p>
-            </div>
-            <div class="form-group">
-              <label for="exampleInputPassword1">Path:</label>
-              <input type="text" class="form-control" name="path" placeholder="{{ selectedMenu.path }}">
-              <p class="help-block">Required: The path of the URL. You will find that page under https://{your_auth_domain}/simplewiki/{name}.</p>
-            </div>
-            <div class="form-group">
-              <label for="exampleInputPassword1">Group:</label>
-              <input type="text" class="form-control" name="group" placeholder="{{ selectedMenu.group }}">
-              <p class="help-block">Optional: Do you only want to show this page to one group of people? Insert the group name here and only they will be able to see the post and all of it's sections.</p>
-            </div>
-            <button type="submit" name="confirm_edit" value="0" class="btn btn-default">Cancel</button>
-            <div class="pull-right">
-              <button type="submit" name="confirm_edit" value="1" class="btn btn-success">Save</button>
-            </div>
+            {% include 'simplewiki/admin/partials/_edit_menu.html' %}
           </form>
         </div>
-        {% elif act == 2 %}
+        {% elif user_action == 'delete' %}
         <div class="panel-body">
           <div class="text-center h4">
             Are you sure you want to delete the following menu?
@@ -122,7 +94,7 @@
             </div>
           </form>  
         </div>
-        {% elif act == 3 %}
+        {% elif user_action == 'create' %}
         <div class="panel-body">
           <div class="text-center h4">
             Create a new menu <i class="fas fa-thumbs-up"></i>
@@ -130,35 +102,7 @@
           <hr>
           <form method="post" id="my_form">
             {% csrf_token %}
-            <div class="form-group">
-              <label for="exampleInputEmail1">Index:</label>
-              <input type="text" class="form-control" name="index" placeholder="" required>
-              <p class="help-block">Required: The navbar is sorted by this index. The lower the value, the further to the left is the menu.</p>
-            </div>
-            <div class="form-group">
-              <label for="exampleInputPassword1">Title:</label>
-              <input type="text" class="form-control" name="title" placeholder="" required>
-              <p class="help-block">Required: The navbar title for the menu.</p>
-            </div>
-            <div class="form-group">
-              <label for="exampleInputPassword1">Icon:</label>
-              <input type="text" class="form-control" name="icon" placeholder="">
-              <p class="help-block">Optional: Go to <a href="https://fontawesome.com/v5/search">https://fontawesome.com/v5/search</a> to find matching icons. We only support free icons. Format example: fas fa-hand-spock</p>
-            </div>
-            <div class="form-group">
-              <label for="exampleInputPassword1">Path:</label>
-              <input type="text" class="form-control" name="path" placeholder="" required>
-              <p class="help-block">Required: The path of the URL. You will find that page under https://{your_auth_domain}/simplewiki/{name}.</p>
-            </div>
-            <div class="form-group">
-              <label for="exampleInputPassword1">Group:</label>
-              <input type="text" class="form-control" name="group" placeholder="">
-              <p class="help-block">Optional: Do you only want to show this page to one group of people? Insert the group name here and only they will be able to see the post and all of it's sections.</p>
-            </div>
-            <button type="submit" name="confirm_create" value="0" class="btn btn-default">Cancel</button>
-            <div class="pull-right">
-              <button type="submit" name="confirm_create" value="1" class="btn btn-success">Create</button>
-            </div>
+            {% include 'simplewiki/admin/partials/_create_menu.html' %}
           </form>
         </div>
         {% endif %}
