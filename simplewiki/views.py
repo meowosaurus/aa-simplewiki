@@ -6,6 +6,7 @@ from django.contrib.auth.models import Group
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django import forms
 from .models import MenuItem, SectionItem
 
 ### Helper Functions ###
@@ -13,8 +14,8 @@ from .models import MenuItem, SectionItem
 # Standard context for a normal view, required by base.html
 def genContext(request):
 
-    menu_items = MenuItem.objects.all()
-    section_items = SectionItem.objects.all()
+    menu_items = MenuItem.objects.all().order_by('index')
+    section_items = SectionItem.objects.all().order_by('index')
 
     if request.user.has_perm('simplewiki.editor'):
         isEditor = True
@@ -117,7 +118,80 @@ def admin_menu(request: WSGIRequest) -> HttpResponse:
     :return:
     """
 
-    return render(request, "simplewiki/admin_menus.html", genContext(request))
+    context = genContext(request)
+
+    create = request.GET.get('create')
+    edit = request.GET.get('edit')
+    delete = request.GET.get('delete')
+
+    # Used to update values inside the model
+    if request.method == 'POST':
+
+        if create:
+            if request.POST['confirm_create'] == '1':
+                newMenu = MenuItem()
+
+                newMenu.index = request.POST['index']
+                newMenu.title = request.POST['title']
+                newMenu.icon = request.POST['icon']
+                newMenu.path = request.POST['path']
+                newMenu.group = request.POST['group']
+
+                newMenu.save()
+                return redirect("simplewiki:admin_menus")
+            else:
+                return redirect("simplewiki:admin_menus")
+
+        # If If edit GET request is still available
+        if edit:
+            # If do edit operation
+            if request.POST['confirm_edit'] == '1':
+                selectedMenu = MenuItem.objects.get(path=edit)
+
+                # Check if user changed a value. If they did, save the new one.
+                if request.POST['index']:
+                    selectedMenu.index = request.POST['index']
+                if request.POST['title']:
+                    selectedMenu.title = request.POST['title']
+                if request.POST['icon']:
+                    selectedMenu.icon = request.POST['icon']
+                if request.POST['path']:
+                    selectedMenu.path = request.POST['path']
+                if request.POST['group']:
+                    selectedMenu.group = request.POST['group']
+
+                selectedMenu.save()
+                return redirect("simplewiki:admin_menus")
+            # If cancel edit operation
+            elif request.POST['confirm_edit'] == '0':
+                return redirect("simplewiki:admin_menus")
+        
+        # If delete GET request is still available
+        if delete:
+            # If do delete operation
+            if request.POST['confirm_delete'] == '1':
+                selectedMenu = MenuItem.objects.get(path=delete)
+                selectedMenu.delete()
+                return redirect("simplewiki:admin_menus")
+            # If cancel delete operation
+            elif request.POST['confirm_delete'] == '0':
+                return redirect("simplewiki:admin_menus")
+    # Used to determine which button the user clicked on to load the correct form
+    elif request.method == 'GET':
+        if create:
+            context.update({'act': 3})
+        elif edit:
+            selectedMenu = MenuItem.objects.get(path=edit)
+            context.update({'selectedMenu': selectedMenu})
+            context.update({'act': 1}) # 1 = edit
+        elif delete:
+            selectedMenu = MenuItem.objects.get(path=delete)
+            context.update({'selectedMenu': selectedMenu})
+            context.update({'act': 2}) # 2 = delete
+        else:
+            context.update({'act': 0}) # 0 = nothing, show list
+
+    return render(request, "simplewiki/admin/admin_menus.html", context)
 
 @login_required
 @permission_required("simplewiki.editor")
@@ -128,5 +202,7 @@ def admin_pages(request: WSGIRequest) -> HttpResponse:
     :return:
     """
 
-    return render(request, "simplewiki/admin_sections.html", genContext(request))
+    context = genContext(request)
+
+    return render(request, "simplewiki/admin/admin_sections.html", context)
 

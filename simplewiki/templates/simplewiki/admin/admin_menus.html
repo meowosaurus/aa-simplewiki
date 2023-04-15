@@ -1,0 +1,172 @@
+{% extends 'simplewiki/base.html' %}
+{% load i18n %}
+{% load humanize %}
+{% load static %}
+
+{% block details %}
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="panel-title" style="padding-bottom: 1rem;">
+              {% translate "Menu Administration" %}
+
+              {% if act == 0 %}
+              <span class="pull-right">
+                <form method="GET" action="{% url 'simplewiki:admin_menus' %}">
+                  <button type="submit" name="create" value="1" class="btn btn-success btn-sm">
+                    <i class="fas fa-plus-square"></i>
+                    Create new menu
+                  </button>
+                </form>
+              </span>
+              {% endif %}
+            </div>
+        </div>
+
+        {% if act == 0 %}
+        <div class="panel-body">
+            <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th width="25%">Index</th>
+                    <th width="25%">Menu Title</th>
+                    <th width="25%">Path</th>
+                    <th width="25%">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for menu_item in menu_items %}
+                    <tr>
+                      <td>{{ menu_item.index }}</td>
+                      <td>
+                        <i class="{{ menu_item.icon }}"></i>
+                        {{ menu_item.title }}
+                      </td>
+                      <td>
+                        <a href="{% url 'simplewiki:dynamic_menu' menu_name=menu_item.path %}">
+                          {{ menu_item.path }}
+                        </a>
+                      </td>
+                      <td>
+                        <form method="GET" action="{% url 'simplewiki:admin_menus' %}">
+                        <button type="submit" name="edit" value="{{ menu_item.path }}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button type="submit" name="delete" value="{{ menu_item.path }}" class="btn btn-danger btn-sm">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                      </form>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+        </div>
+        {% elif act == 1 %}
+        <div class="panel-body">
+          <div class="text-center h4">
+            Edit menu 
+            <br />
+            <br />
+            <i class="{{ selectedMenu.icon }}"></i> {{ selectedMenu.title }}
+          </div>
+          <hr>
+          <div class="text-center">
+            Leave text-fields blank if you don't want any changes.
+          </div>
+          <form method="post" id="my_form">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="exampleInputEmail1">Index:</label>
+              <input type="text" class="form-control" name="index" placeholder="{{ selectedMenu.index }}">
+              <p class="help-block">Required: The navbar is sorted by this index. The lower the value, the further to the left is the menu.</p>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputPassword1">Title:</label>
+              <input type="text" class="form-control" name="title" placeholder="{{ selectedMenu.title }}">
+              <p class="help-block">Required: The navbar title for the menu.</p>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputPassword1">Icon:</label>
+              <input type="text" class="form-control" name="icon" placeholder="{{ selectedMenu.icon }}">
+              <p class="help-block">Optional: Go to <a href="https://fontawesome.com/v5/search">https://fontawesome.com/v5/search</a> to find matching icons. We only support free icons. Format example: fas fa-hand-spock</p>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputPassword1">Path:</label>
+              <input type="text" class="form-control" name="path" placeholder="{{ selectedMenu.path }}">
+              <p class="help-block">Required: The path of the URL. You will find that page under https://{your_auth_domain}/simplewiki/{name}.</p>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputPassword1">Group:</label>
+              <input type="text" class="form-control" name="group" placeholder="{{ selectedMenu.group }}">
+              <p class="help-block">Optional: Do you only want to show this page to one group of people? Insert the group name here and only they will be able to see the post and all of it's sections.</p>
+            </div>
+            <button type="submit" name="confirm_edit" value="0" class="btn btn-default">Cancel</button>
+            <div class="pull-right">
+              <button type="submit" name="confirm_edit" value="1" class="btn btn-success">Save</button>
+            </div>
+          </form>
+        </div>
+        {% elif act == 2 %}
+        <div class="panel-body">
+          <div class="text-center h4">
+            Are you sure you want to delete the following menu?
+            <br />
+            <br />
+            <i class="{{ selectedMenu.icon }}"></i> {{ selectedMenu.title }}
+          </div>
+          <form method="post">
+            {% csrf_token %}
+            <button type="submit" name="confirm_delete" value="0" class="btn btn-default">Cancel</button>
+            <div class="pull-right">
+              <button type="submit" name="confirm_delete" value="1" class="btn btn-danger">Delete</button>
+            </div>
+          </form>  
+        </div>
+        {% elif act == 3 %}
+        <div class="panel-body">
+          <div class="text-center h4">
+            Create a new menu <i class="fas fa-thumbs-up"></i>
+          </div>
+          <hr>
+          <form method="post" id="my_form">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="exampleInputEmail1">Index:</label>
+              <input type="text" class="form-control" name="index" placeholder="" required>
+              <p class="help-block">Required: The navbar is sorted by this index. The lower the value, the further to the left is the menu.</p>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputPassword1">Title:</label>
+              <input type="text" class="form-control" name="title" placeholder="" required>
+              <p class="help-block">Required: The navbar title for the menu.</p>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputPassword1">Icon:</label>
+              <input type="text" class="form-control" name="icon" placeholder="">
+              <p class="help-block">Optional: Go to <a href="https://fontawesome.com/v5/search">https://fontawesome.com/v5/search</a> to find matching icons. We only support free icons. Format example: fas fa-hand-spock</p>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputPassword1">Path:</label>
+              <input type="text" class="form-control" name="path" placeholder="" required>
+              <p class="help-block">Required: The path of the URL. You will find that page under https://{your_auth_domain}/simplewiki/{name}.</p>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputPassword1">Group:</label>
+              <input type="text" class="form-control" name="group" placeholder="">
+              <p class="help-block">Optional: Do you only want to show this page to one group of people? Insert the group name here and only they will be able to see the post and all of it's sections.</p>
+            </div>
+            <button type="submit" name="confirm_create" value="0" class="btn btn-default">Cancel</button>
+            <div class="pull-right">
+              <button type="submit" name="confirm_create" value="1" class="btn btn-success">Create</button>
+            </div>
+          </form>
+        </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block extra_javascript %}
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}
