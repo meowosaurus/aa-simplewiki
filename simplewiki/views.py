@@ -6,6 +6,7 @@ from django.contrib.auth.models import Group
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.db.models import Q
 from .models import MenuItem, SectionItem
 
 ### Helper Functions ###
@@ -100,7 +101,8 @@ def search(request: WSGIRequest) -> HttpResponse:
 
     query = request.GET.get('query')
     if query:
-        searchResults = SectionItem.objects.filter(content__icontains=query)
+        searchResults = SectionItem.objects.filter(
+            Q(content__icontains=query) | Q(title__icontains=query))
         context.update({'oldQuery': query})
         context.update({'searchResults': searchResults})
 
@@ -206,7 +208,7 @@ def admin_pages(request: WSGIRequest) -> HttpResponse:
     create = request.GET.get('create')
     edit = request.GET.get('edit')
     delete = request.GET.get('delete')
-    
+
     if request.method == 'POST':
         if create:
             # if do create operation

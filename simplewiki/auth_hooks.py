@@ -44,4 +44,4 @@ def register_menu():
 def register_urls():
     """Register app urls"""
 
-    return UrlHook(urls, "simplewiki", r"^simplewiki/")
+    return UrlHook(urls, "simplewiki", r"^wiki/")
