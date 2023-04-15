@@ -1,7 +1,7 @@
 # SimpleWiki
 A simple wiki system for alliance auth. It supports multiple pages with different sections. Every page and every section can have their own icon.
 
-![Showcase](https://i.imgur.com/ALZZ7Bs.png)
+![Showcase](https://i.imgur.com/djlGGiw.png)
 
 ### Current Features
 * Create custom wiki pages with different sections
