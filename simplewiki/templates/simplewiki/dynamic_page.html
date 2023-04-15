@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load humanize %}
 {% load static %}
+{% load markdown2_filters %}
 
 {% block details %}
     {% for item in filtered_pages %}
@@ -13,7 +14,9 @@
             </div>
         </div>
         <div class="panel-body">
-            <p>{{ item.content|safe }}</p>
+            <p>
+                {{ item.content|commonmark|safe }}
+            </p>
         </div>
     </div>
     {% empty %}

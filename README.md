@@ -8,7 +8,7 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 
 * Create custom wiki pages with different sections
 * Add an icon next to menus or sections
-* Edit pages on the admin panel with HTML
+* Edit pages on the admin panel with [markdown](https://commonmark.org/help/)
 * Basic permission system:
   * Editor permissions can be added to single users or groups via the admin panel
   * Alliance Auth groups are synced to simplewiki: Certain pages can only be seen by a specific group
@@ -17,6 +17,7 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 
 * Add repo to pip
 * Add dropdown menues
+* Add search function
 * Add editor interface to create, edit and delete menus and sections
 * Add html editor without accessing admin panel
 * Extend permission system:
@@ -27,6 +28,8 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 * [Meowosaurus](https://github.com/meowosaurus)
 
 ## Installation
+
+* Pip requirements: `pip install commonmark`
 
 ### Alliance Auth Production
 

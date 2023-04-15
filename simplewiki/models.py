@@ -59,7 +59,7 @@ class SectionItem(models.Model):
                             help_text='Optional: Go to https://fontawesome.com/v5/search to find matching icons. We only support free icons. Format example: fas fa-hand-spock')
     content = models.TextField(blank=True, 
                                null=True,
-                               help_text='Optional: This will be displayed as your main content of the section. You can use HTML.')
+                               help_text='Optional: This will be displayed as your main content of the section. You can use markdown. See https://commonmark.org/help/ for references.')
 
     def __str__(self):
         return self.menu_path + ": " + self.title

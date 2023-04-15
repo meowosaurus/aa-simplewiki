@@ -83,6 +83,9 @@ def dynamic_menus(request, menu_name):
     else:
         return render(request, 'simplewiki/group_error.html', context)
 
+
+### Admin ###
+
 @login_required
 @permission_required("simplewiki.editor")
 def admin_menu(request: WSGIRequest) -> HttpResponse:
