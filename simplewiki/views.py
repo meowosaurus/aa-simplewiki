@@ -82,7 +82,22 @@ def dynamic_menus(request, menu_name):
         return render(request, 'simplewiki/dynamic_page.html', context)
     else:
         return render(request, 'simplewiki/group_error.html', context)
+    
+def search(request: WSGIRequest) -> HttpResponse:
+    """
+    Search Menu view
+    :param request:
+    :return:
+    """
 
+    context = genContext(request)
+
+    query = request.GET.get('query')
+    if query:
+        searchResults = SectionItem.objects.filter(content__icontains=query)
+        context.update({'searchResults': searchResults})
+
+    return render(request, "simplewiki/search.html", context)
 
 ### Admin ###
 

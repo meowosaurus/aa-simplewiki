@@ -5,12 +5,26 @@
 {% load markdown_filters %}
 
 {% block details %}
-    {% for item in filtered_pages %}
+<form class="form-inline" method="GET" action="{% url 'simplewiki:search' %}"></form>
+      <div class="input-group">
+        <input type="text" class="form-control" type="search" name="query" placeholder="Search for...">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="submit">
+            <i class="fas fa-search"></i>
+            Go!
+            </button>
+        </span>
+      </div>
+    </form>
+    <br />
+    {% for item in searchResults %}
     <div class="panel panel-primary">
         <div class="panel-heading">
             <div class="panel-title">
                 <i class="{{ item.icon }}"></i>
-                {{ item.title }}
+                <a href="{% url 'simplewiki:dynamic_menu' menu_name=item.menu_path %}">
+                    {{ item.title }}
+                </a>
             </div>
         </div>
         <div class="panel-body">
@@ -19,13 +33,7 @@
             </p>
         </div>
     </div>
-    {% empty %}
-    <div class="alert alert-warning" role="alert">
-        No wiki pages found. You can add them under Admin -> SimpleWiki -> Page Items.<br /><br />
-
-        If you created page items and they are not showing, please make sure your "menu name" is the same as the menu you want it to assign to.
-    </div>
-    {% endfor %}    
+    {% endfor %}
 {% endblock %}
 
 {% block extra_javascript %}

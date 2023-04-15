@@ -15,5 +15,5 @@ def cm_html(text):
 register = template.Library()
 
 # Make cm_html(text) available as 'commonmark' in templates
-register.filter('commonmark', cm_html)
+register.filter('markdown', cm_html)
 

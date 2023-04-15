@@ -12,12 +12,12 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 * Basic permission system:
   * Editor permissions can be added to single users or groups via the admin panel
   * Alliance Auth groups are synced to simplewiki: Certain pages can only be seen by a specific group
+* Search function: Search across all wiki menus and sections
 
 ### ToDo:
 
 * Add repo to pip
 * Add dropdown menues
-* Add search function
 * Add editor interface to create, edit and delete menus and sections
 * Add html editor without accessing admin panel
 * Extend permission system:
