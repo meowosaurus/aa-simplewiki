@@ -18,8 +18,7 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 ### ToDo:
 * Add repo to pip
 * Add dropdown menues
-* Add markdown editor without accessing admin panel
-* Add buttons for ediots to every section to edit or delete it
+* Add buttons for editors to every section to edit or delete it
 * Extend permission system:
   * Add support for having multiple groups accessing a page 
 
