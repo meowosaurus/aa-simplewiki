@@ -12,6 +12,7 @@ from django.utils.text import slugify
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied, ValidationError
 from django.utils.datastructures import MultiValueDictKeyError
 from django.db.models.deletion import ProtectedError
+import inspect
 
 from .models import MenuItem, SectionItem
 
@@ -40,6 +41,12 @@ def checkGroup(request, group):
     srp_group = Group.objects.get(name='srp')
 
     return srp_group in request.user.groups.all()
+
+def defaultExcep(context, e, frame):
+    context.update({'error_django': str(e)})
+    filename = inspect.getframeinfo(frame).filename
+    linenumber = inspect.getframeinfo(frame).lineno
+    context.update({'error_msg': 'Unknown error in {filename} in line {linenumber}'})
 
 ### User Views ###
 
@@ -121,6 +128,13 @@ def search(request: WSGIRequest) -> HttpResponse:
     except PermissionDenied as e:
         context.update({'error_msg': 'Unable to complete search: Do you have the right permissions to access this search?'})
         return render(request, 'simplewiki/error.html', context)
+    except Exception as e:
+        frame = inspect.currentframe()
+        context.update({'error_django': str(e)})
+        filename = inspect.getframeinfo(frame).filename
+        linenumber = inspect.getframeinfo(frame).lineno
+        context.update({'error_msg': 'Unknown error in ' + filename + ' in line ' + str(linenumber)})
+        return render(request, 'simplewiki/error.html', context)
 
     return render(request, "simplewiki/search.html", context)
 
@@ -156,8 +170,15 @@ def admin_menus(request: WSGIRequest) -> HttpResponse:
                             setattr(newMenu, key, int(request.POST[key]))
                         else:
                             setattr(newMenu, key, request.POST[key])
-                    except Exception as e:
+                    except (KeyError, ValueError, TypeError) as e:
                         context.update({'error_django': str(e)})
+                        return render(request, 'simplewiki/error.html', context)
+                    except Exception as e:
+                        frame = inspect.currentframe()
+                        context.update({'error_django': str(e)})
+                        filename = inspect.getframeinfo(frame).filename
+                        linenumber = inspect.getframeinfo(frame).lineno
+                        context.update({'error_msg': 'Unknown error in ' + filename + ' in line ' + str(linenumber)})
                         return render(request, 'simplewiki/error.html', context)
                     
                 # Taking the titel and converting it into a url suitable string
@@ -166,8 +187,15 @@ def admin_menus(request: WSGIRequest) -> HttpResponse:
                 # Save newMenu and check for errors
                 try:
                     newMenu.save()
-                except Exception as e:
+                except (IntegrityError, ValidationError) as e:
                     context.update({'error_django': str(e)})
+                    return render(request, 'simplewiki/error.html', context)
+                except Exception as e:
+                    frame = inspect.currentframe()
+                    context.update({'error_django': str(e)})
+                    filename = inspect.getframeinfo(frame).filename
+                    linenumber = inspect.getframeinfo(frame).lineno
+                    context.update({'error_msg': 'Unknown error in ' + filename + ' in line ' + str(linenumber)})
                     return render(request, 'simplewiki/error.html', context)
 
                 return redirect("simplewiki:admin_menus")
@@ -183,6 +211,13 @@ def admin_menus(request: WSGIRequest) -> HttpResponse:
                 except MenuItem.DoesNotExist as e:
                     context.update({'error_django': str(e)})
                     return render(request, 'simplewiki/error.html', context)
+                except Exception as e:
+                    frame = inspect.currentframe()
+                    context.update({'error_django': str(e)})
+                    filename = inspect.getframeinfo(frame).filename
+                    linenumber = inspect.getframeinfo(frame).lineno
+                    context.update({'error_msg': 'Unknown error in ' + filename + ' in line ' + str(linenumber)})
+                    return render(request, 'simplewiki/error.html', context)
 
                 # Fill selectedMenu with new variables and check for errors
                 keys = ['index', 'title', 'icon', 'group']
@@ -197,6 +232,13 @@ def admin_menus(request: WSGIRequest) -> HttpResponse:
                     except (KeyError, ValueError, TypeError) as e:
                         context.update({'error_django': str(e)})
                         return render(request, 'simplewiki/error.html', context)
+                    except Exception as e:
+                        frame = inspect.currentframe()
+                        context.update({'error_django': str(e)})
+                        filename = inspect.getframeinfo(frame).filename
+                        linenumber = inspect.getframeinfo(frame).lineno
+                        context.update({'error_msg': 'Unknown error in ' + filename + ' in line ' + str(linenumber)})
+                        return render(request, 'simplewiki/error.html', context)
                 
                 # Taking the titel and converting it into a url suitable string
                 selectedMenu.path = slugify(request.POST['title'])
@@ -206,6 +248,13 @@ def admin_menus(request: WSGIRequest) -> HttpResponse:
                     selectedMenu.save()
                 except (ValidationError, IntegrityError) as e:
                     context.update({'error_django': str(e)})
+                    return render(request, 'simplewiki/error.html', context)
+                except Exception as e:
+                    frame = inspect.currentframe()
+                    context.update({'error_django': str(e)})
+                    filename = inspect.getframeinfo(frame).filename
+                    linenumber = inspect.getframeinfo(frame).lineno
+                    context.update({'error_msg': 'Unknown error in ' + filename + ' in line ' + str(linenumber)})
                     return render(request, 'simplewiki/error.html', context)
                 
                 return redirect("simplewiki:admin_menus")
@@ -240,6 +289,13 @@ def admin_menus(request: WSGIRequest) -> HttpResponse:
             except MenuItem.DoesNotExist as e:
                 context.update({'error_django': str(e)})
                 return render(request, 'simplewiki/error.html', context)
+            except Exception as e:
+                frame = inspect.currentframe()
+                context.update({'error_django': str(e)})
+                filename = inspect.getframeinfo(frame).filename
+                linenumber = inspect.getframeinfo(frame).lineno
+                context.update({'error_msg': 'Unknown error in ' + filename + ' in line ' + str(linenumber)})
+                return render(request, 'simplewiki/error.html', context)
         elif delete:
             try:
                 selectedMenu = MenuItem.objects.get(path=delete)
@@ -247,6 +303,13 @@ def admin_menus(request: WSGIRequest) -> HttpResponse:
                 context.update({'user_action': 'delete'})
             except MenuItem.DoesNotExist as e:
                 context.update({'error_django': str(e)})
+                return render(request, 'simplewiki/error.html', context)
+            except Exception as e:
+                frame = inspect.currentframe()
+                context.update({'error_django': str(e)})
+                filename = inspect.getframeinfo(frame).filename
+                linenumber = inspect.getframeinfo(frame).lineno
+                context.update({'error_msg': 'Unknown error in ' + filename + ' in line ' + str(linenumber)})
                 return render(request, 'simplewiki/error.html', context)
         else:
             context.update({'user_action': 'none'})
