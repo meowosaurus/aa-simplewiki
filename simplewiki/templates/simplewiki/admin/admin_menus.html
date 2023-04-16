@@ -29,7 +29,7 @@
                   <tr>
                     <th width="25%">Index</th>
                     <th width="25%">Menu Title</th>
-                    <th width="25%">Path</th>
+                    <th width="25%">URL</th>
                     <th width="25%">Action</th>
                   </tr>
                 </thead>
@@ -43,7 +43,7 @@
                       </td>
                       <td>
                         <a href="{% url 'simplewiki:dynamic_menu' menu_name=menu_item.path %}">
-                          {{ menu_item.path }}
+                          {% url 'simplewiki:dynamic_menu' menu_name=menu_item.path %}
                         </a>
                       </td>
                       <td>

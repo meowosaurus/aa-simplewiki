@@ -43,7 +43,7 @@
                     </td>
                     <td>
                         <a href="{% url 'simplewiki:dynamic_menu' menu_name=section_item.menu_path %}">
-                            {{ section_item.menu_path }}
+                          {% url 'simplewiki:dynamic_menu' menu_name=section_item.menu_path %}
                         </a>
                     </td>
                     <td>
@@ -69,8 +69,12 @@
           <p class="help-block">Required: This title will be displayed above the content.</p>
         </div>
         <div class="form-group">
-          <label for="exampleInputPassword1">Menu Path:</label>
-          <input type="text" class="form-control" name="menu_path" placeholder="">
+          <label for="menuPathSelect">Menu:</label>
+          <select class="form-control" name="menu_path" id="menuPathSelect">
+            {% for menu_item in menu_items %}
+              <option value="{{ menu_item.path }}">{{ menu_item.title }}</option>
+            {% endfor %}
+          </select>
           <p class="help-block">Required: Menu under which this section should be displayed.</p>
         </div>
         <div class="form-group">
@@ -85,7 +89,7 @@
         </div>
         <div class="form-group">
           <label for="exampleInputPassword1">Content:</label>
-          <input type="text" class="form-control" name="content" placeholder="">
+          <textarea class="form-control" name="content" id="contentInput" rows="10"></textarea>
           <p class="help-block">Optional: This will be displayed as your main content of the section. You can use markdown. See <a href="https://commonmark.org/help/">https://commonmark.org/help/</a> for references.</p>
         </div>
         <button type="submit" name="confirm_create" value="0" class="btn btn-default">Cancel</button>
@@ -102,8 +106,12 @@
           <p class="help-block">Required: This title will be displayed above the content.</p>
         </div>
         <div class="form-group">
-          <label for="exampleInputPassword1">Menu Path:</label>
-          <input type="text" class="form-control" name="menu_path" id="menuPathInput" placeholder="{{ selectedSection.menu_path }}">
+          <label for="menuPathSelect">Menu:</label>
+          <select class="form-control" name="menu_path" id="menuPathSelect">
+            {% for menu_item in menu_items %}
+              <option value="{{ menu_item.path }}">{{ menu_item.title }}</option>
+            {% endfor %}
+          </select>
           <p class="help-block">Required: Menu under which this section should be displayed.</p>
         </div>
         <div class="form-group">
@@ -118,8 +126,7 @@
         </div>
         <div class="form-group">
           <label for="exampleInputPassword1">Content:</label>
-          <!--<input type="text" class="form-control" name="content" id="contentInput" placeholder="{{ selectedSection.content }}">-->
-          <textarea class="form-control" name="content" id="contentInput" rows="5"></textarea>
+          <textarea class="form-control" name="content" id="contentInput" rows="10"></textarea>
           <p class="help-block">Optional: This will be displayed as your main content of the section. You can use markdown. See <a href="https://commonmark.org/help/">https://commonmark.org/help/</a> for references.</p>
         </div>
         <button type="submit" name="confirm_edit" value="0" class="btn btn-default">Cancel</button>
@@ -149,6 +156,14 @@
 {% block extra_javascript %}
 {% if user_action == 'edit' %}
 <script>
+  /*var selectElement = document.getElementById("menuPathSelect");
+  for (var i = 0; i < selectElement.options.length; i++) {
+    if (selectElement.options[i].value === "{{ selected_menu_path|escapejs }}") {
+      selectElement.options[i].selected = true;
+      break;
+    }
+  }*/
+
   document.getElementById("titleInput").value = '{{ selectedSection.title|escapejs }}';
   document.getElementById("menuPathInput").value = '{{ selectedSection.menu_path|escapejs }}';
   document.getElementById("indexInput").value = '{{ selecselectedSectiontedMenu.index|escapejs }}';
