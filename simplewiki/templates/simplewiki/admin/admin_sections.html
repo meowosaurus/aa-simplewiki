@@ -140,7 +140,7 @@
         </div>
         <div class="form-group">
           <label for="exampleInputPassword1">Content:</label>
-          <textarea class="form-control" name="content" id="contentInput" rows="10"></textarea>
+          <textarea class="form-control" name="content" id="contentInput" rows="10">{{ selectedSection.content|safe }}</textarea>
           <p class="help-block">Optional: This will be displayed as your main content of the section. You can use markdown. See <a href="https://commonmark.org/help/">https://commonmark.org/help/</a> for references.</p>
         </div>
         <button type="submit" name="confirm_edit" value="0" class="btn btn-default">Cancel</button>
@@ -178,11 +178,22 @@
     }
   }*/
 
+  document.addEventListener('DOMContentLoaded', function() {
+        const menuPathSelect = document.getElementById('menuPathSelect');
+        const selectedPath = "{{ selectedSection.menu_path }}";
+
+        for (let i = 0; i < menuPathSelect.options.length; i++) {
+            if (menuPathSelect.options[i].value == selectedPath) {
+                menuPathSelect.options[i].selected = true;
+                break;
+            }
+        }
+    });
+
   document.getElementById("titleInput").value = '{{ selectedSection.title|escapejs }}';
   document.getElementById("menuPathInput").value = '{{ selectedSection.menu_path|escapejs }}';
   document.getElementById("indexInput").value = '{{ selecselectedSectiontedMenu.index|escapejs }}';
   document.getElementById("iconInput").value = '{{ selectedSection.icon|escapejs }}';
-  document.getElementById("contentInput").value = '{{ selectedSection.content|escapejs }}';
 </script>
 {% endif %}
 {% endblock %}
