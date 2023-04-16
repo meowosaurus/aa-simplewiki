@@ -30,18 +30,16 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 ### Alliance Auth Production
 
 #### Non-Docker Version
-1.) Install `pip install commonmark`
+1.) Install the pip package via `pip install git+https://github.com/meowosaurus/aa-simplewiki`
 
-2.) Install the pip package via `pip install git+https://github.com/meowosaurus/aa-simplewiki`
+2.) Add `simplewiki` to your `INSTALLED_APPS` in your projects `local.py`
 
-3.) Add `simplewiki` to your `INSTALLED_APPS` in your projects `local.py`
-
-4.) Make migrations and migrate, then restart your server
+3.) Make migrations and migrate, then restart your server
 
 #### Docker Version
 1.) Please make sure you followed the custom docker-image tutorial [here](https://gitlab.com/allianceauth/allianceauth/-/tree/master/docker#using-a-custom-docker-image): 
 
-2.) Edit your `conf/requirements` and add the following lines `git+https://github.com/meowosaurus/aa-simplewiki` and `commonmark` Important: Please make sure you add both!
+2.) Edit your `conf/requirements` and add the following lines `git+https://github.com/meowosaurus/aa-simplewiki`
 
 3.) Add `simplewiki` to your `INSTALLED_APPS` in your projects `local.py`
 
