@@ -7,6 +7,9 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.db.models import Q
+from django.db import IntegrityError
+from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
+from django.utils.datastructures import MultiValueDictKeyError
 from .models import MenuItem, SectionItem
 
 ### Helper Functions ###
@@ -86,7 +89,9 @@ def dynamic_menus(request, menu_name):
     if not requestedMenu.group or requestedMenu.group in list(request.user.groups.values_list('name', flat=True)):
         return render(request, 'simplewiki/dynamic_page.html', context)
     else:
-        return render(request, 'simplewiki/group_error.html', context)
+        error_message = "You don\'t have the permissions to access this page. You need to be in the <b>" + requestedMenu.group + "</b> group on auth."
+        context.update({'error_msg': error_message})
+        return render(request, 'simplewiki/error.html', context)
 
 @login_required
 @permission_required("simplewiki.basic_access") 
@@ -99,12 +104,16 @@ def search(request: WSGIRequest) -> HttpResponse:
 
     context = genContext(request)
 
-    query = request.GET.get('query')
-    if query:
-        searchResults = SectionItem.objects.filter(
-            Q(content__icontains=query) | Q(title__icontains=query))
-        context.update({'oldQuery': query})
-        context.update({'searchResults': searchResults})
+    try:
+        query = request.GET.get('query')
+        if query:
+            searchResults = SectionItem.objects.filter(
+                Q(content__icontains=query) | Q(title__icontains=query))
+            context.update({'oldQuery': query})
+            context.update({'searchResults': searchResults})
+    except PermissionDenied as e:
+        context.update({'error_msg': 'Unable to complete search: Do you have the right permissions to access this search?'})
+        return render(request, 'simplewiki/error.html', context)
 
     return render(request, "simplewiki/search.html", context)
 
@@ -112,7 +121,7 @@ def search(request: WSGIRequest) -> HttpResponse:
 
 @login_required
 @permission_required("simplewiki.editor")
-def admin_menu(request: WSGIRequest) -> HttpResponse:
+def admin_menus(request: WSGIRequest) -> HttpResponse:
     """
     Admin Menu view
     :param request:
@@ -132,13 +141,25 @@ def admin_menu(request: WSGIRequest) -> HttpResponse:
             if request.POST['confirm_create'] == '1':
                 newMenu = MenuItem()
 
-                newMenu.index = request.POST['index']
-                newMenu.title = request.POST['title']
-                newMenu.icon = request.POST['icon']
-                newMenu.path = request.POST['path']
-                newMenu.group = request.POST['group']
+                # Fill newMenu with variables and check for errors
+                keys = ['index', 'title', 'icon', 'path', 'group']
+                for key in keys:
+                    try:
+                        if key == 'index':
+                            setattr(newMenu, key, int(request.POST[key]))
+                        else:
+                            setattr(newMenu, key, request.POST[key])
+                    except Exception as e:
+                        context.update({'error_msg': 'Unable to save new menu: Does a menu with a similar name already exist? Is index a number? '})
+                        return render(request, 'simplewiki/error.html', context)
+                
+                # Save newMenu and check for errors
+                try:
+                    newMenu.save()
+                except Exception as e:
+                    context.update({'error_msg': 'Unable to save new menu: Does a menu with a similar name already exist?'})
+                    return render(request, 'simplewiki/error.html', context)
 
-                newMenu.save()
                 return redirect("simplewiki:admin_menus")
             else:
                 return redirect("simplewiki:admin_menus")
@@ -147,21 +168,33 @@ def admin_menu(request: WSGIRequest) -> HttpResponse:
         if edit:
             # If do edit operation
             if request.POST['confirm_edit'] == '1':
-                selectedMenu = MenuItem.objects.get(path=edit)
+                try:
+                    selectedMenu = MenuItem.objects.get(path=edit)
+                except Exception as e:
+                    context.update({'error_msg': 'Unable to save the menu: Does a menu with a similar name already exist? Is index a number? '})
+                    return render(request, 'simplewiki/error.html', context)
 
-                # Check if user changed a value. If they did, save the new one.
-                if request.POST['index']:
-                    selectedMenu.index = request.POST['index']
-                if request.POST['title']:
-                    selectedMenu.title = request.POST['title']
-                if request.POST['icon']:
-                    selectedMenu.icon = request.POST['icon']
-                if request.POST['path']:
-                    selectedMenu.path = request.POST['path']
-                if request.POST['group']:
-                    selectedMenu.group = request.POST['group']
-
-                selectedMenu.save()
+                # Fill selectedMenu with new variables and check for errors
+                keys = ['index', 'title', 'icon', 'path', 'content']
+                for key in keys:
+                    try: 
+                        # Check if user changed a value. If they did, save the new one.
+                        if request.POST[key]:
+                            if key == 'index':
+                                setattr(selectedMenu, key, int(request.POST[key]))
+                            else:
+                                setattr(selectedMenu, key, request.POST[key])
+                    except Exception as e:
+                        context.update({'error_msg': 'Unable to save the menu: Does a menu with a similar name already exist? Is index a number? '})
+                        return render(request, 'simplewiki/error.html', context)
+                
+                # Save selectedMenu and check for errors
+                try:
+                    selectedMenu.save()
+                except Exception as e:
+                    context.update({'error_msg': 'Unable to save new menu: Does a menu with a similar name already exist? Is index a number? '})
+                    return render(request, 'simplewiki/error.html', context)
+                
                 return redirect("simplewiki:admin_menus")
             # If cancel edit operation
             elif request.POST['confirm_edit'] == '0':
@@ -171,8 +204,13 @@ def admin_menu(request: WSGIRequest) -> HttpResponse:
         if delete:
             # If do delete operation
             if request.POST['confirm_delete'] == '1':
-                selectedMenu = MenuItem.objects.get(path=delete)
-                selectedMenu.delete()
+                try:
+                    selectedMenu = MenuItem.objects.get(path=delete)
+                    selectedMenu.delete()
+                except Exception as e:
+                    context.update({'error_msg': 'Unable to save new menu: Does a menu with a similar name already exist? Is index a number? '})
+                    return render(request, 'simplewiki/error.html', context)
+                
                 return redirect("simplewiki:admin_menus")
             # If cancel delete operation
             elif request.POST['confirm_delete'] == '0':
@@ -182,13 +220,21 @@ def admin_menu(request: WSGIRequest) -> HttpResponse:
         if create:
             context.update({'user_action': 'create'})
         elif edit:
-            selectedMenu = MenuItem.objects.get(path=edit)
-            context.update({'selectedMenu': selectedMenu})
-            context.update({'user_action': 'edit'})
+            try:
+                selectedMenu = MenuItem.objects.get(path=edit)
+                context.update({'selectedMenu': selectedMenu})
+                context.update({'user_action': 'edit'})
+            except Exception as e:
+                context.update({'error_msg': 'Unable to save new menu: Does a menu with a similar name already exist? Is index a number? '})
+                return render(request, 'simplewiki/error.html', context)
         elif delete:
-            selectedMenu = MenuItem.objects.get(path=delete)
-            context.update({'selectedMenu': selectedMenu})
-            context.update({'user_action': 'delete'})
+            try:
+                selectedMenu = MenuItem.objects.get(path=delete)
+                context.update({'selectedMenu': selectedMenu})
+                context.update({'user_action': 'delete'})
+            except Exception as e:
+                context.update({'error_msg': 'Unable to save new menu: Does a menu with a similar name already exist? Is index a number? '})
+                return render(request, 'simplewiki/error.html', context)
         else:
             context.update({'user_action': 'none'})
 
@@ -196,9 +242,9 @@ def admin_menu(request: WSGIRequest) -> HttpResponse:
 
 @login_required
 @permission_required("simplewiki.editor")
-def admin_pages(request: WSGIRequest) -> HttpResponse:
+def admin_sections(request: WSGIRequest) -> HttpResponse:
     """
-    Admin pages view
+    Admin sections view
     :param request:
     :return:
     """
@@ -215,13 +261,22 @@ def admin_pages(request: WSGIRequest) -> HttpResponse:
             if request.POST['confirm_create'] == '1':
                 newSectionItem = SectionItem()
 
-                newSectionItem.title = request.POST['title']
-                newSectionItem.menu_path = request.POST['menu_path']
-                newSectionItem.index = request.POST['index']
-                newSectionItem.icon = request.POST['icon']
-                newSectionItem.content = request.POST['content']
+                try:
+                    newSectionItem.title = request.POST['title']
+                    newSectionItem.menu_path = request.POST['menu_path']
+                    newSectionItem.index = request.POST['index']
+                    newSectionItem.icon = request.POST['icon']
+                    newSectionItem.content = request.POST['content']
+                except Exception as e:
+                    context.update({'error_msg': 'Unable to save new menu: Does a menu with a similar name already exist? Is index a number? '})
+                    return render(request, 'simplewiki/error.html', context)
 
-                newSectionItem.save()
+                try:
+                    newSectionItem.save()
+                except Exception as e:
+                    context.update({'error_msg': 'Unable to save new menu: Does a menu with a similar name already exist? Is index a number? '})
+                    return render(request, 'simplewiki/error.html', context)
+                
                 return redirect('simplewiki:admin_sections')
             # if cancel create operation
             else:
@@ -229,21 +284,27 @@ def admin_pages(request: WSGIRequest) -> HttpResponse:
         if edit:
             # if do edit operation
             if request.POST['confirm_edit'] == '1':
-                selectedSection = SectionItem.objects.get(title=edit)
+                try:
+                    selectedSection = SectionItem.objects.get(title=edit)
+                except Exception as e:
+                    context.update({'error_msg': 'Unable to save new menu: Does a menu with a similar name already exist? Is index a number? '})
+                    return render(request, 'simplewiki/error.html', context)
 
                 # Check if user changed a value. If they did, save the new one.
-                if request.POST['title']:
-                    selectedSection.title = request.POST['title']
-                if request.POST['menu_path']:
-                    selectedSection.menu_path = request.POST['menu_path']
-                if request.POST['index']:
-                    selectedSection.index = request.POST['index']
-                if request.POST['icon']:
-                    selectedSection.icon = request.POST['icon']
-                if request.POST['content']:
-                    selectedSection.content = request.POST['content']
+                keys = ['title', 'menu_path', 'index', 'icon', 'content']
+                for key in keys:
+                    try:
+                        if request.POST[key]:
+                            setattr(selectedSection, key, request.POST[key])
+                    except Exception as e:
+                        context.update({'error_msg': 'Unable to save new menu: Does a menu with a similar name already exist? Is index a number? '})
+                        return render(request, 'simplewiki/error.html', context)
 
-                selectedSection.save()
+                try:
+                    selectedSection.save()
+                except Exception as e:
+                    context.update({'error_msg': 'Unable to save new menu: Does a menu with a similar name already exist? Is index a number? '})
+                    return render(request, 'simplewiki/error.html', context)
 
                 return redirect('simplewiki:admin_sections')
             # if cancel edit operation
@@ -252,8 +313,12 @@ def admin_pages(request: WSGIRequest) -> HttpResponse:
         if delete:
             # if do delete operation
             if request.POST['confirm_delete'] == '1':
-                selectedSection = SectionItem.objects.get(title=delete)
-                selectedSection.delete()
+                try:
+                    selectedSection = SectionItem.objects.get(title=delete)
+                    selectedSection.delete()
+                except Exception as e:
+                    context.update({'error_msg': 'Unable to save new menu: Does a menu with a similar name already exist? Is index a number? '})
+                    return render(request, 'simplewiki/error.html', context)
                 return redirect('simplewiki:admin_sections')
             # if cancel delete operation
             elif request.POST['confirm_delete'] == '0':
@@ -264,12 +329,20 @@ def admin_pages(request: WSGIRequest) -> HttpResponse:
         if create:
             context.update({'user_action': 'create'})
         elif edit:
-            selectedSection = SectionItem.objects.get(title=edit)
-            context.update({'selectedSection': selectedSection})
+            try:
+                selectedSection = SectionItem.objects.get(title=edit)
+                context.update({'selectedSection': selectedSection})
+            except Exception as e:
+                context.update({'error_msg': 'Unable to save new menu: Does a menu with a similar name already exist? Is index a number? '})
+                return render(request, 'simplewiki/error.html', context)
             context.update({'user_action': 'edit'})
         elif delete:
-            selectedSection = SectionItem.objects.get(title=delete)
-            context.update({'selectedSection': selectedSection})
+            try:
+                selectedSection = SectionItem.objects.get(title=delete)
+                context.update({'selectedSection': selectedSection})
+            except Exception as e:
+                context.update({'error_msg': 'Unable to save new menu: Does a menu with a similar name already exist? Is index a number? '})
+                return render(request, 'simplewiki/error.html', context)
             context.update({'user_action': 'delete'})
         else:
             context.update({'user_action': 'none'})

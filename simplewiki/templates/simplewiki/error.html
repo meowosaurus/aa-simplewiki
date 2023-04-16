@@ -5,7 +5,9 @@
 
 {% block details %}
     <div class="alert alert-danger" role="alert">
-        You don't have the permissions to access this page. You need to be in the right group on auth. 
+        <h4>Error {{ error_code }}</h4>
+        <br />
+        {{ error_msg|safe }}
     </div>
 {% endblock %}
 
