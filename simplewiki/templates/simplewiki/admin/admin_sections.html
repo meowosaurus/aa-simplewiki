@@ -61,6 +61,13 @@
             </tbody>
           </table>
       {% elif user_action == 'create' %}
+      <div class="text-center h4">
+        Create new section <i class="fas fa-thumbs-up"></i>
+        <br />
+        <br />
+        <i class="{{ selectedMenu.icon }}"></i> {{ selectedMenu.title }}
+      </div>
+      <hr>
       <form method="post">
         {% csrf_token %}
         <div class="form-group">
@@ -98,6 +105,13 @@
         </div>
       </form>
       {% elif user_action == 'edit' %}
+      <div class="text-center h4">
+        Edit section
+        <br />
+        <br />
+        <i class="{{ selectedSection.icon }}"></i> {{ selectedSection.title }}
+      </div>
+      <hr>
       <form method="post">
         {% csrf_token %}
         <div class="form-group">
