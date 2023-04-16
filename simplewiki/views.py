@@ -10,6 +10,7 @@ from django.db.models import Q
 from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.utils.datastructures import MultiValueDictKeyError
+
 from .models import MenuItem, SectionItem
 
 ### Helper Functions ###
@@ -49,6 +50,8 @@ def index(request: WSGIRequest) -> HttpResponse:
     :return:
     """
 
+    context = genContext(request)
+
     menu_items = MenuItem.objects.all()
 
     # Show the first wiki page 
@@ -56,7 +59,9 @@ def index(request: WSGIRequest) -> HttpResponse:
         return redirect('simplewiki:dynamic_menu', menu_items.order_by('index').first())
     # Show a default "create your first page.." error page
     else:
-        return render(request, "simplewiki/index.html", genContext(request))
+        error_message = "So far you didn't create any menus. Please create one under Admin -> Menus"
+        context.update({'error_msg': error_message})
+        return render(request, "simplewiki/error.html", context)
 
 @login_required
 @permission_required("simplewiki.basic_access")
@@ -150,14 +155,14 @@ def admin_menus(request: WSGIRequest) -> HttpResponse:
                         else:
                             setattr(newMenu, key, request.POST[key])
                     except Exception as e:
-                        context.update({'error_msg': 'Unable to save new menu: Does a menu with a similar name already exist? Is index a number? '})
+                        context.update({'error_django': str(e)})
                         return render(request, 'simplewiki/error.html', context)
                 
                 # Save newMenu and check for errors
                 try:
                     newMenu.save()
                 except Exception as e:
-                    context.update({'error_msg': 'Unable to save new menu: Does a menu with a similar name already exist?'})
+                    context.update({'error_django': str(e)})
                     return render(request, 'simplewiki/error.html', context)
 
                 return redirect("simplewiki:admin_menus")
@@ -171,7 +176,7 @@ def admin_menus(request: WSGIRequest) -> HttpResponse:
                 try:
                     selectedMenu = MenuItem.objects.get(path=edit)
                 except Exception as e:
-                    context.update({'error_msg': 'Unable to save the menu: Does a menu with a similar name already exist? Is index a number? '})
+                    context.update({'error_django': str(e)})
                     return render(request, 'simplewiki/error.html', context)
 
                 # Fill selectedMenu with new variables and check for errors
@@ -185,14 +190,14 @@ def admin_menus(request: WSGIRequest) -> HttpResponse:
                             else:
                                 setattr(selectedMenu, key, request.POST[key])
                     except Exception as e:
-                        context.update({'error_msg': 'Unable to save the menu: Does a menu with a similar name already exist? Is index a number? '})
+                        context.update({'error_django': str(e)})
                         return render(request, 'simplewiki/error.html', context)
                 
                 # Save selectedMenu and check for errors
                 try:
                     selectedMenu.save()
                 except Exception as e:
-                    context.update({'error_msg': 'Unable to save new menu: Does a menu with a similar name already exist? Is index a number? '})
+                    context.update({'error_django': str(e)})
                     return render(request, 'simplewiki/error.html', context)
                 
                 return redirect("simplewiki:admin_menus")
@@ -208,7 +213,7 @@ def admin_menus(request: WSGIRequest) -> HttpResponse:
                     selectedMenu = MenuItem.objects.get(path=delete)
                     selectedMenu.delete()
                 except Exception as e:
-                    context.update({'error_msg': 'Unable to save new menu: Does a menu with a similar name already exist? Is index a number? '})
+                    context.update({'error_django': str(e)})
                     return render(request, 'simplewiki/error.html', context)
                 
                 return redirect("simplewiki:admin_menus")
@@ -225,7 +230,7 @@ def admin_menus(request: WSGIRequest) -> HttpResponse:
                 context.update({'selectedMenu': selectedMenu})
                 context.update({'user_action': 'edit'})
             except Exception as e:
-                context.update({'error_msg': 'Unable to save new menu: Does a menu with a similar name already exist? Is index a number? '})
+                context.update({'error_django': str(e)})
                 return render(request, 'simplewiki/error.html', context)
         elif delete:
             try:
@@ -233,7 +238,7 @@ def admin_menus(request: WSGIRequest) -> HttpResponse:
                 context.update({'selectedMenu': selectedMenu})
                 context.update({'user_action': 'delete'})
             except Exception as e:
-                context.update({'error_msg': 'Unable to save new menu: Does a menu with a similar name already exist? Is index a number? '})
+                context.update({'error_django': str(e)})
                 return render(request, 'simplewiki/error.html', context)
         else:
             context.update({'user_action': 'none'})
@@ -250,6 +255,8 @@ def admin_sections(request: WSGIRequest) -> HttpResponse:
     """
 
     context = genContext(request)
+
+    #return admin_section_view(request, context)
 
     create = request.GET.get('create')
     edit = request.GET.get('edit')
@@ -268,13 +275,13 @@ def admin_sections(request: WSGIRequest) -> HttpResponse:
                     newSectionItem.icon = request.POST['icon']
                     newSectionItem.content = request.POST['content']
                 except Exception as e:
-                    context.update({'error_msg': 'Unable to save new menu: Does a menu with a similar name already exist? Is index a number? '})
+                    context.update({'error_django': str(e)})
                     return render(request, 'simplewiki/error.html', context)
 
                 try:
                     newSectionItem.save()
                 except Exception as e:
-                    context.update({'error_msg': 'Unable to save new menu: Does a menu with a similar name already exist? Is index a number? '})
+                    context.update({'error_django': str(e)})
                     return render(request, 'simplewiki/error.html', context)
                 
                 return redirect('simplewiki:admin_sections')
@@ -287,7 +294,7 @@ def admin_sections(request: WSGIRequest) -> HttpResponse:
                 try:
                     selectedSection = SectionItem.objects.get(title=edit)
                 except Exception as e:
-                    context.update({'error_msg': 'Unable to save new menu: Does a menu with a similar name already exist? Is index a number? '})
+                    context.update({'error_django': str(e)})
                     return render(request, 'simplewiki/error.html', context)
 
                 # Check if user changed a value. If they did, save the new one.
@@ -297,13 +304,13 @@ def admin_sections(request: WSGIRequest) -> HttpResponse:
                         if request.POST[key]:
                             setattr(selectedSection, key, request.POST[key])
                     except Exception as e:
-                        context.update({'error_msg': 'Unable to save new menu: Does a menu with a similar name already exist? Is index a number? '})
+                        context.update({'error_django': str(e)})
                         return render(request, 'simplewiki/error.html', context)
 
                 try:
                     selectedSection.save()
                 except Exception as e:
-                    context.update({'error_msg': 'Unable to save new menu: Does a menu with a similar name already exist? Is index a number? '})
+                    context.update({'error_django': str(e)})
                     return render(request, 'simplewiki/error.html', context)
 
                 return redirect('simplewiki:admin_sections')
@@ -317,7 +324,7 @@ def admin_sections(request: WSGIRequest) -> HttpResponse:
                     selectedSection = SectionItem.objects.get(title=delete)
                     selectedSection.delete()
                 except Exception as e:
-                    context.update({'error_msg': 'Unable to save new menu: Does a menu with a similar name already exist? Is index a number? '})
+                    context.update({'error_django': str(e)})
                     return render(request, 'simplewiki/error.html', context)
                 return redirect('simplewiki:admin_sections')
             # if cancel delete operation
@@ -333,7 +340,7 @@ def admin_sections(request: WSGIRequest) -> HttpResponse:
                 selectedSection = SectionItem.objects.get(title=edit)
                 context.update({'selectedSection': selectedSection})
             except Exception as e:
-                context.update({'error_msg': 'Unable to save new menu: Does a menu with a similar name already exist? Is index a number? '})
+                context.update({'error_django': str(e)})
                 return render(request, 'simplewiki/error.html', context)
             context.update({'user_action': 'edit'})
         elif delete:
@@ -341,7 +348,7 @@ def admin_sections(request: WSGIRequest) -> HttpResponse:
                 selectedSection = SectionItem.objects.get(title=delete)
                 context.update({'selectedSection': selectedSection})
             except Exception as e:
-                context.update({'error_msg': 'Unable to save new menu: Does a menu with a similar name already exist? Is index a number? '})
+                context.update({'error_django': str(e)})
                 return render(request, 'simplewiki/error.html', context)
             context.update({'user_action': 'delete'})
         else:

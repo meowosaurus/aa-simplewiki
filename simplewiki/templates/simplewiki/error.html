@@ -7,7 +7,15 @@
     <div class="alert alert-danger" role="alert">
         <h4>Error {{ error_code }}</h4>
         <br />
-        {{ error_msg|safe }}
+        {% if error_msg %}
+            {{ error_msg|safe }}
+        {% endif %} 
+        {% if error_msg and error_django %}
+            <br />
+        {% endif %}
+        {% if error_django %}
+            Django error: {{ error_django|safe }}
+        {% endif %}
     </div>
 {% endblock %}
 

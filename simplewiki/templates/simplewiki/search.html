@@ -7,7 +7,7 @@
 {% block details %}
 <form method="GET" action="{% url 'simplewiki:search' %}">
     <div class="input-group">
-      <input type="text" class="form-control" type="search" name="query" placeholder="{{ oldQuery|default:'Search..' }}" id="searchInput" style="width: 100%;">
+      <input type="text" class="form-control" type="search" name="query" placeholder="Search.." id="searchInput" style="width: 100%;">
       <span class="input-group-btn">
         <button class="btn btn-default" type="submit">
           <i class="fas fa-search"></i>
@@ -43,6 +43,11 @@
 {% endblock %}
 
 {% block extra_javascript %}
+{% if oldQuery %}
+    <script>
+        document.getElementById("searchInput").value = '{{ oldQuery|escapejs }}';
+    </script>
+{% endif %}
 {% endblock %}
 
 {% block extra_script %}

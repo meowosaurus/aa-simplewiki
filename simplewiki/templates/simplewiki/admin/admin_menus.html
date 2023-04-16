@@ -110,6 +110,15 @@
 {% endblock %}
 
 {% block extra_javascript %}
+{% if user_action == 'edit' %}
+<script>
+  document.getElementById("indexInput").value = '{{ selectedMenu.index|escapejs }}';
+  document.getElementById("titleInput").value = '{{ selectedMenu.title|escapejs }}';
+  document.getElementById("iconInput").value = '{{ selectedMenu.icon|escapejs }}';
+  document.getElementById("pathInput").value = '{{ selectedMenu.path|escapejs }}';
+  document.getElementById("groupInput").value = '{{ selectedMenu.group|escapejs }}';
+</script>
+{% endif %}
 {% endblock %}
 
 {% block extra_script %}

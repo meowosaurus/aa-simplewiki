@@ -98,27 +98,28 @@
         {% csrf_token %}
         <div class="form-group">
           <label for="exampleInputEmail1">Title:</label>
-          <input type="text" class="form-control" name="title" placeholder="{{ selectedSection.title }}">
+          <input type="text" class="form-control" name="title" id="titleInput" placeholder="{{ selectedSection.title }}">
           <p class="help-block">Required: This title will be displayed above the content.</p>
         </div>
         <div class="form-group">
           <label for="exampleInputPassword1">Menu Path:</label>
-          <input type="text" class="form-control" name="menu_path" placeholder="{{ selectedSection.menu_path }}">
+          <input type="text" class="form-control" name="menu_path" id="menuPathInput" placeholder="{{ selectedSection.menu_path }}">
           <p class="help-block">Required: Menu under which this section should be displayed.</p>
         </div>
         <div class="form-group">
           <label for="exampleInputPassword1">Index:</label>
-          <input type="text" class="form-control" name="index" placeholder="{{ selectedSection.index }}">
+          <input type="text" class="form-control" name="index" id="indexInput" placeholder="{{ selectedSection.index }}">
           <p class="help-block">Required: The entire wiki page is sorted by this index. The lower the value, the further to the top is the section.</p>
         </div>
         <div class="form-group">
           <label for="exampleInputPassword1">Icon:</label>
-          <input type="text" class="form-control" name="icon" placeholder="{{ selectedSection.icon }}">
+          <input type="text" class="form-control" name="icon" id="iconInput" placeholder="{{ selectedSection.icon }}">
           <p class="help-block">Optional: Go to <a href="https://fontawesome.com/v5/search">https://fontawesome.com/v5/search</a> to find matching icons. We only support free icons. Format example: fas fa-hand-spock</p>
         </div>
         <div class="form-group">
           <label for="exampleInputPassword1">Content:</label>
-          <input type="text" class="form-control" name="content" placeholder="{{ selectedSection.content }}">
+          <!--<input type="text" class="form-control" name="content" id="contentInput" placeholder="{{ selectedSection.content }}">-->
+          <textarea class="form-control" name="content" id="contentInput" rows="5"></textarea>
           <p class="help-block">Optional: This will be displayed as your main content of the section. You can use markdown. See <a href="https://commonmark.org/help/">https://commonmark.org/help/</a> for references.</p>
         </div>
         <button type="submit" name="confirm_edit" value="0" class="btn btn-default">Cancel</button>
@@ -146,6 +147,15 @@
 {% endblock %}
 
 {% block extra_javascript %}
+{% if user_action == 'edit' %}
+<script>
+  document.getElementById("titleInput").value = '{{ selectedSection.title|escapejs }}';
+  document.getElementById("menuPathInput").value = '{{ selectedSection.menu_path|escapejs }}';
+  document.getElementById("indexInput").value = '{{ selecselectedSectiontedMenu.index|escapejs }}';
+  document.getElementById("iconInput").value = '{{ selectedSection.icon|escapejs }}';
+  document.getElementById("contentInput").value = '{{ selectedSection.content|escapejs }}';
+</script>
+{% endif %}
 {% endblock %}
 
 {% block extra_script %}
