@@ -16,7 +16,7 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
   * Non-superadmin users can create, edit and delete custom sections (editor)
 
 ### ToDo:
-* Add repo to pip
+* Add repo to PyPi
 * Add dropdown menues
 * Add buttons for editors to every section to edit or delete it
 * Extend permission system:
