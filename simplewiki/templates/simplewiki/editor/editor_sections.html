@@ -4,25 +4,29 @@
 {% load static %}
 
 {% block details %}
-<div class="panel panel-primary">
-    <div class="panel-heading">
-        <div class="panel-title" style="padding-bottom: 1rem;">
-          {% translate "Section Administration" %}
+{% if user_action == 'none' %}
+  <div class="container-fluid" style="margin-bottom: 1rem;">
+    <span class="pull-right">
+      <form method="GET" action="{% url 'simplewiki:editor_sections' %}">
+        <button type="submit" name="create" value="1" class="btn btn-success btn-sm">
+          <i class="fas fa-plus-square"></i>
+          Create new section
+        </button>
+      </form>
+    </span>
+  </div>    
+{% endif %}
 
-          {% if user_action == 'none' %}
-          <span class="pull-right">
-            <form method="GET" action="{% url 'simplewiki:editor_sections' %}">
-              <button type="submit" name="create" value="1" class="btn btn-success btn-sm">
-                <i class="fas fa-plus-square"></i>
-                Create new section
-              </button>
-            </form>
-          </span>
-          {% endif %}
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <div class="panel-title">
+          <div class="text-center">
+            {% translate "Section Administration" %}  
+          </div>
         </div>
-    </div>
+      </div>
 
-    <div class="panel-body">
+      <div class="panel-body">
       {% if user_action == 'none' %}
         <table class="table table-striped">
             <thead>
@@ -46,7 +50,7 @@
                           {% url 'simplewiki:dynamic_menu' menu_name=section_item.menu_path %}
                         </a>
                     </td>
-                    <td class="text-right">
+                    <td class="text-center">
                       <form method="GET" action="{% url 'simplewiki:editor_sections' %}">
                         <button type="submit" name="edit" value="{{ section_item.title }}" class="btn btn-primary btn-sm">
                             <i class="fas fa-edit"></i>

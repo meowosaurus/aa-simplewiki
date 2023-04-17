@@ -4,21 +4,25 @@
 {% load static %}
 
 {% block details %}
+{% if user_action == 'none' %}
+    <div class="container-fluid">
+      <span class="pull-right" style="margin-bottom: 1rem;">
+        <form method="GET" action="{% url 'simplewiki:editor_menus' %}">
+          <button type="submit" name="create" value="1" class="btn btn-success btn-sm">
+            <i class="fas fa-plus-square"></i>
+            Create new menu
+          </button>
+        </form>
+      </span>
+    </div>
+              
+    {% endif %}
     <div class="panel panel-primary">
         <div class="panel-heading">
-            <div class="panel-title" style="padding-bottom: 1rem;">
-              {% translate "Menu Administration" %}
-
-              {% if user_action == 'none' %}
-              <span class="pull-right">
-                <form method="GET" action="{% url 'simplewiki:editor_menus' %}">
-                  <button type="submit" name="create" value="1" class="btn btn-success btn-sm">
-                    <i class="fas fa-plus-square"></i>
-                    Create new menu
-                  </button>
-                </form>
-              </span>
-              {% endif %}
+            <div class="panel-title">
+              <div class="text-center">
+                {% translate "Menu Administration" %}
+              </div>
             </div>
         </div>
 
@@ -46,7 +50,7 @@
                           {% url 'simplewiki:dynamic_menu' menu_name=menu_item.path %}
                         </a>
                       </td>
-                      <td class="text-right">
+                      <td class="text-center">
                         <form method="GET" action="{% url 'simplewiki:editor_menus' %}">
                         <button type="submit" name="edit" value="{{ menu_item.path }}" class="btn btn-primary btn-sm">
                             <i class="fas fa-edit"></i>
