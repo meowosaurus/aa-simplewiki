@@ -15,7 +15,6 @@ def is_user_in_groups(user_groups, group_list) -> bool:
 
     try:
         if group_list is not None and isinstance(group_list, str):
-            print(type(group_list))
             group_names = group_list.split(',')
         else:
             return False

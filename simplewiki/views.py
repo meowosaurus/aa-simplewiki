@@ -35,7 +35,7 @@ def genContext(request: WSGIRequest):
     menu_items = MenuItem.objects.all().order_by('index')
     section_items = SectionItem.objects.all().order_by('index')
 
-    if request.user.has_perm('simplewiki.editor'):
+    if request.user.has_perm('simplewiki.editor_access'):
         is_editor = True
     else:
         is_editor = False
@@ -113,7 +113,6 @@ def dynamic_menus(request: WSGIRequest, menu_name: str) -> HttpResponse:
         group_names = ""
     
     context.update({'group_names': group_names})
-    print("Test")
 
     #if not requested_menu.groups or requested_menu.groups in list(request.user.groups.values_list('name', flat=True)):
     if not requested_menu.groups or any(group_name in request.user.groups.values_list('name', flat=True) for group_name in group_names):
@@ -164,7 +163,7 @@ def search(request: WSGIRequest) -> HttpResponse:
 ### Admin Views ###
 
 @login_required
-@permission_required("simplewiki.editor")
+@permission_required("simplewiki.editor_access")
 def editor_menus(request: WSGIRequest) -> HttpResponse:
     """
     Admin Menu View, this view is responsible for handling all list, create, edit
@@ -207,6 +206,8 @@ def editor_menus(request: WSGIRequest) -> HttpResponse:
 
     return render(request, "simplewiki/editor/editor_menus.html", context)
 
+@login_required
+@permission_required("simplewiki.editor_access")
 def editor_sections(request: WSGIRequest) -> HttpResponse:
     """
     Admin Sections View, this view is responsible for handling all list, create, edit

@@ -16,7 +16,7 @@ class General(models.Model):
         managed = False
         default_permissions = ()
         permissions = (("basic_access", "Can access this app"),
-                       ("editor", "Can edit menues and sections"))
+                       ("editor_access", "Can edit menues and sections"))
 
 class MenuItem(models.Model):
     index = models.IntegerField(default=0, 
