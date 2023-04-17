@@ -52,8 +52,8 @@
                         </a>
                       </td>
                       <td>
-                        {% if menu_item.group %}
-                          {{ menu_item.group }}
+                        {% if menu_item.groups %}
+                          {{ menu_item.groups }}
                         {% else %}
                           None
                         {% endif %}
@@ -130,7 +130,8 @@
   document.getElementById("titleInput").value = '{{ selectedMenu.title|escapejs }}';
   document.getElementById("iconInput").value = '{{ selectedMenu.icon|escapejs }}';
   document.getElementById("pathInput").value = '{{ selectedMenu.path|escapejs }}';
-  document.getElementById("groupInput").value = '{{ selectedMenu.group|escapejs }}';
+  
+  document.getElementById("groupsInput").value = '{{ selectedMenu.groups|escapejs }}';
 </script>
 {% endif %}
 {% endblock %}

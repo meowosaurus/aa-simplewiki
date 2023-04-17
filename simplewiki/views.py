@@ -108,18 +108,18 @@ def dynamic_menus(request: WSGIRequest, menu_name: str) -> HttpResponse:
 
     # Split all group names. All group names need to be seperated by a comma
     try:
-        group_names = requested_menu.group.split(',')
+        group_names = requested_menu.groups.split(',')
     except Exception as e:
         group_names = ""
     
     context.update({'group_names': group_names})
     print("Test")
 
-    #if not requested_menu.group or requested_menu.group in list(request.user.groups.values_list('name', flat=True)):
-    if not requested_menu.group or any(group_name in request.user.groups.values_list('name', flat=True) for group_name in group_names):
+    #if not requested_menu.groups or requested_menu.groups in list(request.user.groups.values_list('name', flat=True)):
+    if not requested_menu.groups or any(group_name in request.user.groups.values_list('name', flat=True) for group_name in group_names):
         return render(request, 'simplewiki/dynamic_page.html', context)
     else:
-        error_message = "You don\'t have the permissions to access this page. You need to be in the <b>" + requested_menu.group + "</b> group on auth."
+        error_message = "You don\'t have the permissions to access this page. You need to be in the <b>" + requested_menu.groups.replace(',', ', ') + "</b> groups on auth."
         context.update({'error_msg': error_message})
         return render(request, 'simplewiki/error.html', context)
 

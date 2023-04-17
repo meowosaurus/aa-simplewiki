@@ -29,7 +29,7 @@ def create_new_menu(request: WSGIRequest, context: dict) -> HttpResponse:
         new_menu = MenuItem()
 
         # Fill new_menu with variables and check for errors
-        keys = ['index', 'title', 'icon', 'group']
+        keys = ['index', 'title', 'icon', 'groups']
         for key in keys:
             try:
                 if key == 'index':
@@ -98,7 +98,7 @@ def edit_existing_menu(request: WSGIRequest, context: dict, edit: str) -> HttpRe
             return render(request, 'simplewiki/error.html', context)
 
         # Fill selected_menu with new variables and check for errors
-        keys = ['index', 'title', 'icon', 'group']
+        keys = ['index', 'title', 'icon', 'groups']
         for key in keys:
             try: 
                 # Check if user changed a value. If they did, save the new one.
@@ -120,7 +120,7 @@ def edit_existing_menu(request: WSGIRequest, context: dict, edit: str) -> HttpRe
                 
         # Taking the titel and converting it into a url suitable string
         selected_menu.path = slugify(request.POST['title'])
-        selected_menu.group = request.POST['group']
+        selected_menu.groups = request.POST['groups']
 
         # Save selected_menu and check for errors
         try:

@@ -30,7 +30,7 @@
     
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 {% for menu_item in menu_items %}
-                    {% if not menu_item.group or menu_item.group in user_groups %}
+                    {% if not menu_item.groups or menu_item.groups in user_groups %}
                     <ul class="nav navbar-nav">
                         {% url 'simplewiki:dynamic_menu' menu_name=menu_item.path as expected_path %}
                         <li class="navbar-text {% if current_path == expected_path %}active{% endif %}">
@@ -41,7 +41,7 @@
                         </li>
                     </ul>
                     {% else %}
-                        {% if user_groups|is_user_in_groups:menu_item.group %}
+                        {% if user_groups|is_user_in_groups:menu_item.groups %}
                             <ul class="nav navbar-nav">
                                 {% url 'simplewiki:dynamic_menu' menu_name=menu_item.path as expected_path %}
                                 <li class="navbar-text {% if current_path == expected_path %}active{% endif %}">
@@ -58,7 +58,7 @@
                 
                   
                 
-                <ul class="nav navbar-nav navbar-right">
+                <ul class="nav navbar-nav pull-right">
                     <li class="navbar-text {% if current_path == '/wiki/search/' %}active{% endif %}">
                         <a href="{% url 'simplewiki:search' %}">
                             <i class="fas fa-search"></i>
