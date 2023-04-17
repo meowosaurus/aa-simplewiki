@@ -169,16 +169,14 @@
 
 {% block extra_javascript %}
 {% if user_action == 'edit' %}
-<script>
-  /*var selectElement = document.getElementById("menuPathSelect");
-  for (var i = 0; i < selectElement.options.length; i++) {
-    if (selectElement.options[i].value === "{{ selected_menu_path|escapejs }}") {
-      selectElement.options[i].selected = true;
-      break;
-    }
-  }*/
-
-  document.addEventListener('DOMContentLoaded', function() {
+  <script>
+    document.getElementById("indexInput").value = '{{ selectedSection.index|escapejs }}';
+    document.getElementById("iconInput").value = '{{ selectedSection.icon|escapejs }}';
+    document.getElementById("titleInput").value = '{{ selectedSection.title|escapejs }}';
+    document.getElementById("menuPathInput").value = '{{ selectedSection.menu_path|escapejs }}';
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
         const menuPathSelect = document.getElementById('menuPathSelect');
         const selectedPath = "{{ selectedSection.menu_path }}";
 
@@ -189,11 +187,6 @@
             }
         }
     });
-
-  document.getElementById("titleInput").value = '{{ selectedSection.title|escapejs }}';
-  document.getElementById("menuPathInput").value = '{{ selectedSection.menu_path|escapejs }}';
-  document.getElementById("indexInput").value = '{{ selecselectedSectiontedMenu.index|escapejs }}';
-  document.getElementById("iconInput").value = '{{ selectedSection.icon|escapejs }}';
 </script>
 {% endif %}
 {% endblock %}

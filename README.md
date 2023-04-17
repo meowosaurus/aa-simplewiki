@@ -12,13 +12,12 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
   * Alliance Auth groups are synced to simplewiki: Certain pages can only be seen by a specific group
 * Search function: Search across all wiki menus and sections
 * Editor interface
-  * Non-superadmin users can create, edit and delete custom menus (editor)
-  * Non-superadmin users can create, edit and delete custom sections (editor)
+  * Users with editor permission can create, edit and delete custom menus and sections (editor)
+  * Users with editor permission see edit and delete buttons above all sections
 
 ### ToDo:
-* Add repo to pip
+* Add repo to PyPi
 * Add dropdown menues
-* Add buttons for editors to every section to edit or delete it
 * Extend permission system:
   * Add support for having multiple groups accessing a page 
 
@@ -92,4 +91,16 @@ editor | None | Can create, edit and delete wiki pages and menus
 ## Support
 * On Discord: Meowlicious#7045
 * Check out our wiki on GitHub: https://github.com/meowosaurus/aa-simplewiki/wiki
+
+## Screenshots
+
+### Search
+![Search](https://i.imgur.com/wW69LFN.png)
+
+### Admin Panel
+![Menu Admin](https://i.imgur.com/VGssV4d.png)
+
+![Menu Edit](https://i.imgur.com/15DSNfZ.png)
+
+![Section Edit](https://i.imgur.com/3LrysW7.png)
 

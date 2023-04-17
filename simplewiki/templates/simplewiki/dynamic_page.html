@@ -6,6 +6,20 @@
 
 {% block details %}
     {% for item in available_sections %}
+    {% if permission %}
+    <div class="container-fluid" style="margin-bottom: 1rem;">
+        <div class="pull-right">
+            <a class="btn btn-sm btn-success" href="{% url 'simplewiki:index' %}admin/sections/?edit={{ item.title }}">
+                <i class="fas fa-edit"></i>
+                Edit Section
+            </a>
+            <a class="btn btn-sm btn-danger" href="{% url 'simplewiki:index' %}admin/sections/?delete={{ item.title }}">
+                <i class="fas fa-trash-alt"></i>
+                Delete Section
+            </a>
+        </div>
+    </div>
+    {% endif %}
     <div class="panel panel-primary">
         <div class="panel-heading">
             <div class="panel-title">
