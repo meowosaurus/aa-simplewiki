@@ -7,11 +7,11 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 * Create custom wiki pages with different sections
 * Add an icon next to menus or sections
 * Edit pages on the admin panel with [markdown](https://commonmark.org/help/)
-* Basic permission system:
+* Search function: Search across all wiki menus and sections
+* Permission system:
   * Editor permissions can be added to single users or groups via the admin panel
   * Alliance Auth groups are synced to simplewiki: Certain pages can only be seen by a specific group
   * Multiple groups support: As long as the user is in any of the required groups, they can access the menu
-* Search function: Search across all wiki menus and sections
 * Editor interface
   * Users with editor permission can create, edit and delete custom menus and sections (editor)
   * Users with editor permission see edit and delete buttons above all sections
