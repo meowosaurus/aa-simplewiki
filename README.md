@@ -103,4 +103,5 @@ editor | None | Can create, edit and delete wiki pages and menus
 
 ![Menu Edit](https://i.imgur.com/15DSNfZ.png)
 
+![Section Edit](https://i.imgur.com/3LrysW7.png)
 
