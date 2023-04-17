@@ -93,3 +93,14 @@ editor | None | Can create, edit and delete wiki pages and menus
 * On Discord: Meowlicious#7045
 * Check out our wiki on GitHub: https://github.com/meowosaurus/aa-simplewiki/wiki
 
+## Screenshots
+
+### Search
+![Search](https://i.imgur.com/wW69LFN.png)
+
+### Admin Panel
+![Menu Admin](https://i.imgur.com/VGssV4d.png)
+
+![Menu Edit](https://i.imgur.com/15DSNfZ.png)
+
+
