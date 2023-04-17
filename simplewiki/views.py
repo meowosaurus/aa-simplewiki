@@ -105,7 +105,13 @@ def dynamic_menus(request: WSGIRequest, menu_name: str) -> HttpResponse:
     
     # Check if the user has the permission to see the requested page. If not, send an error
     requested_menu = MenuItem.objects.get(path=menu_name)
-    if not requested_menu.group or requested_menu.group in list(request.user.groups.values_list('name', flat=True)):
+
+    # Split all group names. All group names need to be seperated by a comma
+    group_names = requested_menu.group.split(',')
+    context.update({'group_names': group_names})
+
+    #if not requested_menu.group or requested_menu.group in list(request.user.groups.values_list('name', flat=True)):
+    if not requested_menu.group or any(group_name in request.user.groups.values_list('name', flat=True) for group_name in group_names):
         return render(request, 'simplewiki/dynamic_page.html', context)
     else:
         error_message = "You don\'t have the permissions to access this page. You need to be in the <b>" + requested_menu.group + "</b> group on auth."
