@@ -13,11 +13,16 @@ def is_user_in_groups(user_groups, group_list) -> bool:
         bool: Returns true if the user is at least in one of the required groups
     """
 
-    splitted_list = group_list.split(',')
-
-    if not group_list:
+    try:
+        if group_list is not None and isinstance(group_list, str):
+            print(type(group_list))
+            group_names = group_list.split(',')
+        else:
+            return False
+    except Exception as e:
         return False
-    return any(group_name in user_groups for group_name in splitted_list)
+
+    return any(group_name in user_groups for group_name in group_names)
 
 register = template.Library()
 

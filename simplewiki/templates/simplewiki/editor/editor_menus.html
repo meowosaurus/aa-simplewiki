@@ -31,10 +31,11 @@
             <table class="table table-striped">
                 <thead>
                   <tr>
-                    <th width="25%">Index</th>
-                    <th width="25%">Menu Title</th>
-                    <th width="25%">URL</th>
-                    <th width="25%">Action</th>
+                    <th width="20%">Index</th>
+                    <th width="20%">Menu Title</th>
+                    <th width="20%">URL</th>
+                    <th width="20%">Groups</th>
+                    <th width="20%">Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -50,7 +51,14 @@
                           {% url 'simplewiki:dynamic_menu' menu_name=menu_item.path %}
                         </a>
                       </td>
-                      <td class="text-center">
+                      <td>
+                        {% if menu_item.group %}
+                          {{ menu_item.group }}
+                        {% else %}
+                          None
+                        {% endif %}
+                      </td>
+                      <td>
                         <form method="GET" action="{% url 'simplewiki:editor_menus' %}">
                         <button type="submit" name="edit" value="{{ menu_item.path }}" class="btn btn-primary btn-sm">
                             <i class="fas fa-edit"></i>

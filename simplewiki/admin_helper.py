@@ -26,16 +26,16 @@ def create_new_menu(request: WSGIRequest, context: dict) -> HttpResponse:
     """
 
     if request.POST['confirm_create'] == '1':
-        newMenu = MenuItem()
+        new_menu = MenuItem()
 
-        # Fill newMenu with variables and check for errors
+        # Fill new_menu with variables and check for errors
         keys = ['index', 'title', 'icon', 'group']
         for key in keys:
             try:
                 if key == 'index':
-                    setattr(newMenu, key, int(request.POST[key]))
+                    setattr(new_menu, key, int(request.POST[key]))
                 else:
-                    setattr(newMenu, key, request.POST[key])
+                    setattr(new_menu, key, request.POST[key])
             except (KeyError, ValueError, TypeError) as e:
                 context.update({'error_django': str(e)})
                 return render(request, 'simplewiki/error.html', context)
@@ -48,11 +48,11 @@ def create_new_menu(request: WSGIRequest, context: dict) -> HttpResponse:
                 return render(request, 'simplewiki/error.html', context)
                     
         # Taking the titel and converting it into a url suitable string
-        newMenu.path = slugify(request.POST['title'])
+        new_menu.path = slugify(request.POST['title'])
                 
-        # Save newMenu and check for errors
+        # Save new_menu and check for errors
         try:
-            newMenu.save()
+            new_menu.save()
         except (IntegrityError, ValidationError) as e:
             context.update({'error_django': str(e)})
             return render(request, 'simplewiki/error.html', context)
@@ -63,8 +63,6 @@ def create_new_menu(request: WSGIRequest, context: dict) -> HttpResponse:
             linenumber = inspect.getframeinfo(frame).lineno
             context.update({'error_msg': 'Unknown error in ' + filename + ' in line ' + str(linenumber)})
             return render(request, 'simplewiki/error.html', context)
-
-        print("Yeeeeeeeeeeeeeeeeep")
         return redirect("simplewiki:editor_menus")
     else:
         return redirect("simplewiki:editor_menus")
@@ -87,7 +85,7 @@ def edit_existing_menu(request: WSGIRequest, context: dict, edit: str) -> HttpRe
     # If do edit operation
     if request.POST['confirm_edit'] == '1':
         try:
-            selectedMenu = MenuItem.objects.get(path=edit)
+            selected_menu = MenuItem.objects.get(path=edit)
         except MenuItem.DoesNotExist as e:
             context.update({'error_django': str(e)})
             return render(request, 'simplewiki/error.html', context)
@@ -99,16 +97,16 @@ def edit_existing_menu(request: WSGIRequest, context: dict, edit: str) -> HttpRe
             context.update({'error_msg': 'Unknown error in ' + filename + ' in line ' + str(linenumber)})
             return render(request, 'simplewiki/error.html', context)
 
-        # Fill selectedMenu with new variables and check for errors
+        # Fill selected_menu with new variables and check for errors
         keys = ['index', 'title', 'icon', 'group']
         for key in keys:
             try: 
                 # Check if user changed a value. If they did, save the new one.
                 if request.POST[key]:
                     if key == 'index':
-                        setattr(selectedMenu, key, int(request.POST[key]))
+                        setattr(selected_menu, key, int(request.POST[key]))
                     else:
-                        setattr(selectedMenu, key, request.POST[key])
+                        setattr(selected_menu, key, request.POST[key])
             except (KeyError, ValueError, TypeError) as e:
                 context.update({'error_django': str(e)})
                 return render(request, 'simplewiki/error.html', context)
@@ -121,11 +119,12 @@ def edit_existing_menu(request: WSGIRequest, context: dict, edit: str) -> HttpRe
                 return render(request, 'simplewiki/error.html', context)
                 
         # Taking the titel and converting it into a url suitable string
-        selectedMenu.path = slugify(request.POST['title'])
+        selected_menu.path = slugify(request.POST['title'])
+        selected_menu.group = request.POST['group']
 
-        # Save selectedMenu and check for errors
+        # Save selected_menu and check for errors
         try:
-            selectedMenu.save()
+            selected_menu.save()
         except (ValidationError, IntegrityError) as e:
             context.update({'error_django': str(e)})
             return render(request, 'simplewiki/error.html', context)
@@ -160,8 +159,8 @@ def delete_existing_menu(request: WSGIRequest, context: dict, delete: str) -> Ht
     # If do delete operation
     if request.POST['confirm_delete'] == '1':
         try:
-            selectedMenu = MenuItem.objects.get(path=delete)
-            selectedMenu.delete()
+            selected_menu = MenuItem.objects.get(path=delete)
+            selected_menu.delete()
         except (MenuItem.DoesNotExist, ProtectedError) as e:
             context.update({'error_django': str(e)})
             return render(request, 'simplewiki/error.html', context)
@@ -187,8 +186,8 @@ def load_menu_edit_form(request: WSGIRequest, context: dict, edit: str) -> HttpR
     """
 
     try:
-        selectedMenu = MenuItem.objects.get(path=edit)
-        context.update({'selectedMenu': selectedMenu})
+        selected_menu = MenuItem.objects.get(path=edit)
+        context.update({'selectedMenu': selected_menu})
         context.update({'user_action': 'edit'})
     except MenuItem.DoesNotExist as e:
         context.update({'error_django': str(e)})
@@ -217,8 +216,8 @@ def load_menu_delete_form(request: WSGIRequest, context: dict, delete: str) -> H
     """
 
     try:
-        selectedMenu = MenuItem.objects.get(path=delete)
-        context.update({'selectedMenu': selectedMenu})
+        selected_menu = MenuItem.objects.get(path=delete)
+        context.update({'selectedMenu': selected_menu})
         context.update({'user_action': 'delete'})
     except MenuItem.DoesNotExist as e:
         context.update({'error_django': str(e)})
@@ -230,6 +229,8 @@ def load_menu_delete_form(request: WSGIRequest, context: dict, delete: str) -> H
         linenumber = inspect.getframeinfo(frame).lineno
         context.update({'error_msg': 'Unknown error in ' + filename + ' in line ' + str(linenumber)})
         return render(request, 'simplewiki/error.html', context)
+    
+### SECTION ###
 
 def create_new_section(request: WSGIRequest, context: dict) -> HttpResponse:
     """
@@ -246,20 +247,20 @@ def create_new_section(request: WSGIRequest, context: dict) -> HttpResponse:
 
     # if do create operation
     if request.POST['confirm_create'] == '1':
-        newSectionItem = SectionItem()
+        new_section = SectionItem()
 
         try:
-            newSectionItem.title = request.POST['title']
-            newSectionItem.menu_path = request.POST['menu_path']
-            newSectionItem.index = request.POST['index']
-            newSectionItem.icon = request.POST['icon']
-            newSectionItem.content = request.POST['content']
+            new_section.title = request.POST['title']
+            new_section.menu_path = request.POST['menu_path']
+            new_section.index = request.POST['index']
+            new_section.icon = request.POST['icon']
+            new_section.content = request.POST['content']
         except (KeyError, ValueError, TypeError) as e:
             context.update({'error_django': str(e)})
             return render(request, 'simplewiki/error.html', context)
 
         try:
-            newSectionItem.save()
+            new_section.save()
         except (ValidationError, IntegrityError) as e:
             context.update({'error_django': str(e)})
             return render(request, 'simplewiki/error.html', context)
@@ -287,7 +288,7 @@ def edit_existing_section(request: WSGIRequest, context: dict, edit: str) -> Htt
     # if do edit operation
     if request.POST['confirm_edit'] == '1':
         try:
-            selectedSection = SectionItem.objects.get(title=edit)
+            selected_section = SectionItem.objects.get(title=edit)
         except SectionItem.DoesNotExist as e:
             context.update({'error_django': str(e)})
             return render(request, 'simplewiki/error.html', context)
@@ -297,13 +298,13 @@ def edit_existing_section(request: WSGIRequest, context: dict, edit: str) -> Htt
         for key in keys:
             try:
                 if request.POST[key]:
-                    setattr(selectedSection, key, request.POST[key])
+                    setattr(selected_section, key, request.POST[key])
             except (KeyError, ValueError, TypeError) as e:
                 context.update({'error_django': str(e)})
                 return render(request, 'simplewiki/error.html', context)
 
         try:
-            selectedSection.save()
+            selected_section.save()
         except (ValidationError, IntegrityError) as e:
             context.update({'error_django': str(e)})
             return render(request, 'simplewiki/error.html', context)
@@ -331,8 +332,8 @@ def delete_existing_section(request: WSGIRequest, context: dict, delete: str) ->
     # if do delete operation
     if request.POST['confirm_delete'] == '1':
         try:
-            selectedSection = SectionItem.objects.get(title=delete)
-            selectedSection.delete()
+            selected_section = SectionItem.objects.get(title=delete)
+            selected_section.delete()
         except (SectionItem.DoesNotExist, ProtectedError) as e:
             context.update({'error_django': str(e)})
             return render(request, 'simplewiki/error.html', context)
@@ -358,8 +359,8 @@ def load_section_edit_form(request: WSGIRequest, context: dict, edit: str) -> Ht
     """
 
     try:
-        selectedSection = SectionItem.objects.get(title=edit)
-        context.update({'selectedSection': selectedSection})
+        selected_section = SectionItem.objects.get(title=edit)
+        context.update({'selectedSection': selected_section})
     except SectionItem.DoesNotExist as e:
         context.update({'error_django': str(e)})
         return render(request, 'simplewiki/error.html', context)
@@ -382,8 +383,8 @@ def load_section_delete_form(request: WSGIRequest, context: dict, delete: str) -
     """
 
     try:
-        selectedSection = SectionItem.objects.get(title=delete)
-        context.update({'selectedSection': selectedSection})
+        selected_section = SectionItem.objects.get(title=delete)
+        context.update({'selectedSection': selected_section})
     except SectionItem.DoesNotExist as e:
         context.update({'error_django': str(e)})
         return render(request, 'simplewiki/error.html', context)

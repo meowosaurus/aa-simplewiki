@@ -107,8 +107,13 @@ def dynamic_menus(request: WSGIRequest, menu_name: str) -> HttpResponse:
     requested_menu = MenuItem.objects.get(path=menu_name)
 
     # Split all group names. All group names need to be seperated by a comma
-    group_names = requested_menu.group.split(',')
+    try:
+        group_names = requested_menu.group.split(',')
+    except Exception as e:
+        group_names = ""
+    
     context.update({'group_names': group_names})
+    print("Test")
 
     #if not requested_menu.group or requested_menu.group in list(request.user.groups.values_list('name', flat=True)):
     if not requested_menu.group or any(group_name in request.user.groups.values_list('name', flat=True) for group_name in group_names):
