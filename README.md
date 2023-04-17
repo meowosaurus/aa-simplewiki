@@ -1,9 +1,21 @@
 # SimpleWiki
 A simple wiki system for alliance auth. It supports multiple pages with different sections. Every page and every section can have their own icon.
 
-![Showcase](https://i.imgur.com/buYmABX.png)
+# Contents
+* [Current Features](#current-features)
+  * [ToDo](#todo)
+  * [Planned](#planned)
+* [Screenshots](#screenshots)
+* [Installation](#installation)
+  * [Alliance Auth Production](#alliance-auth-production)
+    * [Non-Docker Version](#non-docker-version)
+    * [Docker Version](#docker-version)
+  * [Alliance Auth Development](#alliance-auth-development)
+* [Usage](#usage)
+* [Permissions](#permissions)
+* [Support](#support)
 
-### Current Features
+# Current Features
 * Create custom wiki pages with different sections
 * Add an icon next to menus or sections
 * Edit pages on the admin panel with [markdown](https://commonmark.org/help/)
@@ -16,15 +28,28 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
   * Users with editor permission can create, edit and delete custom menus and sections (editor)
   * Users with editor permission see edit and delete buttons above all sections
 
-### ToDo:
+## ToDo:
 * Add repo to PyPi
 * Add dropdown menues
 
-## Planned (low priority)
+## Planned
 * Drag and drop system to make indexing menus and sections easier
 
 ### Active devs:
 * [Meowosaurus](https://github.com/meowosaurus)
+
+## Screenshots
+![Showcase](https://i.imgur.com/buYmABX.png)
+
+### Search
+![Search](https://i.imgur.com/wW69LFN.png)
+
+### Admin Panel
+![Menu Admin](https://i.imgur.com/VGssV4d.png)
+
+![Menu Edit](https://i.imgur.com/15DSNfZ.png)
+
+![Section Edit](https://i.imgur.com/3LrysW7.png)
 
 ## Installation
 
@@ -74,6 +99,8 @@ Make sure you have installed alliance auth in the correct way: https://alliancea
 8.) Restart auth with `python manage.py runserver`
 
 ## Usage
+Check out our wiki on GitHub: https://github.com/meowosaurus/aa-simplewiki/wiki
+
 1.) Go to `{your_auth_url}/admin` -> SimpleWiki -> Add Menu Item
 
 2.) Give it a title, an index (menu items are sorted by their index from low to high) and a name (the name is the name in the url) and hit save.
@@ -92,17 +119,3 @@ editor | None | Can create, edit and delete wiki pages and menus
 
 ## Support
 * On Discord: Meowlicious#7045
-* Check out our wiki on GitHub: https://github.com/meowosaurus/aa-simplewiki/wiki
-
-## Screenshots
-
-### Search
-![Search](https://i.imgur.com/wW69LFN.png)
-
-### Admin Panel
-![Menu Admin](https://i.imgur.com/VGssV4d.png)
-
-![Menu Edit](https://i.imgur.com/15DSNfZ.png)
-
-![Section Edit](https://i.imgur.com/3LrysW7.png)
-
