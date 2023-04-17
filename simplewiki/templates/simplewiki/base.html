@@ -29,7 +29,8 @@
                 {% for menu_item in menu_items %}
                     {% if not menu_item.group or menu_item.group in user_groups%}
                     <ul class="nav navbar-nav">
-                        <li class="navbar-text">
+                        {% url 'simplewiki:dynamic_menu' menu_name=menu_item.path as expected_path %}
+                        <li class="navbar-text {% if current_path == expected_path %}active{% endif %}">
                             <a href="{% url 'simplewiki:dynamic_menu' menu_name=menu_item.path %}" style="display: inline-block;">
                                 <i class="{{ menu_item.icon }}" style="display: inline-block;"></i>
                                 {{ menu_item.title }}
@@ -41,14 +42,14 @@
                   
                 
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="navbar-text">
+                    <li class="navbar-text {% if current_path == '/wiki/search/' %}active{% endif %}">
                         <a href="{% url 'simplewiki:search' %}">
                             <i class="fas fa-search"></i>
                             Search
                         </a>
                     </li>
                     {% if permission is True %}
-                        <li class="dropdown">
+                        <li class="dropdown {% if current_path == '/wiki/admin/menus/' or current_path == '/wiki/admin/sections/' %}active{% endif %}">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-user-cog"></i>
                                 Admin 
@@ -74,6 +75,7 @@
             </div>
         </div>
     </nav>
+
     {% block details %}{% endblock %}
 </div>
 {% endblock %}

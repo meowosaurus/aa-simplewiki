@@ -36,14 +36,17 @@ def genContext(request: WSGIRequest):
     section_items = SectionItem.objects.all().order_by('index')
 
     if request.user.has_perm('simplewiki.editor'):
-        isEditor = True
+        is_editor = True
     else:
-        isEditor = False
+        is_editor = False
+
+    current_path = request.path
 
     context = {'menu_items': menu_items, 
-               'permission': isEditor, 
+               'permission': is_editor, 
                'section_items': section_items,
-               'user_groups': list(request.user.groups.values_list('name', flat=True))}
+               'user_groups': list(request.user.groups.values_list('name', flat=True)),
+               'current_path': current_path}
 
     return context
 
@@ -93,30 +96,19 @@ def dynamic_menus(request: WSGIRequest, menu_name: str) -> HttpResponse:
         HttpResponse: Returns the template and context to render
     """
 
-    # Order all menus by their index from low to high
-    allMenuItems = MenuItem.objects.all().order_by('index')
-
-    # isEditor is needed to show or hide the admin menu in the header panel
-    if request.user.has_perm('simplewiki.editor'):
-        isEditor = True
-    else:
-        isEditor = False
-
     # Order all sections by their index to display them from left to right from low to hight
     # Also only show sections that are related to the currently selected menu
-    filtered_pages = SectionItem.objects.filter(menu_path=menu_name).order_by('index')
+    available_sections = SectionItem.objects.filter(menu_path=menu_name).order_by('index')
 
-    context = {'menu_items': allMenuItems, 
-               'filtered_pages': filtered_pages,
-               'permission': isEditor,
-               'user_groups': list(request.user.groups.values_list('name', flat=True))}
+    context = genContext(request)
+    context.update({'available_sections': available_sections})
     
     # Check if the user has the permission to see the requested page. If not, send an error
-    requestedMenu = MenuItem.objects.get(path=menu_name)
-    if not requestedMenu.group or requestedMenu.group in list(request.user.groups.values_list('name', flat=True)):
+    requested_menu = MenuItem.objects.get(path=menu_name)
+    if not requested_menu.group or requested_menu.group in list(request.user.groups.values_list('name', flat=True)):
         return render(request, 'simplewiki/dynamic_page.html', context)
     else:
-        error_message = "You don\'t have the permissions to access this page. You need to be in the <b>" + requestedMenu.group + "</b> group on auth."
+        error_message = "You don\'t have the permissions to access this page. You need to be in the <b>" + requested_menu.group + "</b> group on auth."
         context.update({'error_msg': error_message})
         return render(request, 'simplewiki/error.html', context)
 
@@ -141,19 +133,19 @@ def search(request: WSGIRequest) -> HttpResponse:
     try:
         query = request.GET.get('query')
         if query:
-            searchResults = SectionItem.objects.filter(
+            search_results = SectionItem.objects.filter(
                 Q(content__icontains=query) | Q(title__icontains=query))
             context.update({'oldQuery': query})
-            context.update({'searchResults': searchResults})
+            context.update({'searchResults': search_results})
     except PermissionDenied as e:
         context.update({'error_msg': 'Unable to complete search: Do you have the right permissions to access this search?'})
         return render(request, 'simplewiki/error.html', context)
     except Exception as e:
         frame = inspect.currentframe()
         context.update({'error_django': str(e)})
-        filename = inspect.getframeinfo(frame).filename
-        linenumber = inspect.getframeinfo(frame).lineno
-        context.update({'error_msg': 'Unknown error in ' + filename + ' in line ' + str(linenumber)})
+        file_name = inspect.getframeinfo(frame).filename
+        line_number = inspect.getframeinfo(frame).lineno
+        context.update({'error_msg': 'Unknown error in ' + file_name + ' in line ' + str(line_number)})
         return render(request, 'simplewiki/error.html', context)
 
     return render(request, "simplewiki/search.html", context)
@@ -184,20 +176,20 @@ def admin_menus(request: WSGIRequest) -> HttpResponse:
     # POST requests functions handle the actual create, edit and delete operations
     if request.method == 'POST':
         if create:
-            return handle_menu_create(request, context)
+            return create_new_menu(request, context)
         elif edit:
-            return handle_menu_edit(request, context, edit)
+            return edit_existing_menu(request, context, edit)
         elif delete:
-            return handle_menu_delete(request, context, delete)
+            return delete_existing_menu(request, context, delete)
 
     # GET requests functions handle which button was pressed and which POST form to display
     elif request.method == 'GET':
         if create:
             context.update({'user_action': 'create'})
         elif edit:
-            handle_menu_edit_get(request, context, edit)
+            load_menu_edit_form(request, context, edit)
         elif delete:
-            handle_menu_delete_get(request, context, delete)
+            load_menu_delete_form(request, context, delete)
         else:
             # Just list all sections if no button was pressed
             context.update({'user_action': 'none'})
@@ -226,11 +218,11 @@ def admin_sections(request: WSGIRequest) -> HttpResponse:
     # POST requests functions handle the actual create, edit and delete operations
     if request.method == 'POST':
         if create:
-            return handle_section_create(request, context)
+            return create_new_section(request, context)
         elif edit:
-            return handle_section_edit(request, context, edit)
+            return edit_existing_section(request, context, edit)
         elif delete:
-            return handle_section_delete(request, context, delete)
+            return delete_existing_section(request, context, delete)
     
     # GET requests functions handle which button was pressed and which POST form to display
     if request.method == 'GET':
@@ -238,10 +230,10 @@ def admin_sections(request: WSGIRequest) -> HttpResponse:
             context.update({'user_action': 'create'})
         elif edit:
             # Is parsing the GET values and starts the first model queries for edit
-            handle_section_edit_get(request, context, edit)
+            load_section_edit_form(request, context, edit)
         elif delete:
             # Is parsing the GET values and starts the first model queries for delete
-            handle_section_delete_get(request, context, delete)
+            load_section_delete_form(request, context, delete)
         else:
             # Just list all sections if no button was pressed
             context.update({'user_action': 'none'})

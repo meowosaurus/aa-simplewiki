@@ -12,7 +12,7 @@ from django.db.models.deletion import ProtectedError
 # Custom imports
 from .models import MenuItem, SectionItem
 
-def handle_menu_create(request: WSGIRequest, context: dict) -> HttpResponse:
+def create_new_menu(request: WSGIRequest, context: dict) -> HttpResponse:
     """
     Handle Menu Create will check the data, sent by the user via the form via a POST
     request and then store it. This function creates a new model object and stores it.
@@ -69,7 +69,7 @@ def handle_menu_create(request: WSGIRequest, context: dict) -> HttpResponse:
     else:
         return redirect("simplewiki:admin_menus")
     
-def handle_menu_edit(request: WSGIRequest, context: dict, edit: str) -> HttpResponse:
+def edit_existing_menu(request: WSGIRequest, context: dict, edit: str) -> HttpResponse:
     """
     Handle Menu Edit will check the data, sent by the user via the form via a POST
     request and then store it. This function requests an existing model object and 
@@ -142,7 +142,7 @@ def handle_menu_edit(request: WSGIRequest, context: dict, edit: str) -> HttpResp
     elif request.POST['confirm_edit'] == '0':
         return redirect("simplewiki:admin_menus")
 
-def handle_menu_delete(request: WSGIRequest, context: dict, delete: str) -> HttpResponse:
+def delete_existing_menu(request: WSGIRequest, context: dict, delete: str) -> HttpResponse:
     """
     Handle Menu Delete will check the data, sent by the user via the form via a POST
     request and then store it. This function requests an existing model object and 
@@ -171,7 +171,7 @@ def handle_menu_delete(request: WSGIRequest, context: dict, delete: str) -> Http
     elif request.POST['confirm_delete'] == '0':
         return redirect("simplewiki:admin_menus")
 
-def handle_menu_edit_get(request: WSGIRequest, context: dict, edit: str) -> HttpResponse:
+def load_menu_edit_form(request: WSGIRequest, context: dict, edit: str) -> HttpResponse:
     """
     Handle Menu Edit Get is the GET request helper function for editing menus. This function does 
     not read the GET value data, but only processes it. It takes the data and sends it via the context 
@@ -201,7 +201,7 @@ def handle_menu_edit_get(request: WSGIRequest, context: dict, edit: str) -> Http
         context.update({'error_msg': 'Unknown error in ' + filename + ' in line ' + str(linenumber)})
         return render(request, 'simplewiki/error.html', context)
     
-def handle_menu_delete_get(request: WSGIRequest, context: dict, delete: str) -> HttpResponse:
+def load_menu_delete_form(request: WSGIRequest, context: dict, delete: str) -> HttpResponse:
     """
     Handle Menu Delete Get is the GET request helper function for deleting menus. This function does 
     not read the GET value data, but only processes it. It takes the data and sends it via the context 
@@ -231,7 +231,7 @@ def handle_menu_delete_get(request: WSGIRequest, context: dict, delete: str) -> 
         context.update({'error_msg': 'Unknown error in ' + filename + ' in line ' + str(linenumber)})
         return render(request, 'simplewiki/error.html', context)
 
-def handle_section_create(request: WSGIRequest, context: dict) -> HttpResponse:
+def create_new_section(request: WSGIRequest, context: dict) -> HttpResponse:
     """
     Handle Section Create will check the data, sent by the user via the form via a POST
     request and then store it. This function creates a new model object and stores it.
@@ -269,7 +269,7 @@ def handle_section_create(request: WSGIRequest, context: dict) -> HttpResponse:
     else:
         return redirect('simplewiki:admin_sections')
 
-def handle_section_edit(request: WSGIRequest, context: dict, edit: str) -> HttpResponse:
+def edit_existing_section(request: WSGIRequest, context: dict, edit: str) -> HttpResponse:
     """
     Handle Sections Edit will check the data, sent by the user via the form via a POST
     request and then store it. This function requests an existing model object and 
@@ -313,7 +313,7 @@ def handle_section_edit(request: WSGIRequest, context: dict, edit: str) -> HttpR
     elif request.POST['confirm_edit'] == '0':
         return redirect('simplewiki:admin_sections')
 
-def handle_section_delete(request: WSGIRequest, context: dict, delete: str) -> HttpResponse:
+def delete_existing_section(request: WSGIRequest, context: dict, delete: str) -> HttpResponse:
     """
     Handle Section Delete will check the data, sent by the user via the form via a POST
     request and then store it. This function requests an existing model object and 
@@ -342,7 +342,7 @@ def handle_section_delete(request: WSGIRequest, context: dict, delete: str) -> H
     elif request.POST['confirm_delete'] == '0':
         return redirect('simplewiki:admin_sections')
 
-def handle_section_edit_get(request: WSGIRequest, context: dict, edit: str) -> HttpResponse:
+def load_section_edit_form(request: WSGIRequest, context: dict, edit: str) -> HttpResponse:
     """
     Handle Section Edit Get is the GET request helper function for editing menus. This function does 
     not read the GET value data, but only processes it. It takes the data and sends it via the context 
@@ -366,7 +366,7 @@ def handle_section_edit_get(request: WSGIRequest, context: dict, edit: str) -> H
     
     context.update({'user_action': 'edit'})
 
-def handle_section_delete_get(request: WSGIRequest, context: dict, delete: str) -> HttpResponse:
+def load_section_delete_form(request: WSGIRequest, context: dict, delete: str) -> HttpResponse:
     """
     Handle Section Delete Get is the GET request helper function for deleting sections. This function does 
     not read the GET value data, but only processes it. It takes the data and sends it via the context 
@@ -389,7 +389,6 @@ def handle_section_delete_get(request: WSGIRequest, context: dict, delete: str) 
         return render(request, 'simplewiki/error.html', context)
     
     context.update({'user_action': 'delete'})
-
 
 
 
