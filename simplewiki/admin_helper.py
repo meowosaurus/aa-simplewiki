@@ -65,9 +65,9 @@ def create_new_menu(request: WSGIRequest, context: dict) -> HttpResponse:
             return render(request, 'simplewiki/error.html', context)
 
         print("Yeeeeeeeeeeeeeeeeep")
-        return redirect("simplewiki:admin_menus")
+        return redirect("simplewiki:editor_menus")
     else:
-        return redirect("simplewiki:admin_menus")
+        return redirect("simplewiki:editor_menus")
     
 def edit_existing_menu(request: WSGIRequest, context: dict, edit: str) -> HttpResponse:
     """
@@ -137,10 +137,10 @@ def edit_existing_menu(request: WSGIRequest, context: dict, edit: str) -> HttpRe
             context.update({'error_msg': 'Unknown error in ' + filename + ' in line ' + str(linenumber)})
             return render(request, 'simplewiki/error.html', context)
                 
-        return redirect("simplewiki:admin_menus")
+        return redirect("simplewiki:editor_menus")
     # If cancel edit operation
     elif request.POST['confirm_edit'] == '0':
-        return redirect("simplewiki:admin_menus")
+        return redirect("simplewiki:editor_menus")
 
 def delete_existing_menu(request: WSGIRequest, context: dict, delete: str) -> HttpResponse:
     """
@@ -166,10 +166,10 @@ def delete_existing_menu(request: WSGIRequest, context: dict, delete: str) -> Ht
             context.update({'error_django': str(e)})
             return render(request, 'simplewiki/error.html', context)
                 
-        return redirect("simplewiki:admin_menus")
+        return redirect("simplewiki:editor_menus")
     # If cancel delete operation
     elif request.POST['confirm_delete'] == '0':
-        return redirect("simplewiki:admin_menus")
+        return redirect("simplewiki:editor_menus")
 
 def load_menu_edit_form(request: WSGIRequest, context: dict, edit: str) -> HttpResponse:
     """
@@ -264,10 +264,10 @@ def create_new_section(request: WSGIRequest, context: dict) -> HttpResponse:
             context.update({'error_django': str(e)})
             return render(request, 'simplewiki/error.html', context)
                 
-        return redirect('simplewiki:admin_sections')
+        return redirect('simplewiki:editor_sections')
     # if cancel create operation
     else:
-        return redirect('simplewiki:admin_sections')
+        return redirect('simplewiki:editor_sections')
 
 def edit_existing_section(request: WSGIRequest, context: dict, edit: str) -> HttpResponse:
     """
@@ -308,10 +308,10 @@ def edit_existing_section(request: WSGIRequest, context: dict, edit: str) -> Htt
             context.update({'error_django': str(e)})
             return render(request, 'simplewiki/error.html', context)
 
-        return redirect('simplewiki:admin_sections')
+        return redirect('simplewiki:editor_sections')
     # if cancel edit operation
     elif request.POST['confirm_edit'] == '0':
-        return redirect('simplewiki:admin_sections')
+        return redirect('simplewiki:editor_sections')
 
 def delete_existing_section(request: WSGIRequest, context: dict, delete: str) -> HttpResponse:
     """
@@ -337,10 +337,10 @@ def delete_existing_section(request: WSGIRequest, context: dict, delete: str) ->
             context.update({'error_django': str(e)})
             return render(request, 'simplewiki/error.html', context)
         
-        return redirect('simplewiki:admin_sections')
+        return redirect('simplewiki:editor_sections')
     # if cancel delete operation
     elif request.POST['confirm_delete'] == '0':
-        return redirect('simplewiki:admin_sections')
+        return redirect('simplewiki:editor_sections')
 
 def load_section_edit_form(request: WSGIRequest, context: dict, edit: str) -> HttpResponse:
     """

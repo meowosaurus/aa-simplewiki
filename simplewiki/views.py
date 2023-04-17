@@ -43,7 +43,7 @@ def genContext(request: WSGIRequest):
     current_path = request.path
 
     context = {'menu_items': menu_items, 
-               'permission': is_editor, 
+               'is_editor': is_editor, 
                'section_items': section_items,
                'user_groups': list(request.user.groups.values_list('name', flat=True)),
                'current_path': current_path}
@@ -154,7 +154,7 @@ def search(request: WSGIRequest) -> HttpResponse:
 
 @login_required
 @permission_required("simplewiki.editor")
-def admin_menus(request: WSGIRequest) -> HttpResponse:
+def editor_menus(request: WSGIRequest) -> HttpResponse:
     """
     Admin Menu View, this view is responsible for handling all list, create, edit
     and delete operations related to menus. It uses GET requests to check what button 
@@ -194,9 +194,9 @@ def admin_menus(request: WSGIRequest) -> HttpResponse:
             # Just list all sections if no button was pressed
             context.update({'user_action': 'none'})
 
-    return render(request, "simplewiki/admin/admin_menus.html", context)
+    return render(request, "simplewiki/editor/editor_menus.html", context)
 
-def admin_sections(request: WSGIRequest) -> HttpResponse:
+def editor_sections(request: WSGIRequest) -> HttpResponse:
     """
     Admin Sections View, this view is responsible for handling all list, create, edit
     and delete operations related to sections. It uses GET requests to check what button 
@@ -238,5 +238,5 @@ def admin_sections(request: WSGIRequest) -> HttpResponse:
             # Just list all sections if no button was pressed
             context.update({'user_action': 'none'})
 
-    return render(request, "simplewiki/admin/admin_sections.html", context)
+    return render(request, "simplewiki/editor/editor_sections.html", context)
 

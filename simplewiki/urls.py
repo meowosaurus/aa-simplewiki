@@ -11,6 +11,6 @@ urlpatterns = [
     path('search/', views.search, name='search'),
     path('<str:menu_name>/', views.dynamic_menus, name='dynamic_menu'),
     
-    path("admin/menus/", views.admin_menus, name="admin_menus"),
-    path("admin/sections/", views.admin_sections, name="admin_sections"),
+    path("editor/menus/", views.editor_menus, name="editor_menus"),
+    path("editor/sections/", views.editor_sections, name="editor_sections"),
 ]

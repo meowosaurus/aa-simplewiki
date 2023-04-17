@@ -11,7 +11,7 @@
 
           {% if user_action == 'none' %}
           <span class="pull-right">
-            <form method="GET" action="{% url 'simplewiki:admin_sections' %}">
+            <form method="GET" action="{% url 'simplewiki:editor_sections' %}">
               <button type="submit" name="create" value="1" class="btn btn-success btn-sm">
                 <i class="fas fa-plus-square"></i>
                 Create new section
@@ -46,13 +46,15 @@
                           {% url 'simplewiki:dynamic_menu' menu_name=section_item.menu_path %}
                         </a>
                     </td>
-                    <td>
-                      <form method="GET" action="{% url 'simplewiki:admin_sections' %}">
+                    <td class="text-right">
+                      <form method="GET" action="{% url 'simplewiki:editor_sections' %}">
                         <button type="submit" name="edit" value="{{ section_item.title }}" class="btn btn-primary btn-sm">
                             <i class="fas fa-edit"></i>
+                            Edit Section
                         </button>
                         <button type="submit" name="delete" value="{{ section_item.title }}" class="btn btn-danger btn-sm">
                             <i class="fas fa-trash-alt"></i>
+                            Delete Section
                         </button>
                       </form>
                     </td>

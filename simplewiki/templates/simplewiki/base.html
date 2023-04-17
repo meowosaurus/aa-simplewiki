@@ -18,10 +18,12 @@
                     <span class="icon-bar"></span>
                 </button>
 
+                {% if False %}
                 <a class="navbar-brand">
                     <i class="fas fa-book"></i>
                     Wiki
                 </a>
+                {% endif %}
                 
             </div>
     
@@ -48,22 +50,22 @@
                             Search
                         </a>
                     </li>
-                    {% if permission is True %}
+                    {% if is_editor is True %}
                         <li class="dropdown {% if current_path == '/wiki/admin/menus/' or current_path == '/wiki/admin/sections/' %}active{% endif %}">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-user-cog"></i>
-                                Admin 
+                                Editor 
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="{% url 'simplewiki:admin_menus' %}">
+                                    <a href="{% url 'simplewiki:editor_menus' %}">
                                         <i class="fas fa-folder-open"></i>
                                         Menus
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{% url 'simplewiki:admin_sections' %}">
+                                    <a href="{% url 'simplewiki:editor_sections' %}">
                                         <i class="fas fa-pen"></i>
                                         Sections
                                     </a>

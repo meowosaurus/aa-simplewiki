@@ -11,7 +11,7 @@
 
               {% if user_action == 'none' %}
               <span class="pull-right">
-                <form method="GET" action="{% url 'simplewiki:admin_menus' %}">
+                <form method="GET" action="{% url 'simplewiki:editor_menus' %}">
                   <button type="submit" name="create" value="1" class="btn btn-success btn-sm">
                     <i class="fas fa-plus-square"></i>
                     Create new menu
@@ -46,13 +46,15 @@
                           {% url 'simplewiki:dynamic_menu' menu_name=menu_item.path %}
                         </a>
                       </td>
-                      <td>
-                        <form method="GET" action="{% url 'simplewiki:admin_menus' %}">
+                      <td class="text-right">
+                        <form method="GET" action="{% url 'simplewiki:editor_menus' %}">
                         <button type="submit" name="edit" value="{{ menu_item.path }}" class="btn btn-primary btn-sm">
                             <i class="fas fa-edit"></i>
+                            Edit Menu
                         </button>
                         <button type="submit" name="delete" value="{{ menu_item.path }}" class="btn btn-danger btn-sm">
                             <i class="fas fa-trash-alt"></i>
+                            Delete Menu
                         </button>
                       </form>
                       </td>
@@ -75,7 +77,7 @@
           </div>
           <form method="post" id="my_form">
             {% csrf_token %}
-            {% include 'simplewiki/admin/partials/_edit_menu.html' %}
+            {% include 'simplewiki/editor/partials/_edit_menu.html' %}
           </form>
         </div>
         {% elif user_action == 'delete' %}
@@ -102,7 +104,7 @@
           <hr>
           <form method="post" id="my_form">
             {% csrf_token %}
-            {% include 'simplewiki/admin/partials/_create_menu.html' %}
+            {% include 'simplewiki/editor/partials/_create_menu.html' %}
           </form>
         </div>
         {% endif %}
