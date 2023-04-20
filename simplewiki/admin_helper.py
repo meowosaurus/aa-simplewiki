@@ -48,7 +48,19 @@ def create_new_menu(request: WSGIRequest, context: dict) -> HttpResponse:
                 return render(request, 'simplewiki/error.html', context)
                     
         # Taking the titel and converting it into a url suitable string
-        new_menu.path = slugify(request.POST['title'])
+        try:
+            new_menu.path = slugify(request.POST['title'])
+            new_menu.parent = request.POST['parent']
+        except (KeyError, ValueError, TypeError) as e:
+                context.update({'error_django': str(e)})
+                return render(request, 'simplewiki/error.html', context)
+        except Exception as e:
+                frame = inspect.currentframe()
+                context.update({'error_django': str(e)})
+                filename = inspect.getframeinfo(frame).filename
+                linenumber = inspect.getframeinfo(frame).lineno
+                context.update({'error_msg': 'Unknown error in ' + filename + ' in line ' + str(linenumber)})
+                return render(request, 'simplewiki/error.html', context)
                 
         # Save new_menu and check for errors
         try:
@@ -119,8 +131,20 @@ def edit_existing_menu(request: WSGIRequest, context: dict, edit: str) -> HttpRe
                 return render(request, 'simplewiki/error.html', context)
                 
         # Taking the titel and converting it into a url suitable string
-        selected_menu.path = slugify(request.POST['title'])
-        selected_menu.groups = request.POST['groups']
+        try:
+            selected_menu.path = slugify(request.POST['title'])
+            selected_menu.parent = request.POST['parent']
+            selected_menu.groups = request.POST['groups']
+        except (KeyError, ValueError, TypeError) as e:
+            context.update({'error_django': str(e)})
+            return render(request, 'simplewiki/error.html', context)
+        except Exception as e:
+            frame = inspect.currentframe()
+            context.update({'error_django': str(e)})
+            filename = inspect.getframeinfo(frame).filename
+            linenumber = inspect.getframeinfo(frame).lineno
+            context.update({'error_msg': 'Unknown error in ' + filename + ' in line ' + str(linenumber)})
+            return render(request, 'simplewiki/error.html', context)
 
         # Save selected_menu and check for errors
         try:

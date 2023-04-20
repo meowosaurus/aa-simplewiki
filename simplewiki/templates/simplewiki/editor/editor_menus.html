@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load humanize %}
 {% load static %}
+{% load custom_filters %}
 
 {% block details %}
 {% if user_action == 'none' %}
@@ -31,11 +32,12 @@
             <table class="table table-striped">
                 <thead>
                   <tr>
-                    <th width="20%">Index</th>
-                    <th width="20%">Menu Title</th>
-                    <th width="20%">URL</th>
-                    <th width="20%">Groups</th>
-                    <th width="20%">Action</th>
+                    <th width="16%">Index</th>
+                    <th width="17%">Menu Title</th>
+                    <th width="17%">URL</th>
+                    <th width="17%">Parent Menu</th>
+                    <th width="17%">Groups</th>
+                    <th width="16%">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -52,22 +54,33 @@
                         </a>
                       </td>
                       <td>
+                        {% if not menu_item.parent %}
+                          None
+                        {% else %}
+                          <a href="{% url 'simplewiki:dynamic_menu' menu_name=menu_item.parent %}">
+                            {{ menu_item.parent }}
+                          </a>
+                        {% endif %}
+                      </td>
+                      <td>
                         {% if menu_item.groups %}
-                          {{ menu_item.groups }}
+                          {{ menu_item.groups|add_group_space }}
                         {% else %}
                           None
                         {% endif %}
                       </td>
                       <td>
                         <form method="GET" action="{% url 'simplewiki:editor_menus' %}">
-                        <button type="submit" name="edit" value="{{ menu_item.path }}" class="btn btn-primary btn-sm">
-                            <i class="fas fa-edit"></i>
-                            Edit Menu
-                        </button>
-                        <button type="submit" name="delete" value="{{ menu_item.path }}" class="btn btn-danger btn-sm">
-                            <i class="fas fa-trash-alt"></i>
-                            Delete Menu
-                        </button>
+                          <div class="btn-group-vertical btn-block">
+                            <button type="submit" name="edit" value="{{ menu_item.path }}" class="btn btn-primary btn-sm btn-block">
+                              <i class="fas fa-edit"></i>
+                              Edit Menu
+                            </button>
+                            <button type="submit" name="delete" value="{{ menu_item.path }}" class="btn btn-danger btn-sm btn-block">
+                              <i class="fas fa-trash-alt"></i>
+                              Delete Menu
+                            </button>
+                          </div>
                       </form>
                       </td>
                     </tr>
@@ -120,6 +133,9 @@
           </form>
         </div>
         {% endif %}
+        <div class="panel-footer">
+          Check our wiki on GitHub if you need help.
+        </div>
     </div>
 {% endblock %}
 

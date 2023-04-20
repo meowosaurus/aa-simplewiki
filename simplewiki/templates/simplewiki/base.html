@@ -29,9 +29,32 @@
             </div>
     
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
                 {% for menu_item in menu_items %}
-                    {% if not menu_item.groups or menu_item.groups in user_groups %}
-                    <ul class="nav navbar-nav">
+                    {% if not menu_item.parent %}
+                        {% if menu_item|has_menu_children %}
+                        {% with submenu_paths=menu_item|get_submenu_paths %}
+                        <li class="dropdown {% if current_path|any_paths_current:submenu_paths %}active{% endif %}">
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <i class="{{ menu_item.icon }}" style="display: inline-block;"></i>
+                            {{ menu_item.title }} 
+                            <span class="caret"></span>
+                          </a>
+                          <ul class="dropdown-menu">
+                            {% with menu_children=menu_item|get_menu_children %}
+                                {% for sub_menu_item in menu_children %}
+                                <li>
+                                    <a href="{% url 'simplewiki:dynamic_menu' menu_name=sub_menu_item.path %}">
+                                        <i class="{{ sub_menu_item.icon }}" style="display: inline-block;"></i>
+                                        {{ sub_menu_item.title }}
+                                    </a>
+                                </li>
+                                {% endfor %}
+                            {% endwith %}
+                          </ul>
+                        </li>
+                        {% endwith %}
+                        {% else %}
                         {% url 'simplewiki:dynamic_menu' menu_name=menu_item.path as expected_path %}
                         <li class="navbar-text {% if current_path == expected_path %}active{% endif %}">
                             <a href="{% url 'simplewiki:dynamic_menu' menu_name=menu_item.path %}" style="display: inline-block;">
@@ -39,25 +62,11 @@
                                 {{ menu_item.title }}
                             </a>
                         </li>
-                    </ul>
-                    {% else %}
-                        {% if user_groups|is_user_in_groups:menu_item.groups %}
-                            <ul class="nav navbar-nav">
-                                {% url 'simplewiki:dynamic_menu' menu_name=menu_item.path as expected_path %}
-                                <li class="navbar-text {% if current_path == expected_path %}active{% endif %}">
-                                    <a href="{% url 'simplewiki:dynamic_menu' menu_name=menu_item.path %}" style="display: inline-block;">
-                                        <i class="{{ menu_item.icon }}" style="display: inline-block;"></i>
-                                        {{ menu_item.title }}
-                                    </a>
-                                </li>
-                            </ul>
                         {% endif %}
                     {% endif %}
                 {% endfor %} 
+                </ul>
 
-                
-                  
-                
                 <ul class="nav navbar-nav pull-right">
                     <li class="navbar-text {% if current_path == '/wiki/search/' %}active{% endif %}">
                         <a href="{% url 'simplewiki:search' %}">
@@ -66,7 +75,7 @@
                         </a>
                     </li>
                     {% if is_editor is True %}
-                        <li class="dropdown {% if current_path == '/wiki/admin/menus/' or current_path == '/wiki/admin/sections/' %}active{% endif %}">
+                        <li class="dropdown {% if current_path == '/wiki/editor/menus/' or current_path == '/wiki/editor/sections/' %}active{% endif %}">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-user-cog"></i>
                                 Editor 

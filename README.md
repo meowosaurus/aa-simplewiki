@@ -16,7 +16,7 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 * [Support](#support)
 
 # Current Features
-* Create custom wiki pages with different sections
+* Create custom wiki menus with dropdowns plus different sections on each menu
 * Add an icon next to menus or sections
 * Edit pages on the admin panel with [markdown](https://commonmark.org/help/)
 * Search function: Search across all wiki menus and sections
@@ -30,7 +30,9 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 
 ## ToDo:
 * Add repo to PyPi
-* Add dropdown menues
+* Quality-of-life updates
+* Improve code documentation
+* Clean-up code
 
 ## Planned
 * Drag and drop system to make indexing menus and sections easier

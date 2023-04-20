@@ -34,6 +34,10 @@ class MenuItem(models.Model):
                             unique=True,
                             null=True,
                             help_text='Required: The path of the URL. You will find that page under https://{your_auth_domain}/simplewiki/{name}.')
+    parent = models.CharField(max_length=255,
+                              null=True,
+                              blank=True,
+                              help_text='Optional: Write the path of the parent menu. If you want this menu to be the parent leave this field empty.')
     groups = models.CharField(max_length=255, 
                              null=True,
                              blank=True,

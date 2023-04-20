@@ -1,4 +1,7 @@
 from django import template
+from simplewiki.models import MenuItem
+
+register = template.Library()
 
 def is_user_in_groups(user_groups, group_list) -> bool:
     """
@@ -23,6 +26,32 @@ def is_user_in_groups(user_groups, group_list) -> bool:
 
     return any(group_name in user_groups for group_name in group_names)
 
-register = template.Library()
+def add_group_space(text: str) -> str:
+    return text.replace(',', ', ')
+
+def has_menu_children(menu_item):
+    # If any other menu has menu_item as parent
+    return MenuItem.objects.filter(parent=menu_item.path).exists()
+
+def get_menu_children(menu_item):
+    return MenuItem.objects.filter(parent=menu_item.path)
+
+def get_submenu_paths(parent_menu_item):
+    paths = []
+
+    children = get_menu_children(parent_menu_item)
+    for child in children:
+        paths.append("/wiki/" + child.path + "/")
+
+    return paths
+
+@register.simple_tag
+def any_paths_current(current_path, children_paths):
+    return current_path in children_paths
 
 register.filter('is_user_in_groups', is_user_in_groups)
+register.filter('add_group_space', add_group_space)
+register.filter('has_menu_children', has_menu_children)
+register.filter('get_menu_children', get_menu_children)
+register.filter('get_submenu_paths', get_submenu_paths)
+register.filter('any_paths_current', any_paths_current)

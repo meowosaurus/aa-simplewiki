@@ -52,14 +52,17 @@
                     </td>
                     <td class="text-center">
                       <form method="GET" action="{% url 'simplewiki:editor_sections' %}">
-                        <button type="submit" name="edit" value="{{ section_item.title }}" class="btn btn-primary btn-sm">
+                        <div class="btn-group-vertical btn-block">
+                          <button type="submit" name="edit" value="{{ section_item.title }}" class="btn btn-primary btn-sm btn-block">
                             <i class="fas fa-edit"></i>
                             Edit Section
-                        </button>
-                        <button type="submit" name="delete" value="{{ section_item.title }}" class="btn btn-danger btn-sm">
+                          </button>
+                          <button type="submit" name="delete" value="{{ section_item.title }}" class="btn btn-danger btn-sm btn-block">
                             <i class="fas fa-trash-alt"></i>
                             Delete Section
-                        </button>
+                          </button>
+                        </div>
+                        
                       </form>
                     </td>
                 </tr>
@@ -169,6 +172,9 @@
           </div>
         </form>
       {% endif %}
+    </div>
+    <div class="panel-footer">
+      Check our wiki on GitHub if you need help.
     </div>
 </div>
 {% endblock %}
