@@ -41,7 +41,7 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 * [Meowosaurus](https://github.com/meowosaurus)
 
 ## Screenshots
-![Showcase](https://i.imgur.com/buYmABX.png)
+![Showcase](https://i.imgur.com/vST5An1.png)
 
 ### Search
 ![Search](https://i.imgur.com/wW69LFN.png)
