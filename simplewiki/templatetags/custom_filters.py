@@ -34,7 +34,7 @@ def has_menu_children(menu_item):
     return MenuItem.objects.filter(parent=menu_item.path).exists()
 
 def get_menu_children(menu_item):
-    return MenuItem.objects.filter(parent=menu_item.path)
+    return MenuItem.objects.filter(parent=menu_item.path).order_by('index')
 
 def get_submenu_paths(parent_menu_item):
     paths = []
@@ -49,9 +49,19 @@ def get_submenu_paths(parent_menu_item):
 def any_paths_current(current_path, children_paths):
     return current_path in children_paths
 
+@register.simple_tag
+def user_access_any_submenus(parent_menu, user_groups):
+    submenus = MenuItem.objects.filter(parent=parent_menu.path)
+
+    for submenu in submenus:
+        if not submenu.groups or is_user_in_groups(user_groups, submenu.groups):
+            return True
+    return False
+
 register.filter('is_user_in_groups', is_user_in_groups)
 register.filter('add_group_space', add_group_space)
 register.filter('has_menu_children', has_menu_children)
 register.filter('get_menu_children', get_menu_children)
 register.filter('get_submenu_paths', get_submenu_paths)
 register.filter('any_paths_current', any_paths_current)
+register.filter('user_access_any_submenus', user_access_any_submenus)

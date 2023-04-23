@@ -14,12 +14,14 @@ from django.core.exceptions import PermissionDenied
 
 # Custom imports
 from .models import MenuItem, SectionItem
-from .admin_helper import *
+#from .admin_helper import *
+from .admin_helper_menus import *
+from .admin_helper_sections import *
 
 ### Helper Functions ###
 
 # Standard context for a normal view, required by base.html
-def genContext(request: WSGIRequest):
+def gen_context(request: WSGIRequest):
     """
     Generates the standard context for the django render function, 
     context includes all menu and section items, if the user is 
@@ -42,11 +44,14 @@ def genContext(request: WSGIRequest):
 
     current_path = request.path
 
+    all_groups = Group.objects.all()
+
     context = {'menu_items': menu_items, 
                'is_editor': is_editor, 
                'section_items': section_items,
                'user_groups': list(request.user.groups.values_list('name', flat=True)),
-               'current_path': current_path}
+               'current_path': current_path,
+               'all_groups': all_groups}
 
     return context
 
@@ -58,7 +63,7 @@ def index(request: WSGIRequest) -> HttpResponse:
     """
     Index view, will redirect the user to either an error message, saying no 
     menu items have been created or will redirect the user to the first menu 
-    item (the one with the lowest index)
+    item they have access to (the one with the lowest index)
     
     Args:
         request (WSGIRequest): The standard django request
@@ -67,16 +72,55 @@ def index(request: WSGIRequest) -> HttpResponse:
         HttpResponse: Returns the template and context to render
     """
 
-    context = genContext(request)
+    context = gen_context(request)
 
     menu_items = MenuItem.objects.all()
 
-    # Show the first wiki page 
+    # If the menu even has menu items
     if menu_items.count() > 0:
-        return redirect('simplewiki:dynamic_menu', menu_items.order_by('index').first())
-    # Show a default "create your first page.." error page
+        # Get all parent menus
+        for parent_menu_item in MenuItem.objects.filter(parent=""):
+
+            # Get all sub menus for the current parent menu
+            first_menu_submenus = MenuItem.objects.filter(parent=parent_menu_item.path)
+
+            # If the menu even has submenus
+            if first_menu_submenus.count() > 0:
+                for first_menu_item in first_menu_submenus:
+                    # If the submenu has any groups
+                    if first_menu_item.groups:
+                        group_names = first_menu_item.groups.split(',')
+                        user_groups = list(request.user.groups.values_list('name', flat=True))
+
+                        # If the user has the right to access this submenu
+                        if any(group_name in user_groups for group_name in group_names):
+                            return redirect('simplewiki:dynamic_menu', first_menu_item)
+                    else:
+                        return redirect('simplewiki:dynamic_menu', first_menu_item)
+            # If the menu doesn't have submenus
+            else:
+                # If the parent menu has any groups
+                if parent_menu_item.groups:
+                    group_names = parent_menu_item.groups.split(',')
+                    user_groups = list(request.user.groups.values_list('name', flat=True))
+
+                    # If the user has the right to access the parent menu
+                    if any(group_name in user_groups for group_name in group_names):
+                        return redirect('simplewiki:dynamic_menu', parent_menu_item)
+                else:
+                    return redirect('simplewiki:dynamic_menu', parent_menu_item)
+
+        # If there are no menus the user has permission to access
+        error_code = "#1000"
+        error_message = "You don't have the permission to access any menus. Please contact the administrator."
+        context.update({'error_code': error_code})
+        context.update({'error_msg': error_message})
+        return render(request, "simplewiki/error.html", context)
+    # Show a default "create your first menu.." error page
     else:
+        error_code = "#1000"
         error_message = "So far you didn't create any menus. Please create one under Admin -> Menus"
+        context.update({'error_code': error_code})
         context.update({'error_msg': error_message})
         return render(request, "simplewiki/error.html", context)
 
@@ -100,7 +144,7 @@ def dynamic_menus(request: WSGIRequest, menu_name: str) -> HttpResponse:
     # Also only show sections that are related to the currently selected menu
     available_sections = SectionItem.objects.filter(menu_path=menu_name).order_by('index')
 
-    context = genContext(request)
+    context = gen_context(request)
     context.update({'available_sections': available_sections})
     
     # Check if the user has the permission to see the requested page. If not, send an error
@@ -118,7 +162,13 @@ def dynamic_menus(request: WSGIRequest, menu_name: str) -> HttpResponse:
     if not requested_menu.groups or any(group_name in request.user.groups.values_list('name', flat=True) for group_name in group_names):
         return render(request, 'simplewiki/dynamic_page.html', context)
     else:
-        error_message = "You don\'t have the permissions to access this page. You need to be in the <b>" + requested_menu.groups.replace(',', ', ') + "</b> groups on auth."
+        # If more then two groups are required
+        if len(requested_menu.groups.split(',')) > 1:
+            group_plural = "groups"
+        else:
+            group_plural = "group"
+        context.update({'error_code': '#1001'})
+        error_message = "You don\'t have the permissions to access this page. You need to be in the <b>" + requested_menu.groups.replace(',', ', ') + "</b> " + group_plural + " on auth."
         context.update({'error_msg': error_message})
         return render(request, 'simplewiki/error.html', context)
 
@@ -138,16 +188,32 @@ def search(request: WSGIRequest) -> HttpResponse:
         HttpResponse: Returns the template and context to render
     """
 
-    context = genContext(request)
+    context = gen_context(request)
 
     try:
         query = request.GET.get('query')
+
+        available_results = []
         if query:
+            # Search all sections' contexts and titles
             search_results = SectionItem.objects.filter(
                 Q(content__icontains=query) | Q(title__icontains=query))
+            
+            # Get the menu for every search result
+            for result in search_results:
+                result_menu = MenuItem.objects.get(path=result.menu_path)
+
+                group_names = result_menu.groups.split(',')
+                user_groups = list(request.user.groups.values_list('name', flat=True))
+
+                # Check if the user can access the corresponding menu
+                if not result_menu.groups or any(group_name in user_groups for group_name in group_names):
+                    available_results.append(result)
+            
+            context.update({'available_results': available_results})
             context.update({'oldQuery': query})
-            context.update({'searchResults': search_results})
     except PermissionDenied as e:
+        context.update({'error_code': '#1002'})
         context.update({'error_msg': 'Unable to complete search: Do you have the right permissions to access this search?'})
         return render(request, 'simplewiki/error.html', context)
     except Exception as e:
@@ -177,7 +243,7 @@ def editor_menus(request: WSGIRequest) -> HttpResponse:
         HttpResponse: Returns the template and context to render
     """
 
-    context = genContext(request)
+    context = gen_context(request)
 
     create = request.GET.get('create')
     edit = request.GET.get('edit')
@@ -221,7 +287,7 @@ def editor_sections(request: WSGIRequest) -> HttpResponse:
         HttpResponse: Returns the template and context to render
     """
 
-    context = genContext(request)
+    context = gen_context(request)
 
     create = request.GET.get('create')
     edit = request.GET.get('edit')

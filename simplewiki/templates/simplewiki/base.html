@@ -31,37 +31,47 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                 {% for menu_item in menu_items %}
+                    {# Check if menu is the parent #}
                     {% if not menu_item.parent %}
+                        {# Check if the menu has any children #}
                         {% if menu_item|has_menu_children %}
-                        {% with submenu_paths=menu_item|get_submenu_paths %}
-                        <li class="dropdown {% if current_path|any_paths_current:submenu_paths %}active{% endif %}">
-                          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                            <i class="{{ menu_item.icon }}" style="display: inline-block;"></i>
-                            {{ menu_item.title }} 
-                            <span class="caret"></span>
-                          </a>
-                          <ul class="dropdown-menu">
-                            {% with menu_children=menu_item|get_menu_children %}
-                                {% for sub_menu_item in menu_children %}
-                                <li>
-                                    <a href="{% url 'simplewiki:dynamic_menu' menu_name=sub_menu_item.path %}">
-                                        <i class="{{ sub_menu_item.icon }}" style="display: inline-block;"></i>
-                                        {{ sub_menu_item.title }}
+                            {# Check if the user is in at least one required group #}
+                            {% if menu_item|user_access_any_submenus:user_groups %}
+                                {% with submenu_paths=menu_item|get_submenu_paths %}
+                                <li class="dropdown {% if current_path|any_paths_current:submenu_paths %}active{% endif %}">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                        <i class="{{ menu_item.icon }}" style="display: inline-block;"></i>
+                                        {{ menu_item.title }} 
+                                        <span class="caret"></span>
                                     </a>
+                                    <ul class="dropdown-menu">
+                                    {% with menu_children=menu_item|get_menu_children %}
+                                        {% for sub_menu_item in menu_children %}
+                                            {% if not sub_menu_item.groups or user_groups|is_user_in_groups:sub_menu_item.groups %}
+                                            <li>
+                                                <a href="{% url 'simplewiki:dynamic_menu' menu_name=sub_menu_item.path %}">
+                                                    <i class="{{ sub_menu_item.icon }}" style="display: inline-block;"></i>
+                                                    {{ sub_menu_item.title }}
+                                                </a>
+                                            </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endwith %}
+                                    </ul>
                                 </li>
-                                {% endfor %}
-                            {% endwith %}
-                          </ul>
-                        </li>
-                        {% endwith %}
+                                {% endwith %}
+                            {% endif %}
+                        {# Check if the menu doesn't have any children -> must be a parent #}
                         {% else %}
-                        {% url 'simplewiki:dynamic_menu' menu_name=menu_item.path as expected_path %}
-                        <li class="navbar-text {% if current_path == expected_path %}active{% endif %}">
-                            <a href="{% url 'simplewiki:dynamic_menu' menu_name=menu_item.path %}" style="display: inline-block;">
-                                <i class="{{ menu_item.icon }}" style="display: inline-block;"></i>
-                                {{ menu_item.title }}
-                            </a>
-                        </li>
+                            {% url 'simplewiki:dynamic_menu' menu_name=menu_item.path as expected_path %}
+                            {% if not menu_item.groups or user_groups|is_user_in_groups:menu_item.groups %}
+                            <li class="navbar-text {% if current_path == expected_path %}active{% endif %}">
+                                <a href="{% url 'simplewiki:dynamic_menu' menu_name=menu_item.path %}" style="display: inline-block;">
+                                    <i class="{{ menu_item.icon }}" style="display: inline-block;"></i>
+                                    {{ menu_item.title }}
+                                </a>
+                            </li>
+                            {% endif %}
                         {% endif %}
                     {% endif %}
                 {% endfor %} 

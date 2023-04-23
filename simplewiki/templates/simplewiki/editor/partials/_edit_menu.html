@@ -14,16 +14,28 @@
     <p class="help-block">Optional: Go to <a href="https://fontawesome.com/v5/search?o=r&m=free" target="_blank">https://fontawesome.com/v5/search?o=r&m=free</a> to find matching icons. We only support free icons. Format example: fas fa-hand-spock</p>
   </div>
   <div class="form-group">
-    <label for="exampleInputPassword1">Parent:</label>
-    <input type="text" class="form-control" name="parent" id="parentInput" placeholder="{{ selectedMenu.parent }}">
-    <p class="help-block">Optional: Go to <a href="https://fontawesome.com/v5/search?o=r&m=free" target="_blank">https://fontawesome.com/v5/search?o=r&m=free</a> to find matching icons. We only support free icons. Format example: fas fa-hand-spock</p>
+    <label for="menuPathSelect">Parent:</label>
+    <select class="form-control" name="parent_select" id="menuParentSelect">
+      <option value="none">None</option>
+      {% for menu_item in menu_items %}
+        {% if not menu_item.parent and selectedMenu.path != menu_item.path %}
+          <option value="{{ menu_item.path }}">{{ menu_item.title }}</option>
+        {% endif %}
+      {% endfor %}
+    </select>
+    <p class="help-block">Optional: Select the parent menu here. If you leave it at 'None' it will be the parent. For example: welcome</p>
   </div>
   <div class="form-group">
-    <label for="exampleInputPassword1">Groups:</label>
-    <input type="text" class="form-control" name="groups" id="groupsInput" placeholder="{{ selectedMenu.groups }}">
-    <p class="help-block">Optional: Insert the exact name of any (Alliance Auth) groups who should have access to this menu and seperate them with a comma. Example: CEO,Director,Recruiter</p>
+    <label for="menuPathSelect">Groups:</label>
+    <select multiple class="form-control" name="group_select" id="menuGroupSelect">
+      <option value="none">None</option>
+      {% for group_item in all_groups %}
+        <option value="{{ group_item.name }}">{{ group_item.name }}</option>
+      {% endfor %}
+    </select>
+    <p class="help-block">Optional: Select the groups who are able to access this menu. You can select multiple.</p>
   </div>
   <button type="submit" name="confirm_edit" value="0" class="btn btn-default">Cancel</button>
   <div class="pull-right">
     <button type="submit" name="confirm_edit" value="1" class="btn btn-success">Save</button>
-  </div>
+</div>
