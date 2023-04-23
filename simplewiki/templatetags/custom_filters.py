@@ -1,4 +1,5 @@
 from django import template
+
 from simplewiki.models import MenuItem
 
 register = template.Library()
