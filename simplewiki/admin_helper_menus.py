@@ -67,6 +67,7 @@ def create_new_menu(request: WSGIRequest, context: dict) -> HttpResponse:
         # Take all inputs from the group multiple select and put them in a string, seperated by a comma
         group_string = ""
         try:
+            
             groups = request.POST.getlist('group_select')
 
             for group_item in groups:

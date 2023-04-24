@@ -9,5 +9,3 @@ from .models import SectionItem
 admin.site.register(MenuItem)
 
 admin.site.register(SectionItem)
-
-

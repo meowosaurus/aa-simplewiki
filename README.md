@@ -29,13 +29,20 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
   * Users with editor permission see edit and delete buttons above all sections (editor_access)
 
 ## ToDo:
-* Add repo to PyPi
 * Quality-of-life updates
 * Improve code documentation
 * Clean-up code
 
 ## Planned
 * Drag and drop system to make indexing menus and sections easier
+* Add translations for 
+  * German
+  * Spanish
+  * Chinese
+  * Russian
+  * Korean 
+  * French
+  * Italian
 
 ### Active devs:
 * [Meowosaurus](https://github.com/meowosaurus)
@@ -58,7 +65,7 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 ### Alliance Auth Production
 
 #### Non-Docker Version
-1.) Install the pip package via `pip install git+https://github.com/meowosaurus/aa-simplewiki`
+1.) Install the pip package via `pip install aa-simplewiki`
 
 2.) Add `simplewiki` to your `INSTALLED_APPS` in your projects `local.py`
 
@@ -67,7 +74,7 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 #### Docker Version
 1.) Please make sure you followed the custom docker-image tutorial [here](https://gitlab.com/allianceauth/allianceauth/-/tree/master/docker#using-a-custom-docker-image): 
 
-2.) Edit your `conf/requirements` and add the following lines `git+https://github.com/meowosaurus/aa-simplewiki`
+2.) Edit your `conf/requirements` and add the following line `aa-simplewiki` (Check https://pypi.org/project/aa-simplewiki/ for different versions!)
 
 3.) Add `simplewiki` to your `INSTALLED_APPS` in your projects `local.py`
 
