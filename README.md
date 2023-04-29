@@ -48,7 +48,7 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 * [Meowosaurus](https://github.com/meowosaurus)
 
 ## Screenshots
-![Showcase](https://i.imgur.com/vST5An1.png)
+![Showcase](https://i.imgur.com/a9KsXRw.gif)
 
 ### Search
 ![Search](https://i.imgur.com/wW69LFN.png)
@@ -96,6 +96,8 @@ Make sure you have installed alliance auth in the correct way: https://alliancea
 2.) Make sure it's under the root folder `aa-dev`, not under `myauth` 
 
 3.) Change directory into `aa-dev` aand run `pip install -e aa-simplewiki`
+
+**Important**: If you are getting an error saying that `simplewiki` is not installed after running `pip install -e aa-simplewiki`, delete the `setup.py` file in the aa-simplewiki root directory and try again.
 
 4.) Add `simplewiki` to your `INSTALLED_APPS` in your projects `local.py`
 
