@@ -19,7 +19,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     license='GNU General Public License v3 (GPLv3)',
-    description='Alliance Auth Plugin',
+    description='Alliance Auth Wiki Plugin',
     install_requires=install_requires,
     long_description=README,
     long_description_content_type='text/markdown',
