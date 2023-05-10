@@ -28,9 +28,9 @@
   <div class="form-group">
     <label for="menuPathSelect">Groups:</label>
     <select multiple class="form-control" name="group_select" id="menuGroupSelect">
-      <option value="none">None</option>
+      <option value="none" {% if selectedMenu.groups == "" %}selected{% endif %} >None</option>
       {% for group_item in all_groups %}
-        <option value="{{ group_item.name }}">{{ group_item.name }}</option>
+        <option value="{{ group_item.name }}" {% if group_item.name in selectedMenu.groups %} selected{% endif %}>{{ group_item.name }}</option>
       {% endfor %}
     </select>
     <p class="help-block">Optional: Select the groups who are able to access this menu. You can select multiple.</p>

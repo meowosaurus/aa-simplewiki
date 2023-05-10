@@ -28,7 +28,7 @@
   <div class="form-group">
     <label for="menuPathSelect">Groups:</label>
     <select multiple class="form-control" name="group_select" id="menuGroupSelect">
-      <option value="none">None</option>
+      <option value="none" selected>None</option>
       {% for group_item in all_groups %}
         <option value="{{ group_item.name }}">{{ group_item.name }}</option>
       {% endfor %}
