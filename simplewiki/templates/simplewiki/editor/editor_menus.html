@@ -143,19 +143,19 @@
 {% if user_action == 'edit' %}
 {# groupInput needs to be seperated, otherwise it won't find the input #}
 <script>
-  document.getElementById("groupInput").value = '{{ selectedMenu.groups|escapejs }}';
-</script>
-<script>
-  document.getElementById("indexInput").value = '{{ selectedMenu.index|escapejs }}';
-  document.getElementById("titleInput").value = '{{ selectedMenu.title|escapejs }}';
-  document.getElementById("iconInput").value = '{{ selectedMenu.icon|escapejs }}';
-  document.getElementById("parentInput").value = '{{ selectedMenu.parent|escapejs }}';
-  document.getElementById("pathInput").value = '{{ selectedMenu.path|escapejs }}';
-</script>
-<script>
+  const selectElement = document.getElementById("menuParentSelect");
+  const selectedPath = "{{ selectedMenu.menu_path }}";
+
+  for (let i = 0; i < menuParentSelect.options.length; i++) {
+          if (menuParentSelect.options[i].value == selectedPath) {
+              menuParentSelect.options[i].selected = true;
+              break;
+          }
+      }
+
   document.addEventListener('DOMContentLoaded', function() {
       const menuParentSelect = document.getElementById('menuParentSelect');
-      const selectedPath = "{{ selectedMenu.menu_path }}";
+      const selectedPath = "{{ selectedMenu.parent }}";
 
       for (let i = 0; i < menuParentSelect.options.length; i++) {
           if (menuParentSelect.options[i].value == selectedPath) {
@@ -165,6 +165,12 @@
       }
   });
 </script>
+<script>
+  document.getElementById("indexInput").value = '{{ selectedMenu.index|escapejs }}';
+  document.getElementById("titleInput").value = '{{ selectedMenu.title|escapejs }}';
+  document.getElementById("iconInput").value = '{{ selectedMenu.icon|escapejs }}';
+</script>
+
 {% endif %}
 {% endblock %}
 
