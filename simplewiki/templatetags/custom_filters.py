@@ -17,6 +17,7 @@ def is_user_in_groups(user_groups, group_list) -> bool:
         bool: Returns true if the user is at least in one of the required groups
     """
 
+    # Try to split group lists into any array based on comma
     try:
         if group_list is not None and isinstance(group_list, str):
             group_names = group_list.split(',')
@@ -25,7 +26,8 @@ def is_user_in_groups(user_groups, group_list) -> bool:
     except Exception as e:
         return False
 
-    return any(group_name in user_groups for group_name in group_names)
+    # Check if the user has any groups or if the menu doesn't even require any groups
+    return any(group_name in user_groups for group_name in group_names) or any(group_name == "none" for group_name in group_names)
 
 def add_group_space(text: str) -> str:
     return text.replace(',', ', ')

@@ -92,8 +92,10 @@ def index(request: WSGIRequest) -> HttpResponse:
                         group_names = first_menu_item.groups.split(',')
                         user_groups = list(request.user.groups.values_list('name', flat=True))
 
+                        print(group_names)
+
                         # If the user has the right to access this submenu
-                        if any(group_name in user_groups for group_name in group_names):
+                        if any(group_name in user_groups for group_name in group_names) or any(element == "none" for element in group_names):
                             return redirect('simplewiki:dynamic_menu', first_menu_item)
                     else:
                         return redirect('simplewiki:dynamic_menu', first_menu_item)
@@ -105,7 +107,7 @@ def index(request: WSGIRequest) -> HttpResponse:
                     user_groups = list(request.user.groups.values_list('name', flat=True))
 
                     # If the user has the right to access the parent menu
-                    if any(group_name in user_groups for group_name in group_names):
+                    if any(group_name in user_groups for group_name in group_names) or any(element == "none" for element in group_names):
                         return redirect('simplewiki:dynamic_menu', parent_menu_item)
                 else:
                     return redirect('simplewiki:dynamic_menu', parent_menu_item)
@@ -155,11 +157,11 @@ def dynamic_menus(request: WSGIRequest, menu_name: str) -> HttpResponse:
         group_names = requested_menu.groups.split(',')
     except Exception as e:
         group_names = ""
-    
+
     context.update({'group_names': group_names})
 
     #if not requested_menu.groups or requested_menu.groups in list(request.user.groups.values_list('name', flat=True)):
-    if not requested_menu.groups or any(group_name in request.user.groups.values_list('name', flat=True) for group_name in group_names):
+    if any(group_name in request.user.groups.values_list('name', flat=True) for group_name in group_names) or any(element == "none" for element in group_names):
         return render(request, 'simplewiki/dynamic_page.html', context)
     else:
         # If more then two groups are required

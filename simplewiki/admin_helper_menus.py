@@ -65,7 +65,9 @@ def create_new_menu(request: WSGIRequest, context: dict) -> HttpResponse:
                 return render(request, 'simplewiki/error.html', gen_error_context(context, '#1003', e))
 
         # Take all inputs from the group multiple select and put them in a string, seperated by a comma
-        group_string = ""
+        #group_string = ""
+        group_string = str()
+        
         try:
             
             groups = request.POST.getlist('group_select')
