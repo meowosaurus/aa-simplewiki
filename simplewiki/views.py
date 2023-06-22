@@ -161,7 +161,7 @@ def dynamic_menus(request: WSGIRequest, menu_name: str) -> HttpResponse:
     context.update({'group_names': group_names})
 
     #if not requested_menu.groups or requested_menu.groups in list(request.user.groups.values_list('name', flat=True)):
-    if any(group_name in request.user.groups.values_list('name', flat=True) for group_name in group_names) or any(element == "none" for element in group_names):
+    if any(group_name in request.user.groups.values_list('name', flat=True) for group_name in group_names) or any(element == "none" or not element for element in group_names):
         return render(request, 'simplewiki/dynamic_page.html', context)
     else:
         # If more then two groups are required
@@ -170,6 +170,7 @@ def dynamic_menus(request: WSGIRequest, menu_name: str) -> HttpResponse:
         else:
             group_plural = "group"
         context.update({'error_code': '#1001'})
+        print(requested_menu.groups.replace(',', ', '))
         error_message = "You don\'t have the permissions to access this page. You need to be in the <b>" + requested_menu.groups.replace(',', ', ') + "</b> " + group_plural + " on auth."
         context.update({'error_msg': error_message})
         return render(request, 'simplewiki/error.html', context)
