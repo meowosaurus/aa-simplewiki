@@ -1,0 +1,99 @@
+{% extends 'simplewiki/base.html' %}
+{% load i18n %}
+{% load humanize %}
+{% load static %}
+{% load custom_filters %}
+
+{% block details %}
+<script src="{% static 'simplewiki/Sortable.min.js' %}"></script>
+
+<ul class="list-group custom-box" id="menu">
+    {% for menu in menu_items %}
+    <li class="list-group-item custom-box-header">
+        <h3 class="list-group-item-heading custom-box-title">
+            <i class="fas fa-arrows-alt handle" style="margin-right: 2rem;"></i>
+            <i class="{{ menu.icon }}" style="display: inline-block;"></i>
+            {{ menu.title }}
+            <button class="btn btn-default btn-sm pull-right">
+                Change submenus
+            </button>
+        </h3>
+        <!--<ul>
+            <li class="list-group-item custom-box-header">
+                <h3 class="list-group-item-heading custom-box-title">
+                    Hello
+                </h3>
+            </li>
+        </ul>-->
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
+
+{% block extra_javascript %}
+<script>
+    const menu = document.getElementById('menu');
+    const sortable = Sortable.create(menu, {
+      group: 'nested',
+      handle: '.handle',
+      animation: 150,
+	  fallbackOnBody: true,
+	  swapThreshold: 0.65,
+      onEnd: function (evt) {
+        const item = evt.item;
+        const parent = item.parentNode;
+        const previousItem = item.previousElementSibling;
+
+        
+
+        //const itemRect = item.getBoundingClientRect();
+        //const menuRect = menu.getBoundingClientRect();
+        //const relativeX = itemRect.left - menuRect.left + item.offsetLeft;
+        
+        //console.log(relativeX);
+        //console.log(menuRect.right);
+  
+        // Check if the item was dropped inside another menu
+        if (item !== previousItem /*&& relativeX > menu.offsetWidth*/) {
+          // const previousItem = item.previousElementSibling;
+
+          // Create a new submenu
+          const submenu = document.createElement('ul');
+
+            
+            
+            submenu.className = 'list-group custom-box';
+
+            // Append the dragged item to the submenu
+            submenu.appendChild(item);
+
+            // Replace the previous item's content with the submenu
+            //previousItem.innerHTML = '';
+            previousItem.appendChild(submenu);
+  
+          // Check if the previous item is a menu item (not a submenu)
+          /*if (previousItem && !previousItem.querySelector('ul')) {
+            // Create a new submenu
+            const submenu = document.createElement('ul');
+
+            
+            
+            submenu.className = 'list-group custom-box';
+  
+            // Append the dragged item to the submenu
+            submenu.appendChild(item);
+  
+            // Replace the previous item's content with the submenu
+            previousItem.innerHTML = '';
+            previousItem.appendChild(submenu);
+          }*/
+        }
+      }
+    });
+</script>
+  
+  
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}

@@ -321,3 +321,13 @@ def editor_sections(request: WSGIRequest) -> HttpResponse:
 
     return render(request, "simplewiki/editor/editor_sections.html", context)
 
+"""
+# ToDo
+@login_required
+@permission_required("simplewiki.editor_access")
+def editor_sort(request: WSGIRequest) -> HttpResponse:
+    context = gen_context(request)
+
+    return render(request, "simplewiki/editor/editor_sort.html", context)
+"""
+
