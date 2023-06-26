@@ -8,6 +8,12 @@ class SimpleWikiRenderer(mistune.HTMLRenderer):
         super().__init__(**kwargs)
     
     def paragraph(self, text):
+        # Check if the paragraph starts and ends with the underline video syntax
+        if text.startswith("__") and text.endswith("__"):
+            underline_text = "<u>" + text[2:-2] + "</u>"
+
+            return underline_text
+
         # Check if the paragraph starts with the YouTube video syntax
         if text.startswith("youtube:"):
             video_id = text.split(":")[1].strip() # Extract the YouTube video ID
@@ -43,6 +49,33 @@ class SimpleWikiRenderer(mistune.HTMLRenderer):
             vimeo_frame = f'<iframe width="{width}" height="{height}" src="https://player.vimeo.com/video/{video_id}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>'
             
             return vimeo_frame
+
+        if text.startswith("mp4:"):
+            video_link = text
+
+            string = 'mp4:"https://www.bigbuckbunny.org/":600:400'
+
+            # Split the string by ":"
+            parts = text.split(':')
+
+            # Extract the required values
+            link = ':'.join(parts[1:-2]).strip('"')
+            width = "100%"
+            height = "720px"
+
+            # ToDo
+            """try:
+                width = int(parts[-2])
+            except IndexError:
+                width = "100%"
+            try:
+                height = int(parts[-1])
+            except IndexError:
+                height = "720px"""
+
+            video_frame = f'<video width="{width}" height="{height}" controls><source src="{link}" type="video/mp4">Your browser does not support the video tag.</video>'
+
+            return video_frame
 
         # Check if the paragraph starts with the alert syntax
         if text.startswith("alert:"):

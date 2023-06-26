@@ -1,0 +1,414 @@
+{% extends 'simplewiki/base.html' %}
+{% load i18n %}
+{% load humanize %}
+{% load static %}
+
+{% block details %}
+<div class="alert alert-info" role="alert">
+    You are viewing the built-in markdown guide, as this plugin support more than the usual markdown syntax.
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Headings
+    </div>
+    <div class="panel-body">
+        <h3>
+            Header 1
+        </h3>
+        <pre><code># Header 1</code></pre>
+        <h4>
+            Example
+        </h4>
+        <h1>Header 1</h1>
+        <hr>
+
+        <h3>
+            Header 2
+        </h3>
+        <pre><code>## Header 2</code></pre>
+        <h4>
+            Example
+        </h4>
+        <h2>Header 2</h2>
+        <hr>
+
+        <h3>
+            Header 3
+        </h3>
+        <pre><code>### Header 3</code></pre>
+        <h4>
+            Example
+        </h4>
+        <h3>Header 3</h3>
+        <hr>
+
+        <h3>
+            Header 4
+        </h3>
+        <pre><code>#### Header 4</code></pre>
+        <h4>
+            Example
+        </h4>
+        <h4>Header 4</h4>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Texts
+    </div>
+    <div class="panel-body">
+        <h3>
+            Bold
+        </h3>
+        <pre><code>**This text will be bold.**</code></pre>
+        <h4>
+            Example
+        </h4>
+        <b>This text will be bold.</b>
+        <hr>
+
+        <h3>
+            Italic
+        </h3>
+        <pre><code>*This text will be italic.*</code></pre>
+        <h4>
+            Example
+        </h4>
+        <i>This text will be italic.</i>
+        <hr>
+
+        <h3>
+            Underline
+        </h3>
+        <pre><code>__ This text will be underlined. __</code></pre>
+        <h4>
+            Example
+        </h4>
+        <u>
+            This text will be underlined.
+        </u>
+        <hr>
+
+        <h3>
+            Strikethrough
+        </h3>
+        <pre><code>~~This text will be striked through.~~</code></pre>
+        <h4>
+            Example
+        </h4>
+        <del>
+            This text will be striked through.
+        </del>
+        <hr>
+        
+        <h3>
+            Links
+        </h3>
+        <pre><code>https://google.com</code></pre>
+        <h4>
+            Example
+        </h4>
+        <a href="https://google.com">https://google.com</a>
+        <hr>
+
+        <h3>
+            Links with custom text
+        </h3>
+        <pre><code>[Google.com](https://google.com)</code></pre>
+        <h4>
+            Example
+        </h4>
+        <a href="https://google.com">Google.com</a>
+        <hr>
+
+        <h3>
+            Superscript
+        </h3>
+        <pre><code>Hello^superscript^</code></pre>
+        <h4>
+            Example
+        </h4>
+        Hello<sup>superscript</sup>
+        <hr>
+
+        <h3>
+            Subscript
+        </h3>
+        <pre><code>CH~3~CH~2~OH</code></pre>
+        <h4>
+            Example
+        </h4>
+        CH<sub>3</sub>CH<sub>2</sub>OH
+        <hr>
+
+        <h3>
+            Footnotes
+        </h3>
+        <pre><code>content in paragraph with footnote[^1] markup.
+
+[^1]: footnote explain</code></pre>
+        <h4>
+            Example
+        </h4>
+        <p>content in paragraph with footnote<sup class="footnote-ref" id="fnref-1"><a href="#fn-1">1</a></sup> markup.</p>
+        <section class="footnotes">
+            <ol>
+                <li id="fn-1"><p>footnote explain<a href="#fnref-1" class="footnote">↩</a></p></li>
+            </ol>
+        </section>
+        <hr>
+
+        <h3>
+            Horizontal Line
+        </h3>
+        <pre><code>---</code></pre>
+        <h4>
+            Example
+        </h4>
+        <hr>
+        
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Lists
+    </div>
+    <div class="panel-body">
+        <h3>
+            Ordered Lists
+        </h3>
+        <pre><code>1. First item
+2. Second item
+3. Third item</code></pre>
+        <h4>
+            Example
+        </h4>
+        <ol>
+            <li>First item</li>
+            <li>Second item</li>
+            <li>Third item</li>
+          </ol> 
+        <hr>
+
+        <h3>
+            Unordered Lists
+        </h3>
+        <pre><code>- First item
+- Second item
+- Third item</code></pre>
+        <h4>
+            Example
+        </h4>
+        <ul>
+            <li>First item</li>
+            <li>Second item</li>
+            <li>Third item</li>
+        </ul> 
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Blocks
+    </div>
+    <div class="panel-body">
+        <h3>
+            Blockquote
+        </h3>
+        <pre><code>> blockquote</code></pre>
+        <h4>
+            Examples
+        </h4>
+        <blockquote>
+            <p>blockquote</p>
+        </blockquote>
+        <hr>
+
+        <h3>
+            Code
+        </h3>
+        <pre><code>`code`</code></pre>
+        <h4>
+            Examples
+        </h4>
+        <p><code>code</code></p>
+        <hr>
+
+        <h3>
+            Code (Full width)
+        </h3>
+        <pre><code>```
+code
+```</code></pre>
+        <h4>
+            Examples
+        </h4>
+        <pre><code>code</code></pre>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Images
+    </div>
+    <div class="panel-body">
+        <pre><code>![Keepstar](https://images.evetech.net/types/35834/render?size=128)</code></pre>
+        <p><img src="https://images.evetech.net/types/35834/render?size=128" alt="Keepstar"></p>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Videos
+    </div>
+    <div class="panel-body">
+        <h3>
+            YouTube
+        </h3>
+        <pre><code>youtube:{video_id}:{width}:{height}
+
+youtube:{video_id}</code></pre>
+        <h4>
+            Examples
+        </h4>
+        <pre><code>youtube:6Rxp_qrnO34:700:400
+
+youtube:6Rxp_qrnO34:100%:400px
+
+youtube:6Rxp_qrnO34</code></pre>
+        <hr>
+
+        <h3>
+            Vimeo
+        </h3>
+        <pre><code>vimeo:{video_id}:{width}:{height}
+
+vimeo:{video_id}</code></pre>
+        <hr>
+
+        <h3>
+            MP4
+        </h3>
+        <pre><code>mp4:"{video_link}":{width}:{height}
+
+mp4:"{video_link}"</code></pre>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Tables
+    </div>
+    <div class="panel-body">
+        <h3>
+            Simple Table
+        </h3>
+        <pre><code>First Header  | Second Header
+------------- | -------------
+Content Cell  | Content Cell
+Content Cell  | Content Cell</code></pre>
+        <h4>
+            Example
+        </h4>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+              <th>First Header</th>
+              <th>Second Header</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>Content Cell</td>
+              <td>Content Cell</td>
+            </tr>
+            <tr>
+              <td>Content Cell</td>
+              <td>Content Cell</td>
+            </tr>
+            </tbody>
+        </table>
+        <hr>
+        
+        <h3>
+            Aligned Table
+        </h3>
+        <pre><code> Left Header |  Center Header  | Right Header
+:----------- | :-------------: | ------------:
+ Conent Cell |  Content Cell   | Content Cell</code></pre>
+        <h4>
+            Example
+        </h4>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+              <th style="text-align:left">Left Header</th>
+              <th style="text-align:center">Center Header</th>
+              <th style="text-align:right">Right Header</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td style="text-align:left">Conent Cell</td>
+              <td style="text-align:center">Content Cell</td>
+              <td style="text-align:right">Content Cell</td>
+            </tr>
+            </tbody>
+            </table>
+        <hr>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Alerts
+    </div>
+    <div class="panel-body">
+        <h3>
+            Success alerts
+        </h3>
+        <pre><code>alert:success:This is a success alert! Yes, you can also use \n in here.</code></pre>
+        <h4>
+            Example
+        </h4>
+        <div class="alert alert-success" role="alert">This is a success alert! Yes, you can also use <br> in here.</div>
+        <hr>
+        <h3>
+            Info alerts
+        </h3>
+        <pre><code>alert:info:This is a info alert! Yes, you can also use \n in here.</code></pre>
+        <h4>
+            Example
+        </h4>
+        <div class="alert alert-info" role="alert">This is a info alert! Yes, you can also use <br> in here.</div>
+        <hr>
+        <h3>
+            Warning alerts
+        </h3>
+        <pre><code>alert:warning:This is a warning alert! Yes, you can also use \n in here.</code></pre>
+        <h4>
+            Example
+        </h4>
+        <div class="alert alert-warning" role="alert">This is a warning alert! Yes, you can also use <br> in here.</div>
+        <hr>
+        <h3>
+            Danger alerts
+        </h3>
+        <pre><code>alert:danger:This is a danger alert! Yes, you can also use \n in here.</code></pre>
+        <h4>
+            Example
+        </h4>
+        <div class="alert alert-danger" role="alert">This is a danger alert! Yes, you can also use <br> in here.</div>
+        <hr>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_javascript %}
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}
