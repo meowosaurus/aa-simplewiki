@@ -18,7 +18,7 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 # Current Features
 * Create custom wiki menus with dropdowns plus different sections on each menu
 * Add an icon next to menus or sections
-* Edit pages on the admin panel with [markdown](https://commonmark.org/help/)
+* Edit pages on the admin panel with [markdown](https://www.markdownguide.org/cheat-sheet/)
   * Support for images
   * Support for videos (YouTube and Vimeo)
 * Search function: Search across all wiki menus and sections
@@ -34,6 +34,9 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 * Quality-of-life updates
 * Improve code documentation
 * Clean-up code
+* Markdown
+  * Tables
+  * Buttons
 
 ## Planned
 * Drag and drop system to make indexing menus and sections easier
@@ -58,7 +61,7 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 ### Admin Panel
 ![Menu Admin](https://github.com/meowosaurus/aa-simplewiki/blob/master/simplewiki/images/menu_admin_panel.png)
 
-![Menu Edit](https://i.imgur.com/15DSNfZ.png)
+![Menu Edit](https://github.com/meowosaurus/aa-simplewiki/blob/master/simplewiki/images/menu_admin_panel_edit.png)
 
 ![Section Edit](https://i.imgur.com/3LrysW7.png)
 
