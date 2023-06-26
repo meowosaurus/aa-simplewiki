@@ -43,12 +43,41 @@ class SimpleWikiRenderer(mistune.HTMLRenderer):
             vimeo_frame = f'<iframe width="{width}" height="{height}" src="https://player.vimeo.com/video/{video_id}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>'
             
             return vimeo_frame
+
+        # Check if the paragraph starts with the alert syntax
+        if text.startswith("alert:"):
+            alert_parts = text.split(":")
+            alertType = alert_parts[1].strip()
+            alert_text = ":".join(alert_parts[2:]).strip()
+
+            # Convert \n to a HTML linebreak
+            alert_text = alert_text.replace("\\n", "<br>")
+
+            if alertType == "success":
+                alert = f'<div class="alert alert-success" role="alert">{alert_text}</div>'
+            elif alertType == "info":
+                alert = f'<div class="alert alert-info" role="alert">{alert_text}</div>'
+            elif alertType == "warning":
+                alert = f'<div class="alert alert-warning" role="alert">{alert_text}</div>'
+            elif alertType == "danger":
+                alert = f'<div class="alert alert-danger" role="alert">{alert_text}</div>'
+            else:
+                alert = text
+
+            return alert
+
         return super().paragraph(text)
+
+    # Overwriting table plugin output with bootstrap table
+    def table(self, content):
+        table_html = '<table class="table table-striped">\n' + content + '</table>'
+
+        return table_html
 
 def markdown_to_html(text):
     markdown = mistune.create_markdown(escape=True, 
                                        renderer=SimpleWikiRenderer(), 
-                                       plugins=['strikethrough', 'url', 'footnotes', 'abbr', 'mark', 'insert', 'superscript', 'subscript'])
+                                       plugins=['strikethrough', 'url', 'footnotes', 'abbr', 'mark', 'insert', 'superscript', 'subscript', 'table'])
 
     html = markdown(text)
 

@@ -134,4 +134,4 @@ basic_access | None | Can view all wiki pages
 editor_access | None | Can create, edit and delete wiki pages and menus
 
 ## Support
-* On Discord: Meowlicious#7045
+* On Discord: meowlicious
