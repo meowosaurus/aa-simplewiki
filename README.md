@@ -21,7 +21,6 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 * Edit pages on the admin panel with [markdown](https://commonmark.org/help/)
   * Support for images
   * Support for videos (YouTube and Vimeo)
-  * 
 * Search function: Search across all wiki menus and sections
 * Permission system:
   * Editor permissions can be added to single users or groups via the admin panel
