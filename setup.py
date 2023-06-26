@@ -18,6 +18,7 @@ setup(
     version=__version__,
     packages=find_packages(),
     include_package_data=True,
+    exclude_package_data={'': ['images']},
     license='GNU General Public License v3 (GPLv3)',
     description='Alliance Auth Wiki Plugin',
     install_requires=install_requires,
