@@ -54,7 +54,7 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 ![Search](https://i.imgur.com/wW69LFN.png)
 
 ### Admin Panel
-![Menu Admin](https://i.imgur.com/VGssV4d.png)
+![Menu Admin](https://github.com/meowosaurus/aa-simplewiki/blob/master/simplewiki/images/menu_admin_panel.png)
 
 ![Menu Edit](https://i.imgur.com/15DSNfZ.png)
 
