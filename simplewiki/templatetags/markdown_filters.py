@@ -8,11 +8,22 @@ class SimpleWikiRenderer(mistune.HTMLRenderer):
         super().__init__(**kwargs)
     
     def paragraph(self, text):
-        # Check if the paragraph starts and ends with the underline video syntax
-        if text.startswith("__") and text.endswith("__"):
-            underline_text = "<u>" + text[2:-2] + "</u>"
+        # Convert \n to a HTML linebreak
+        text = text.replace("\\n", "<br>")
 
-            return underline_text
+        # Check if the paragraph starts with the underline video syntax
+        if "__" in text:
+            parts = text.split("__")
+
+            formatted_parts = []
+            for i, part in enumerate(parts):
+                
+                if i % 2 == 1:
+                    formatted_parts.append("<u>{}</u>".format(part))
+                else:
+                    formatted_parts.append(part)
+        
+            return "".join(formatted_parts)
 
         # Check if the paragraph starts with the YouTube video syntax
         if text.startswith("youtube:"):
@@ -84,7 +95,7 @@ class SimpleWikiRenderer(mistune.HTMLRenderer):
             alert_text = ":".join(alert_parts[2:]).strip()
 
             # Convert \n to a HTML linebreak
-            alert_text = alert_text.replace("\\n", "<br>")
+            #alert_text = alert_text.replace("\\n", "<br>")
 
             if alertType == "success":
                 alert = f'<div class="alert alert-success" role="alert">{alert_text}</div>'

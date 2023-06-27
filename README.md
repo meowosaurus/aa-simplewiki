@@ -74,7 +74,7 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 
 2.) Add `simplewiki` to your `INSTALLED_APPS` in your projects `local.py`
 
-3.) Make migrations and migrate, then restart your server
+3.) Restart your server, then run migrations and collectstatic
 
 #### Docker Version
 1.) Please make sure you followed the custom docker-image tutorial [here](https://gitlab.com/allianceauth/allianceauth/-/tree/master/docker#using-a-custom-docker-image): 
@@ -86,8 +86,6 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 4.) Start your server `docker compose --env-file=.env up -d`
 
 5.) Run `docker compose exec allianceauth bash`
-
-6.) Run `allianceauth update myauth`
 
 7.) Run `auth migrate`
 
