@@ -150,7 +150,7 @@
         <div class="form-group">
           <label for="exampleInputPassword1">Content:</label>
           <textarea class="form-control" name="content" id="contentInput" rows="10">{{ selectedSection.content|safe }}</textarea>
-          <p class="help-block">Optional: This will be displayed as your main content of the section. You can use markdown. See <a href="https://commonmark.org/help/">https://commonmark.org/help/</a> for references.</p>
+          <p class="help-block">Optional: This will be displayed as your main content of the section. You can use markdown. Check our <a href="{% url 'simplewiki:editor_markdown_guide' %}" target="_blank">guide</a> for references.</p>
         </div>
         <button type="submit" name="confirm_edit" value="0" class="btn btn-default">Cancel</button>
         <div class="pull-right">

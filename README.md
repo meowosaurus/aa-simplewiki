@@ -133,5 +133,9 @@ Perm | Admin Site | Auth Site
 basic_access | None | Can view all wiki pages
 editor_access | None | Can create, edit and delete wiki pages and menus
 
+## Dependencies
+- [Alliance Auth](https://gitlab.com/allianceauth/allianceauth)
+- [Mistune](https://github.com/lepture/mistune)
+
 ## Support
 * On Discord: meowlicious
