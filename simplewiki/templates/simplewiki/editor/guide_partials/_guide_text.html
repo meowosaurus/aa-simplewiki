@@ -1,3 +1,5 @@
+{% load markdown_filters %}
+
 <div class="panel panel-default">
     <div class="panel-body">
         <h1>
@@ -32,6 +34,7 @@
         <h3>
             Underline
         </h3>
+        {{ "alert:warning:**Warning:** This feature sometimes results in weird results. Use with caution."|markdown|safe }}
         <p>
             Wrapping text with double underscores underlines it, indicating emphasis or a hyperlink-like style.
         </p>
