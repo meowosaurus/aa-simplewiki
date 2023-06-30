@@ -1,5 +1,5 @@
 # SimpleWiki
-A simple wiki system for alliance auth. It supports multiple pages with different sections. Every page and every section can have their own icon.
+A simple wiki plugin for alliance auth. It supports multiple pages with different sections. Every page and every section can have their own icon. Written in Python with Django.
 
 # Contents
 * [Current Features](#current-features)
@@ -19,8 +19,9 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 * Create custom wiki menus with dropdowns plus different sections on each menu
 * Add an icon next to menus or sections
 * Edit pages on the admin panel with [markdown](https://www.markdownguide.org/cheat-sheet/)
-  * Support for images
+  * Support for all major GitHub markdown features
   * Support for videos (YouTube and Vimeo)
+  * Support for alerts and Google Drive
 * Search function: Search across all wiki menus and sections
 * Permission system:
   * Editor permissions can be added to single users or groups via the admin panel
@@ -32,10 +33,10 @@ A simple wiki system for alliance auth. It supports multiple pages with differen
 
 ## ToDo:
 * Quality-of-life updates
+* Implement better logging
 * Improve code documentation
 * Clean-up code
 * Markdown
-  * Tables
   * Buttons
 
 ## Planned

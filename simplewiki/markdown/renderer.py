@@ -27,7 +27,13 @@ class SimpleWikiRenderer(mistune.HTMLRenderer):
 
         # Check if the paragraph starts with the YouTube video syntax
         if text.startswith("youtube:"):
-            video_id = text.split(":")[1].strip() # Extract the YouTube video ID
+            try:
+                video_id = text.split(":")[1].strip() # Extract the YouTube video ID
+            except IndexError:
+                return text
+
+            if not video_id:
+                return text
 
             # Get width and height if specified
             try:
