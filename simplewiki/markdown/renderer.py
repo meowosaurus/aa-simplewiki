@@ -23,7 +23,7 @@ class SimpleWikiRenderer(mistune.HTMLRenderer):
                 else:
                     formatted_parts.append(part)
         
-            return "".join(formatted_parts)
+            return "".join(formatted_parts) + "<br>"
 
         # Check if the paragraph starts with the YouTube video syntax
         if text.startswith("youtube:"):
@@ -64,21 +64,54 @@ class SimpleWikiRenderer(mistune.HTMLRenderer):
         # Check if the paragraph starts with the alert syntax
         if text.startswith("alert:"):
             alert_parts = text.split(":")
-            alertType = alert_parts[1].strip()
-            alert_text = ":".join(alert_parts[2:]).strip()
 
-            if alertType == "success":
+            try:
+                alert_type = alert_parts[1].strip()
+            except IndexError:
+                alert_type = "danger"
+            try:
+                alert_text = ":".join(alert_parts[2:]).strip()
+            except IndexError:
+                alert_text = "ERROR: Unable to process alert text!"
+
+            if alert_type == "success":
                 alert = f'<div class="alert alert-success" role="alert">{alert_text}</div>'
-            elif alertType == "info":
+            elif alert_type == "info":
                 alert = f'<div class="alert alert-info" role="alert">{alert_text}</div>'
-            elif alertType == "warning":
+            elif alert_type == "warning":
                 alert = f'<div class="alert alert-warning" role="alert">{alert_text}</div>'
-            elif alertType == "danger":
+            elif alert_type == "danger":
                 alert = f'<div class="alert alert-danger" role="alert">{alert_text}</div>'
             else:
                 alert = text
 
             return alert
+
+        # Check if the paragraph starts with the google drive syntax
+        if text.startswith("gdrive:"):
+            gdrive_parts = text.split(":")
+
+            try:
+                gdrive_folder_id = gdrive_parts[1].strip()
+            except IndexError:
+                return "Google Drive Syntax error: No folder id provided!"
+            try:
+                gdrive_type = gdrive_parts[2].strip()
+            except IndexError:
+                gdrive_type = "list"
+            
+            try:
+                gdrive_width = gdrive_parts[3].strip()
+            except IndexError:
+                gdrive_width = "100%"
+            try:
+                gdrive_height = gdrive_parts[4].strip()
+            except IndexError:
+                gdrive_height = "600px"
+
+            gdrive_html = f'<iframe src="https://drive.google.com/embeddedfolderview?id={gdrive_folder_id}#{gdrive_type}" width="{gdrive_width}" height="{gdrive_height}" style="border:0px;"></iframe>'
+
+            return gdrive_html
 
         return super().paragraph(text)
 
