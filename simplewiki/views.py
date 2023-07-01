@@ -12,11 +12,18 @@ from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.core.exceptions import PermissionDenied
 
+from allianceauth.services.hooks import get_extension_logger
+
 # Custom imports
 from .models import MenuItem, SectionItem
 #from .admin_helper import *
 from .admin_helper_menus import *
 from .admin_helper_sections import *
+
+from app_utils.logging import LoggerAddTag
+from . import __title__
+
+logger = LoggerAddTag(get_extension_logger(__name__), __title__)
 
 ### Helper Functions ###
 
@@ -92,7 +99,8 @@ def index(request: WSGIRequest) -> HttpResponse:
                         group_names = first_menu_item.groups.split(',')
                         user_groups = list(request.user.groups.values_list('name', flat=True))
 
-                        print(group_names)
+                        logger_msg = f'Menu "{parent_menu_item.title}" has submenu "{first_menu_item.title}", checking if user "{request.user}" has permission to access it.'
+                        logger.info(logger_msg)
 
                         # If the user has the right to access this submenu
                         if any(group_name in user_groups for group_name in group_names) or any(element == "none" for element in group_names):
@@ -101,6 +109,9 @@ def index(request: WSGIRequest) -> HttpResponse:
                         return redirect('simplewiki:dynamic_menu', first_menu_item)
             # If the menu doesn't have submenus
             else:
+                logger_msg = f'Unable to find any submenus for "{parent_menu_item}", checking if user "{request.user}" has permission to access it.'
+                logger.info(logger_msg)
+
                 # If the parent menu has any groups
                 if parent_menu_item.groups:
                     group_names = parent_menu_item.groups.split(',')
@@ -110,6 +121,8 @@ def index(request: WSGIRequest) -> HttpResponse:
                     if any(group_name in user_groups for group_name in group_names) or any(element == "none" for element in group_names):
                         return redirect('simplewiki:dynamic_menu', parent_menu_item)
                 else:
+                    
+
                     return redirect('simplewiki:dynamic_menu', parent_menu_item)
 
         # If there are no menus the user has permission to access
@@ -117,6 +130,10 @@ def index(request: WSGIRequest) -> HttpResponse:
         error_message = "You don't have the permission to access any menus. Please contact the administrator."
         context.update({'error_code': error_code})
         context.update({'error_msg': error_message})
+
+        logger_msg = f'Unable to render any menus: User "{request.user}" doesn\'t have the permission to access any menus.'
+        logger.error(logger_msg)
+
         return render(request, "simplewiki/error.html", context)
     # Show a default "create your first menu.." error page
     else:
@@ -124,6 +141,10 @@ def index(request: WSGIRequest) -> HttpResponse:
         error_message = "So far you didn't create any menus. Please create one under Admin -> Menus"
         context.update({'error_code': error_code})
         context.update({'error_msg': error_message})
+
+        logger_msg = f'Unable to render any menus: No menus created.'
+        logger.error(logger_msg)
+
         return render(request, "simplewiki/error.html", context)
 
 @login_required
@@ -162,8 +183,16 @@ def dynamic_menus(request: WSGIRequest, menu_name: str) -> HttpResponse:
 
     #if not requested_menu.groups or requested_menu.groups in list(request.user.groups.values_list('name', flat=True)):
     if any(group_name in request.user.groups.values_list('name', flat=True) for group_name in group_names) or any(element == "none" or not element for element in group_names):
+        
+        logger_msg = f'Rendering wiki page "{menu_name}" for user "{request.user}".'
+        logger.info(logger_msg)
+
         return render(request, 'simplewiki/dynamic_page.html', context)
     else:
+        requested_groups = requested_menu.groups.replace(',', ', ')
+        logger_msg = f'Rejected rendering request for menu "{menu_name}", user "{request.user}" doesn\'t have neccessary groups "{requested_groups}"'
+        logger.info(logger_msg)
+
         # If more then two groups are required
         if len(requested_menu.groups.split(',')) > 1:
             group_plural = "groups"
@@ -225,6 +254,7 @@ def search(request: WSGIRequest) -> HttpResponse:
         file_name = inspect.getframeinfo(frame).filename
         line_number = inspect.getframeinfo(frame).lineno
         context.update({'error_msg': 'Unknown error in ' + file_name + ' in line ' + str(line_number)})
+
         return render(request, 'simplewiki/error.html', context)
 
     return render(request, "simplewiki/search.html", context)

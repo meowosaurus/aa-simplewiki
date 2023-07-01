@@ -134,6 +134,7 @@ editor_access | None | Can create, edit and delete wiki pages and menus
 
 ## Dependencies
 - [Alliance Auth](https://gitlab.com/allianceauth/allianceauth)
+- [allianceauth-app-utils](https://gitlab.com/ErikKalkoken/allianceauth-app-utils)
 - [Mistune](https://github.com/lepture/mistune)
 
 ## Support
