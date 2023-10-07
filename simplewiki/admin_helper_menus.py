@@ -1,4 +1,5 @@
 import inspect
+import re
 
 # Django imports
 from django.core.handlers.wsgi import WSGIRequest
@@ -63,6 +64,10 @@ def create_new_menu(request: WSGIRequest, context: dict) -> HttpResponse:
                 return render(request, 'simplewiki/error.html', context)
             except Exception as e:
                 return render(request, 'simplewiki/error.html', gen_error_context(context, '#1003', e))
+
+        # TODO: Add try & except
+        menu_icon = format_icon(request.POST['icon'])
+        setattr(new_menu, 'icon', menu_icon)
 
         # Take all inputs from the group multiple select and put them in a string, seperated by a comma
         #group_string = ""
@@ -149,8 +154,12 @@ def edit_existing_menu(request: WSGIRequest, context: dict, edit: str) -> HttpRe
                 return render(request, 'simplewiki/error.html', context)
             except Exception as e:
                 return render(request, 'simplewiki/error.html', gen_error_context(context, '#1007', e))
+
+        # TODO: Add try & except
+        menu_icon = format_icon(request.POST['icon'])
+        setattr(new_menu, 'icon', menu_icon)
         
-        # ToDo Error 'groups'
+        # TODO: Error 'groups'
         try:
             groups = request.POST.getlist('group_select')
             group_string = ""
@@ -277,3 +286,16 @@ def load_menu_delete_form(request: WSGIRequest, context: dict, delete: str) -> H
         return render(request, 'simplewiki/error.html', context)
     except Exception as e:
         return render(request, 'simplewiki/error.html', gen_error_context(context, '#1013', e))
+
+def format_icon(icon: str) -> str:
+    if len(icon) > 0:
+        pattern = re.compile(r'^<i class="fas fa-(.*?)"></i>$')
+        if pattern.match(icon):
+            icon = "fas fa-" + pattern.match(icon).group(1)
+        elif not "fas" in icon:
+            if not "fa-" in icon:
+                icon = "fas fa-" + icon
+            else:
+                icon = "fas " + icon
+
+    return icon

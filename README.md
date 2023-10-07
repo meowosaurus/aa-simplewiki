@@ -136,6 +136,8 @@ editor_access | None | Can create, edit and delete wiki pages and menus
 - [Alliance Auth](https://gitlab.com/allianceauth/allianceauth)
 - [allianceauth-app-utils](https://gitlab.com/ErikKalkoken/allianceauth-app-utils)
 - [Mistune](https://github.com/lepture/mistune)
+- [jQuery](https://github.com/jquery/jquery)
+- [Nestable](https://github.com/dbushell/Nestable)
 
 ## Support
 * On Discord: meowlicious

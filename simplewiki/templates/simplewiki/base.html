@@ -7,8 +7,9 @@
 {% block page_title %}{% translate "Wiki" %}{% endblock %}
 
 {% block content %}
-<div class="allianceauth-afatstat-plugin">
-    <br />
+
+
+<div class="" style="padding-top: 2rem;">
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -77,8 +78,8 @@
                 {% endfor %} 
                 </ul>
 
-                <ul class="nav navbar-nav pull-right">
-                    <li class="navbar-text {% if current_path == '/wiki/search/' %}active{% endif %}">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="{% if current_path == '/wiki/search/' %}active{% endif %}">
                         <a href="{% url 'simplewiki:search' %}">
                             <i class="fas fa-search"></i>
                             Search
@@ -95,23 +96,35 @@
                                 <li>
                                     <a href="{% url 'simplewiki:editor_menus' %}">
                                         <i class="fas fa-folder-open"></i>
-                                        Menus
+                                        Edit Menus
                                     </a>
                                 </li>
                                 <li>
                                     <a href="{% url 'simplewiki:editor_sections' %}">
                                         <i class="fas fa-pen"></i>
-                                        Sections
+                                        Edit Sections
                                     </a>
                                 </li>
-                                {% if False %}
+                                <li role="separator" class="divider"></li>
                                 <li>
                                     <a href="{% url 'simplewiki:editor_sort' %}">
                                         <i class="fas fa-pen"></i>
-                                        Sort
+                                        Change Menu Positions
                                     </a>
                                 </li>
-                                {% endif %}
+                                <li role="separator" class="divider"></li>
+                                <li>
+                                    <a href="#">
+                                        <i class="fas fa-pen"></i>
+                                        Documentation
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'simplewiki:editor_markdown_guide' %}">
+                                        <i class="fas fa-pen"></i>
+                                        Markdown Guide
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     {% endif %}

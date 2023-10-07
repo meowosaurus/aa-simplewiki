@@ -1,4 +1,5 @@
 import inspect
+import re
 
 # Django imports
 from django.core.handlers.wsgi import WSGIRequest
@@ -53,7 +54,7 @@ def create_new_section(request: WSGIRequest, context: dict) -> HttpResponse:
             new_section.title = request.POST['title']
             new_section.menu_path = request.POST['menu_path']
             new_section.index = request.POST['index']
-            new_section.icon = request.POST['icon']
+            new_section.icon = format_icon(request.POST['icon'])
             new_section.content = request.POST['content']
         except (KeyError, ValueError, TypeError) as e:
             context.update({'error_code': '#1014'})
@@ -112,6 +113,8 @@ def edit_existing_section(request: WSGIRequest, context: dict, edit: str) -> Htt
                 return render(request, 'simplewiki/error.html', context)
             except Exception as e:
                 return render(request, 'simplewiki/error.html', gen_error_context(context, '#1015', e))
+
+        setattr(selected_section, 'icon', format_icon(request.POST['icon']))
 
         try:
             selected_section.save()
@@ -213,5 +216,16 @@ def load_section_delete_form(request: WSGIRequest, context: dict, delete: str) -
     
     context.update({'user_action': 'delete'})
 
+def format_icon(icon: str) -> str:
+    if len(icon) > 0:
+        pattern = re.compile(r'^<i class="fas fa-(.*?)"></i>$')
+        if pattern.match(icon):
+            icon = "fas fa-" + pattern.match(icon).group(1)
+        elif not "fas" in icon:
+            if not "fa-" in icon:
+                icon = "fas fa-" + icon
+            else:
+                icon = "fas " + icon
 
+    return icon
 
