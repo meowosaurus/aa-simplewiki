@@ -157,7 +157,7 @@ def edit_existing_menu(request: WSGIRequest, context: dict, edit: str) -> HttpRe
 
         # TODO: Add try & except
         menu_icon = format_icon(request.POST['icon'])
-        setattr(new_menu, 'icon', menu_icon)
+        setattr(selected_menu, 'icon', menu_icon)
         
         # TODO: Error 'groups'
         try:

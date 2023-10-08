@@ -230,24 +230,17 @@ def search(request: WSGIRequest) -> HttpResponse:
             # Search all sections' contexts and titles
             search_results = SectionItem.objects.filter(
                 Q(content__icontains=query) | Q(title__icontains=query))
-
-            print(search_results)
             
             # Get the menu for every search result
             for result in search_results:
-                print(result)
                 result_menu = MenuItem.objects.get(path=result.menu_path)
 
                 group_names = result_menu.groups.split(',')
                 user_groups = list(request.user.groups.values_list('name', flat=True))
 
-                print(any(group_name in user_groups for group_name in group_names))
-
                 # Check if the user can access the corresponding menu
-                if len(result_menu.groups) or any(group_name in user_groups for group_name in group_names):
+                if len(result_menu.groups) == 0 or any(group_name in user_groups for group_name in group_names):
                     available_results.append(result)
-
-            print(available_results)
             
             context.update({'available_results': available_results})
             context.update({'oldQuery': query})
@@ -358,7 +351,6 @@ def editor_sections(request: WSGIRequest) -> HttpResponse:
 
     return render(request, "simplewiki/editor/editor_sections.html", context)
 
-# ToDo
 @login_required
 @permission_required("simplewiki.editor_access")
 def editor_sort(request: WSGIRequest) -> HttpResponse:

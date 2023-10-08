@@ -3,7 +3,7 @@ A simple wiki plugin for alliance auth. It supports multiple pages with differen
 
 # Contents
 * [Current Features](#current-features)
-  * [ToDo](#todo)
+  * [TODO](#todo)
   * [Planned](#planned)
 * [Screenshots](#screenshots)
 * [Installation](#installation)
@@ -31,7 +31,7 @@ A simple wiki plugin for alliance auth. It supports multiple pages with differen
   * Users with editor permission can create, edit and delete custom menus and sections (editor_access)
   * Users with editor permission see edit and delete buttons above all sections (editor_access)
 
-## ToDo:
+## TODO:
 * Quality-of-life updates
 * Implement better logging
 * Improve code documentation

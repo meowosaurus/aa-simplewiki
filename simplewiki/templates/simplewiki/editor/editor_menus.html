@@ -102,7 +102,7 @@
           </div>
           <form method="post" id="my_form">
             {% csrf_token %}
-            {% include 'simplewiki/editor/partials/_edit_menu.html' %}
+            {% include 'simplewiki/editor/partials/menus/_edit_menu.html' %}
           </form>
         </div>
         {% elif user_action == 'delete' %}
@@ -129,7 +129,7 @@
           <hr>
           <form method="post" id="my_form">
             {% csrf_token %}
-            {% include 'simplewiki/editor/partials/_create_menu.html' %}
+            {% include 'simplewiki/editor/partials/menus/_create_menu.html' %}
           </form>
         </div>
         {% endif %}
