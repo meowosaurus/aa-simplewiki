@@ -3,12 +3,11 @@
 {% load i18n %}
 {% load static %}
 {% load custom_filters %}
+{% load navactive %}
 
 {% block page_title %}{% translate "Wiki" %}{% endblock %}
 
 {% block content %}
-
-
 <div class="" style="padding-top: 2rem;">
     <nav class="navbar navbar-default">
         <div class="container-fluid">
@@ -19,13 +18,6 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-
-                {% if False %}
-                <a class="navbar-brand">
-                    <i class="fas fa-book"></i>
-                    Wiki
-                </a>
-                {% endif %}
                 
             </div>
     
@@ -66,7 +58,7 @@
                         {% else %}
                             {% url 'simplewiki:dynamic_menu' menu_name=menu_item.path as expected_path %}
                             {% if not menu_item.groups or user_groups|is_user_in_groups:menu_item.groups %}
-                            <li class="navbar-text {% if current_path == expected_path %}active{% endif %}">
+                            <li class="{% if current_path == expected_path %}active{% endif %}">
                                 <a href="{% url 'simplewiki:dynamic_menu' menu_name=menu_item.path %}" style="display: inline-block;">
                                     <i class="{{ menu_item.icon }}" style="display: inline-block;"></i>
                                     {{ menu_item.title }}
@@ -86,27 +78,27 @@
                         </a>
                     </li>
                     {% if is_editor is True %}
-                        <li class="dropdown {% if current_path == '/wiki/editor/menus/' or current_path == '/wiki/editor/sections/' %}active{% endif %}">
+                        <li class="dropdown {% if current_path == '/wiki/editor/menus/' or current_path == '/wiki/editor/sections/' or '/wiki/guides/' in current_path %}active{% endif %}">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-user-cog"></i>
                                 Editor 
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li>
+                                <li class="{% navactive request 'simplewiki:editor_menus' %}">
                                     <a href="{% url 'simplewiki:editor_menus' %}">
                                         <i class="fas fa-folder-open"></i>
                                         Edit Menus
                                     </a>
                                 </li>
-                                <li>
+                                <li class="{% navactive request 'simplewiki:editor_sections' %}">
                                     <a href="{% url 'simplewiki:editor_sections' %}">
                                         <i class="fas fa-pen"></i>
                                         Edit Sections
                                     </a>
                                 </li>
                                 <li role="separator" class="divider"></li>
-                                <li>
+                                <li class="{% navactive request 'simplewiki:editor_sort' %}">
                                     <a href="{% url 'simplewiki:editor_sort' %}">
                                         <i class="fas fa-pen"></i>
                                         Change Menu Positions
@@ -119,7 +111,7 @@
                                         Documentation
                                     </a>
                                 </li>
-                                <li>
+                                <li class="{% navactive request 'simplewiki:editor_markdown_guide' %}">
                                     <a href="{% url 'simplewiki:editor_markdown_guide' %}">
                                         <i class="fas fa-pen"></i>
                                         Markdown Guide
@@ -138,6 +130,5 @@
 {% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" type="text/css" href="{% static 'simplewiki/custom.css' %}" />
 {% endblock %}
 
