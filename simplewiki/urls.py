@@ -16,6 +16,7 @@ urlpatterns = [
     path("editor/menus/", views.editor_menus, name="editor_menus"),
     path("editor/sections/", views.editor_sections, name="editor_sections"),
     path("editor/sort/", views.editor_sort, name="editor_sort"),
+    path("editor/sort/post/", views.editor_sort_post, name="editor_sort_post"),
 
     # Markdown guide
     path("guides/markdown/", views.editor_markdown_guide, name="editor_markdown_guide"),

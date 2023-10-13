@@ -2,12 +2,15 @@
 
 # Python imports
 import inspect
+import json 
 
 # Django imports
 from django.contrib.auth.decorators import login_required, permission_required
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from django.contrib.auth.models import Group
 from django.core.handlers.wsgi import WSGIRequest
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.core.exceptions import PermissionDenied
@@ -86,7 +89,9 @@ def index(request: WSGIRequest) -> HttpResponse:
     # If the menu even has menu items
     if menu_items.count() > 0:
         # Get all parent menus
-        for parent_menu_item in MenuItem.objects.filter(parent=""):
+        for parent_menu_item in MenuItem.objects.filter(parent="").order_by("index"):
+
+            print(parent_menu_item)
 
             # Get all sub menus for the current parent menu
             first_menu_submenus = MenuItem.objects.filter(parent=parent_menu_item.path)
@@ -358,6 +363,39 @@ def editor_sort(request: WSGIRequest) -> HttpResponse:
 
     return render(request, "simplewiki/editor/editor_sort.html", context)
 
+def editor_sort_post(request: WSGIRequest):
+    try:
+        data_str = '[{"id":"awdwad123","children":[{"id":"dgrdgrd"}]},{"id":"policies"}]'
+        data = json.loads(request.POST.get('data'))
+
+        #print(request.POST.get('data'))
+        #print(request.data)
+
+        number = 0
+
+        tmp_data = request.POST.get('data')
+
+        for item in data:
+            parent_id = item["id"]
+            parent = MenuItem.objects.get(title=parent_id)
+            parent.index = number
+            parent.parent = ""
+            parent.save()
+
+            number = number + 1
+            children = item.get("children", [])
+            for child in children:
+                child_id = child["id"]
+                child = MenuItem.objects.get(title=child_id)
+                child.index = number
+                child.parent = parent_id
+                child.save()
+                number = number + 1
+
+        return JsonResponse({"status": "success"})
+    except Exception as e:
+        return JsonResponse({"status": "error", "message": str(e)})
+
 ### Guides
 
 @login_required
@@ -366,3 +404,31 @@ def editor_markdown_guide(request: WSGIRequest) -> HttpResponse:
     context = gen_context(request)
 
     return render(request, "simplewiki/guides/markdown.html", context)
+
+### Helper
+
+def find_and_set_menu(item, number):
+    #print(number, ":", item["id"])
+
+    parent_id = item["id"]
+
+    parent = MenuItem.objects.filter(title=parent_id)
+    
+    print(parent)
+    parent.update(index=0)
+
+    number += 1
+    print(parent_id)
+    #children = item.get("children", [])
+    """for child in children:
+        
+        child_id = child["id"]
+        child_menu = MenuItem.objects.get(path=child_id)
+
+        child_menu.index = number
+        child_menu.save()
+
+        number += 1"""
+
+    return number
+

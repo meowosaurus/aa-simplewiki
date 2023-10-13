@@ -27,7 +27,7 @@ class MenuItem(models.Model):
 
     # Menu items are sorted after this index
     index = models.IntegerField(default=0, 
-                                unique=True,
+                                unique=False,
                                 help_text='Required: The navbar is sorted by this index. The lower the value, the further to the left is the menu.')
     # Public title for the menu
     title = models.CharField(max_length=255, 
