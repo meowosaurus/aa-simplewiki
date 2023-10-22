@@ -19,7 +19,6 @@ from allianceauth.services.hooks import get_extension_logger
 
 # Custom imports
 from .models import MenuItem, SectionItem
-#from .admin_helper import *
 from .admin_helper_menus import *
 from .admin_helper_sections import *
 
@@ -55,11 +54,13 @@ def gen_context(request: WSGIRequest):
     current_path = request.path
 
     all_groups = Group.objects.all()
+    user_state = request.user.profile.state.name
 
     context = {'menu_items': menu_items, 
                'is_editor': is_editor, 
                'section_items': section_items,
                'user_groups': list(request.user.groups.values_list('name', flat=True)),
+               'user_state': user_state,
                'current_path': current_path,
                'all_groups': all_groups}
 
@@ -90,8 +91,6 @@ def index(request: WSGIRequest) -> HttpResponse:
     if menu_items.count() > 0:
         # Get all parent menus
         for parent_menu_item in MenuItem.objects.filter(parent="").order_by("index"):
-
-            print(parent_menu_item)
 
             # Get all sub menus for the current parent menu
             first_menu_submenus = MenuItem.objects.filter(parent=parent_menu_item.path)
@@ -186,13 +185,23 @@ def dynamic_menus(request: WSGIRequest, menu_name: str) -> HttpResponse:
 
     context.update({'group_names': group_names})
 
+    print(not requested_menu.states)
+
     #if not requested_menu.groups or requested_menu.groups in list(request.user.groups.values_list('name', flat=True)):
     if any(group_name in request.user.groups.values_list('name', flat=True) for group_name in group_names) or any(element == "none" or not element for element in group_names):
         
-        logger_msg = f'Rendering wiki page "{menu_name}" for user "{request.user}".'
-        logger.info(logger_msg)
+        if not requested_menu.states or request.user.profile.state.name in requested_menu.states:
 
-        return render(request, 'simplewiki/dynamic_page.html', context)
+            logger_msg = f'Rendering wiki page "{menu_name}" for user "{request.user}".'
+            logger.info(logger_msg)
+
+            return render(request, 'simplewiki/dynamic_page.html', context)
+        else:
+            context.update({'error_code': 'SIMPLEWIKI_PERMISSION_MISSING_STATE'})
+            error_message = "You don\'t have the permissions to access this page. You need to be in the <b>" + requested_menu.states + "</b> state."
+            context.update({'error_msg': error_message})
+        
+            return render(request, 'simplewiki/error.html', context)
     else:
         requested_groups = requested_menu.groups.replace(',', ', ')
         logger_msg = f'Rejected rendering request for menu "{menu_name}", user "{request.user}" doesn\'t have neccessary groups "{requested_groups}"'
@@ -203,10 +212,10 @@ def dynamic_menus(request: WSGIRequest, menu_name: str) -> HttpResponse:
             group_plural = "groups"
         else:
             group_plural = "group"
-        context.update({'error_code': '#1001'})
-        print(requested_menu.groups.replace(',', ', '))
+        context.update({'error_code': 'SIMPLEWIKI_PERMISSION_MISSING_GROUP'})
         error_message = "You don\'t have the permissions to access this page. You need to be in the <b>" + requested_menu.groups.replace(',', ', ') + "</b> " + group_plural + " on auth."
         context.update({'error_msg': error_message})
+        
         return render(request, 'simplewiki/error.html', context)
 
 @login_required
@@ -250,11 +259,12 @@ def search(request: WSGIRequest) -> HttpResponse:
             context.update({'available_results': available_results})
             context.update({'oldQuery': query})
     except PermissionDenied as e:
-        context.update({'error_code': '#1002'})
+        context.update({'error_code': 'SIMPLEWIKI_SEARCH_NO_PERMISSIONS'})
         context.update({'error_msg': 'Unable to complete search: Do you have the right permissions to access this search?'})
         return render(request, 'simplewiki/error.html', context)
     except Exception as e:
         frame = inspect.currentframe()
+        context.update({'error_code': 'SIMPLEWIKI_SEARCH_UNKNOWN'})
         context.update({'error_django': str(e)})
         file_name = inspect.getframeinfo(frame).filename
         line_number = inspect.getframeinfo(frame).lineno
@@ -363,34 +373,38 @@ def editor_sort(request: WSGIRequest) -> HttpResponse:
 
     return render(request, "simplewiki/editor/editor_sort.html", context)
 
+# JSON post 
+@login_required
+@permission_required("simplewiki.editor_access")
 def editor_sort_post(request: WSGIRequest):
     try:
-        data_str = '[{"id":"awdwad123","children":[{"id":"dgrdgrd"}]},{"id":"policies"}]'
         data = json.loads(request.POST.get('data'))
-
-        #print(request.POST.get('data'))
-        #print(request.data)
 
         number = 0
 
-        tmp_data = request.POST.get('data')
-
+        # Trying to store data and sort menus based on data (json)
         for item in data:
-            parent_id = item["id"]
-            parent = MenuItem.objects.get(title=parent_id)
-            parent.index = number
-            parent.parent = ""
-            parent.save()
-
-            number = number + 1
+            try:
+                parent_title = item["id"]
+                parent = MenuItem.objects.get(title=parent_title)
+                parent.index = number
+                parent.parent = ""
+                parent.save()
+                
+                number = number + 1
+            except Exception as e:
+                return JsonResponse({"status": "error", "message": "Unable to save parent '" + parent_title + "':" + str(e)})
             children = item.get("children", [])
             for child in children:
-                child_id = child["id"]
-                child = MenuItem.objects.get(title=child_id)
-                child.index = number
-                child.parent = parent_id
-                child.save()
-                number = number + 1
+                try:
+                    child_title = child["id"]
+                    child = MenuItem.objects.get(title=child_title)
+                    child.index = number
+                    child.parent = parent.path
+                    child.save()
+                    number = number + 1
+                except Exception as e:
+                    return JsonResponse({"status": "error", "message": "Unable to save child '" + child_title + "':" + str(e)})
 
         return JsonResponse({"status": "success"})
     except Exception as e:
@@ -404,31 +418,3 @@ def editor_markdown_guide(request: WSGIRequest) -> HttpResponse:
     context = gen_context(request)
 
     return render(request, "simplewiki/guides/markdown.html", context)
-
-### Helper
-
-def find_and_set_menu(item, number):
-    #print(number, ":", item["id"])
-
-    parent_id = item["id"]
-
-    parent = MenuItem.objects.filter(title=parent_id)
-    
-    print(parent)
-    parent.update(index=0)
-
-    number += 1
-    print(parent_id)
-    #children = item.get("children", [])
-    """for child in children:
-        
-        child_id = child["id"]
-        child_menu = MenuItem.objects.get(path=child_id)
-
-        child_menu.index = number
-        child_menu.save()
-
-        number += 1"""
-
-    return number
-

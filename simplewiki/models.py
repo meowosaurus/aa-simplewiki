@@ -36,24 +36,29 @@ class MenuItem(models.Model):
     # Icon next to the menu
     icon = models.CharField(max_length=255, 
                             unique=False, 
-                            null=True, 
+                            null=False, 
                             blank=True,
                             help_text='Optional: Go to https://fontawesome.com/v5/search to find matching icons. We only support free icons. Format example: fas fa-hand-spock')
     # The url path of the menu, set automatically based on the title 
     path = models.CharField(max_length=255, 
                             unique=True,
-                            null=True,
+                            null=False,
                             help_text='Required: The path of the URL. You will find that page under https://{your_auth_domain}/simplewiki/{name}.')
     # Parent menu window, blank means it's the parent menu
     parent = models.CharField(max_length=255,
-                              null=True,
+                              null=False,
                               blank=True,
                               help_text='Optional: Write the path of the parent menu. If you want this menu to be the parent leave this field empty.')
     # Menu visibility is filter by these groups
     groups = models.CharField(max_length=255, 
-                             null=True,
+                             null=False,
                              blank=True,
                              help_text='Optional: Do you only want to show this page to one group of people? Insert the group name here and only they will be able to see the post and all of it\'s sections.')
+    # Menu visibility is filter by these states
+    states = models.CharField(max_length=255, 
+                             null=False,
+                             blank=True,
+                             help_text='Optional: Do you only want to show this page to one state? Insert the state name here and only they will be able to see the post and all of it\'s sections.')
 
     def __str__(self):
         return self.path

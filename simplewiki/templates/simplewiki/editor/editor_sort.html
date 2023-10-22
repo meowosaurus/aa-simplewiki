@@ -12,11 +12,6 @@
     Unable to save menu!
 </div>  
 
-<button type="submit" name="confirm_create" value="0" class="btn btn-default">Cancel</button>
-<div class="pull-right">
-  <button type="submit" name="confirm_save" id="confirm_save" value="1" class="btn btn-success">Save</button>
-</div>
-
 <div class="dd" id="editmenus" style="padding-bottom: 1rem;">
     <ol class="dd-list">
         {% for menu_item in menu_items %}
@@ -59,7 +54,7 @@
 
 {% block extra_css %}
 <style type="text/css">
-  .dd { position: relative; display: block; margin: 0; padding: 0; max-width: 100%; list-style: none; /*font-size: 13px;*/ line-height: 20px; }
+  .dd { position: relative; display: block; margin: 0; padding: 0; max-width: 100%; list-style: none; line-height: 20px; }
   
   .dd-list { display: block; position: relative; margin: 0; padding: 0px; padding-block: 1rem; padding-block-end: 0px; list-style: none; }
   .dd-list .dd-list { padding-left: 4rem; }

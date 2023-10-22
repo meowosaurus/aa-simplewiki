@@ -57,12 +57,14 @@
                         {% else %}
                             {% url 'simplewiki:dynamic_menu' menu_name=menu_item.path as expected_path %}
                             {% if not menu_item.groups or user_groups|is_user_in_groups:menu_item.groups %}
-                            <li class="{% if current_path == expected_path %}active{% endif %}">
-                                <a href="{% url 'simplewiki:dynamic_menu' menu_name=menu_item.path %}" style="display: inline-block;">
-                                    <i class="{{ menu_item.icon }}" style="display: inline-block;"></i>
-                                    {{ menu_item.title }}
-                                </a>
-                            </li>
+                                {% if not menu_item.states or "Member" in user_state %}
+                                <li class="{% if current_path == expected_path %}active{% endif %}">
+                                    <a href="{% url 'simplewiki:dynamic_menu' menu_name=menu_item.path %}" style="display: inline-block;">
+                                        <i class="{{ menu_item.icon }}" style="display: inline-block;"></i>
+                                        {{ menu_item.title }} 
+                                    </a>
+                                </li>
+                                {% endif %}
                             {% endif %}
                         {% endif %}
                     {% endif %}
@@ -99,13 +101,21 @@
                                 <li role="separator" class="divider"></li>
                                 <li class="{% navactive request 'simplewiki:editor_sort' %}">
                                     <a href="{% url 'simplewiki:editor_sort' %}">
-                                        <i class="fas fa-pen"></i>
+                                        <i class="fas fa-stream"></i>
                                         Edit Menu Layout
                                     </a>
                                 </li>
+                                {% if False %}
+                                <li class="{% navactive request 'simplewiki:editor_sort' %}">
+                                    <a href="{% url 'simplewiki:editor_sort' %}">
+                                        <i class="fas fa-list-ol"></i>
+                                        Edit Section Layout
+                                    </a>
+                                </li>
+                                {% endif %}
                                 <li role="separator" class="divider"></li>
                                 <li>
-                                    <a href="https://allianceauth.readthedocs.io/en/latest/" target="_blank">
+                                    <a href="https://meowosaurus.github.io/aa-simplewiki/docs/" target="_blank">
                                         <i class="fas fa-question-circle"></i>
                                         Documentation
                                     </a>

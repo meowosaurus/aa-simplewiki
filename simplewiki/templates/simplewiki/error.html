@@ -5,7 +5,7 @@
 
 {% block details %}
     <div class="alert alert-danger" role="alert">
-        <h4>Error {{ error_code }}</h4>
+        <h4>Error: "{{ error_code }}"</h4>
         <br />
         {% if error_msg %}
             {{ error_msg|safe }}

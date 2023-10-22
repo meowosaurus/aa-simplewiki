@@ -1,8 +1,6 @@
 import os
 from setuptools import find_packages, setup
 
-from simplewiki import __version__
-
 with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
     README = readme.read()
 
@@ -16,7 +14,7 @@ install_requires = [
 
 setup(
     name='aa-simplewiki',
-    version=__version__,
+    version='0.0.1',
     packages=find_packages(),
     include_package_data=True,
     exclude_package_data={'': ['images']},
