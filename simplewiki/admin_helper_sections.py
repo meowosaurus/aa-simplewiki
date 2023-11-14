@@ -54,7 +54,10 @@ def create_new_section(request: WSGIRequest, context: dict) -> HttpResponse:
             new_section.title = request.POST['title']
             menu_path = request.POST['menu_path']
             new_section.menu = Menu.objects.get(path=menu_path)
-            new_section.index = request.POST['index']
+            index = 0
+            if isinstance(request.POST['index'], int):
+                index = request.POST['index']
+            new_section.index = index
             new_section.icon = format_icon(request.POST['icon'])
             new_section.content = request.POST['content']
         except (KeyError, ValueError, TypeError) as e:
@@ -103,7 +106,7 @@ def edit_existing_section(request: WSGIRequest, context: dict, edit: str) -> Htt
             return render(request, 'simplewiki/error.html', context)
 
         # Check if user changed a value. If they did, save the new one.
-        keys = ['title', 'index', 'icon', 'content']
+        keys = ['title', 'icon', 'content']
         for key in keys:
             try:
                 if request.POST[key]:
@@ -116,6 +119,11 @@ def edit_existing_section(request: WSGIRequest, context: dict, edit: str) -> Htt
                 return render(request, 'simplewiki/error.html', gen_error_context(context, '#1015', e))
 
         setattr(selected_section, 'icon', format_icon(request.POST['icon']))
+
+        index = 0
+        if isinstance(request.POST['index'], int):
+            index = request.POST['index']
+        selected_section.index = index
 
         # TODO: Add try & except
         menu_path = request.POST['menu_path']
@@ -186,7 +194,6 @@ def load_section_edit_form(request: WSGIRequest, context: dict, edit: str) -> Ht
     """
 
     try:
-        print(Section.objects.get(title=edit))
         selected_section = Section.objects.get(title=edit)
         context.update({'selectedSection': selected_section})
     except SectionItem.DoesNotExist as e:

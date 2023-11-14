@@ -9,16 +9,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [In Development] - Unreleased
 
 ## [1.1.0]
+New features:
+- Drag and drop system for rearranging menus
+- Menus are now accessable by user's state
+
 Fixed bugs:
-- Menu dropdown items expand outside the canvas
-- Navbar doubles it's size on some resolutions
-- No link to the markdown guide on the navbar
-- Search doesn't work on menus (and sections) available for everyone
-- PyPI doesn't install app_utils automatically
-- Clicking on fontawesome link when creating/changing a new section doesn't open a new tab
-- Clicking on the fontawesome links shows all icons, free and premium
-- Icon names are required to be formatted as "fas fa-<name>"
-- Editor dropdown menus don't show which menu is active
+- Index page redirects now to first menu based on index, not oldest menu
+- Menu dropdown items no longer expand outside the screen
+- Navbar no longer doubles it's size on some resolutions
+- Add link on editor dropdown menu to the markdown guide
+- Search now also lists public sections
+- app_utils is now a PyPI requirement
+- Fontawesome link now opens in a new tab
+- Fontawesome link now only shows free icons (premium icons are not usable anyway)
+- Icon names are no longer required to be formatted as "fas fa-<name>", you can either use the name, html or old format
+- Editor dropdown menus now show which sub-menu is active
 
 ## [1.0.5]
 New minor features:
