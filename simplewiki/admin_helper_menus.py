@@ -68,11 +68,13 @@ def create_new_menu(request: WSGIRequest, context: dict) -> HttpResponse:
                 return render(request, 'simplewiki/error.html', gen_error_context(context, '#1003', e))
 
         # TODO: Add try & except
-        menu_icon = format_icon(request.POST['icon'])
-        setattr(new_menu, 'icon', menu_icon)
+        try:
+            menu_icon = format_icon(request.POST['icon'])
+            setattr(new_menu, 'icon', menu_icon)
+        except Exception as e:
+            return render(request, 'simplewiki/error.html', gen_error_context(context, '#1009', e))
 
         # Take all inputs from the group multiple select and put them in a string, seperated by a comma
-        #group_string = ""
         group_string = str()
         
         try:
@@ -85,7 +87,22 @@ def create_new_menu(request: WSGIRequest, context: dict) -> HttpResponse:
                     group_string += group_item
                     group_string += ","
                 group_string = group_string[:-1]
+        except Exception as e:
+            return render(request, 'simplewiki/error.html', gen_error_context(context, '#1003', e))
 
+        # Take all inputs from the state multiple select and put them in a string, seperated by a comma
+        state_string = str()
+
+        try:
+            states = request.POST.getlist('state_select')
+
+            if states is "":
+                state_string = None
+            else:  
+                for state_item in states:
+                    state_string += state_item
+                    state_string += ","
+                state_string = state_string[:-1]
         except Exception as e:
             return render(request, 'simplewiki/error.html', gen_error_context(context, '#1003', e))
         
@@ -100,6 +117,7 @@ def create_new_menu(request: WSGIRequest, context: dict) -> HttpResponse:
                 parent_path = request.POST['parent_select']
                 new_menu.parent = Menu.objects.get(path=parent_path)
             new_menu.groups = group_string
+            new_menu.states = state_string
         except (KeyError, ValueError, TypeError) as e:
                 context.update({'error_code': '#1004'})
                 context.update({'error_django': str(e)})
@@ -160,9 +178,12 @@ def edit_existing_menu(request: WSGIRequest, context: dict, edit: str) -> HttpRe
             except Exception as e:
                 return render(request, 'simplewiki/error.html', gen_error_context(context, '#1007', e))
 
-        # TODO: Add try & except
-        menu_icon = format_icon(request.POST['icon'])
-        setattr(selected_menu, 'icon', menu_icon)
+        # Format the icon and save it
+        try:
+            menu_icon = format_icon(request.POST['icon'])
+            setattr(selected_menu, 'icon', menu_icon)
+        except Exception as e:
+            return render(request, 'simplewiki/error.html', gen_error_context(context, '#1009', e))
         
         # TODO: Error 'groups'
         try:
@@ -178,6 +199,20 @@ def edit_existing_menu(request: WSGIRequest, context: dict, edit: str) -> HttpRe
         except Exception as e:
             return render(request, 'simplewiki/error.html', gen_error_context(context, '#1008', e))
 
+        # TODO: Error 'states'
+        try:
+            states = request.POST.getlist('state_select')
+            state_string = str()
+            for state_item in states:
+                if state_item == "none":
+                    state_string = ""
+                    break;
+                state_string += state_item
+                state_string += ","
+            state_string = state_string[:-1]
+        except Exception as e:
+            return render(request, 'simplewiki/error.html', gen_error_context(context, '#1008', e))
+
         # Taking the title and converting it into a url suitable string
         try:
             selected_menu.path = slugify(request.POST['title'])
@@ -188,6 +223,7 @@ def edit_existing_menu(request: WSGIRequest, context: dict, edit: str) -> HttpRe
                 parent_path = request.POST['parent_select']
                 selected_menu.parent = Menu.objects.get(path=parent_path)
             selected_menu.groups = group_string
+            selected_menu.states = state_string
         except (KeyError, ValueError, TypeError) as e:
             context.update({'error_code': '#1009'})
             context.update({'error_django': str(e)})

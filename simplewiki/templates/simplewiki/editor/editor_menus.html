@@ -32,18 +32,17 @@
             <table class="table table-striped">
                 <thead>
                   <tr>
-                    <th width="16%">Index</th>
                     <th width="17%">Menu Title</th>
                     <th width="17%">URL</th>
                     <th width="17%">Parent Menu</th>
                     <th width="17%">Groups</th>
+                    <th width="16%">States</th>
                     <th width="16%">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {% for menu_item in menu_items %}
                     <tr>
-                      <td>{{ menu_item.index }}</td>
                       <td>
                         <i class="{{ menu_item.icon }}"></i>
                         {{ menu_item.title }}
@@ -65,6 +64,13 @@
                       <td>
                         {% if menu_item.groups %}
                           {{ menu_item.groups|add_group_space }}
+                        {% else %}
+                          None
+                        {% endif %}
+                      </td>
+                      <td>
+                        {% if menu_item.states %}
+                          {{ menu_item.states|add_group_space }}
                         {% else %}
                           None
                         {% endif %}
@@ -133,9 +139,11 @@
           </form>
         </div>
         {% endif %}
+        {% if False %}
         <div class="panel-footer">
           Check our wiki on GitHub if you need help.
         </div>
+        {% endif %}
     </div>
 {% endblock %}
 

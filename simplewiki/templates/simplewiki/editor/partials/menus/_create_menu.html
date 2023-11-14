@@ -1,10 +1,3 @@
-  {% if False %}
-  <div class="form-group">
-    <label for="exampleInputEmail1">Index:</label>
-    <input type="text" class="form-control" name="index" placeholder="For example: {{ menu_items.count }}">
-    <p class="help-block">Required: The navbar is sorted by this index. The lower the value, the further to the left is the menu.</p>
-  </div>
-  {% endif %}
   <div class="form-group">
     <label for="exampleInputPassword1">Title:</label>
     <input type="text" class="form-control" name="title" placeholder="For example: Moon Mining Policies" required>
@@ -36,6 +29,16 @@
       {% endfor %}
     </select>
     <p class="help-block">Optional: Select the groups who are able to access this menu. You can select multiple.</p>
+  </div>
+  <div class="form-group">
+    <label for="menuPathSelect">States:</label>
+    <select multiple class="form-control" name="state_select" id="menuStateSelect">
+      <option value="" selected>None</option>
+      {% for state_item in all_states %}
+        <option value="{{ state_item.name }}">{{ state_item.name }}</option>
+      {% endfor %}
+    </select>
+    <p class="help-block">Optional: Select the states who are able to access this menu. You can select multiple.</p>
   </div>
   <button type="submit" name="confirm_create" value="0" class="btn btn-default">Cancel</button>
   <div class="pull-right">

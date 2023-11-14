@@ -35,23 +35,31 @@
                             </a>
                             <ul class="dropdown-menu">
                             {% for child_menu in menu_item|children_order_by %}
-                            <li class="{% if child_menu.path in current_path %}active{% endif %}">
-                                <a href="{% url 'simplewiki:dynamic_menu' menu_path=child_menu.path %}">
-                                    <i class="{{ child_menu.icon }}" style="display: inline-block;"></i>
-                                    {{ child_menu.title }}
-                                </a>
-                            </li>
+                                {% if not child_menu.groups or user_groups|is_user_in_groups:child_menu.groups %}
+                                    {% if not child_menu.states or user_state|is_user_in_groups:child_menu.states %}
+                                    <li class="{% if child_menu.path in current_path %}active{% endif %}">
+                                        <a href="{% url 'simplewiki:dynamic_menu' menu_path=child_menu.path %}">
+                                            <i class="{{ child_menu.icon }}" style="display: inline-block;"></i>
+                                            {{ child_menu.title }}
+                                        </a>
+                                    </li>
+                                    {% endif %}
+                                {% endif %}
                             {% endfor %}
                             </ul>
                         </li>
                         {% endwith %}
                         {% else %}
-                        <li class="{% if current_path == expected_path %}active{% endif %}">
-                            <a href="{% url 'simplewiki:dynamic_menu' menu_path=menu_item.path %}" style="display: inline-block;">
-                                <i class="{{ menu_item.icon }}" style="display: inline-block;"></i>
-                                {{ menu_item.title }} 
-                            </a>
-                        </li>
+                            {% if not menu_item.groups or user_groups|is_user_in_groups:menu_item.groups %}
+                                {% if not menu_item.states or user_state|is_user_in_groups:menu_item.states %}
+                                <li class="{% if current_path == expected_path %}active{% endif %}">
+                                    <a href="{% url 'simplewiki:dynamic_menu' menu_path=menu_item.path %}" style="display: inline-block;">
+                                        <i class="{{ menu_item.icon }}" style="display: inline-block;"></i>
+                                        {{ menu_item.title }} 
+                                    </a>
+                                </li>
+                                {% endif %}
+                            {% endif %}
                         {% endif %}
                     {% endif %}
                 {% endfor %} 

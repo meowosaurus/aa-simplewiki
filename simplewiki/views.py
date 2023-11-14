@@ -16,6 +16,7 @@ from django.db.models import Q
 from django.core.exceptions import PermissionDenied
 
 from allianceauth.services.hooks import get_extension_logger
+from allianceauth.authentication.models import State
 
 # Custom imports
 from .models import *
@@ -55,6 +56,7 @@ def gen_context(request: WSGIRequest):
     current_path = request.path
 
     all_groups = Group.objects.all()
+    all_states = State.objects.all()
     user_state = request.user.profile.state.name
 
     context = {'menu_items': menu_items, 
@@ -63,7 +65,8 @@ def gen_context(request: WSGIRequest):
                'user_groups': list(request.user.groups.values_list('name', flat=True)),
                'user_state': user_state,
                'current_path': current_path,
-               'all_groups': all_groups}
+               'all_groups': all_groups,
+               'all_states': all_states}
 
     return context
 
@@ -95,7 +98,7 @@ def index(request: WSGIRequest) -> HttpResponse:
                 print(menu.title)
 
                 for child_menu in child_menus:
-                    if child_menu.groups:
+                    if child_menu.groups or child_menu.states:
                         group_names = child_menu.groups.split(',')
                         user_groups = list(request.user.groups.values_list('name', flat=True))
 
@@ -105,25 +108,31 @@ def index(request: WSGIRequest) -> HttpResponse:
                         # If the user has the right to access this submenu
                         if any(group_name in user_groups for group_name in group_names) or any(element == "none" for element in group_names):
                             return redirect('simplewiki:dynamic_menu', child_menu.path)
+                        elif any(state_name == request.user.profile.state.name for state_name in child_menu.states):
+                            print("Yes")
+                            return redirect('simplewiki:dynamic_menu', child_menu.path)
                     else:
                         return redirect('simplewiki:dynamic_menu', child_menu.path)
             # If the menu doesn't have submenus
             else:
-                print(menu.title)
                 logger_msg = f'Unable to find any submenus for "{menu}", checking if user "{request.user}" has permission to access it.'
                 logger.info(logger_msg)
 
                 # If the parent menu has any groups
-                if menu.groups:
+                if menu.groups or menu.states:
                     print("Yes")
                     group_names = menu.groups.split(',')
+                    state_names = menu.states.split(',')
+
                     user_groups = list(request.user.groups.values_list('name', flat=True))
 
-                    # If the user has the right to access the parent menu
+                    # If the user has the right group to access the parent menu
                     if any(group_name in user_groups for group_name in group_names) or any(element == "none" for element in group_names):
                         return redirect('simplewiki:dynamic_menu', menu.path)
-                    else:
+                    # If the user has the right state to access the parent menu
+                    elif any(state_name == request.user.profile.state.name for state_name in state_names):
                         return redirect('simplewiki:dynamic_menu', menu.path)
+                # If the parent menu doesn't have any groups
                 else:
                     return redirect('simplewiki:dynamic_menu', menu.path)
             
@@ -278,15 +287,14 @@ def search(request: WSGIRequest) -> HttpResponse:
 @permission_required("simplewiki.editor_access")
 def editor_menus(request: WSGIRequest) -> HttpResponse:
     """
-    Admin Menu View, this view is responsible for handling all list, create, edit
-    and delete operations related to menus. It uses GET requests to check what button 
-    was pressed and then uses POST requests to store and save the data inside the model
+    This function is a Django view that handles all list, create, edit and delete operations related to menus.
+    It uses GET requests to check what button was pressed and then uses POST requests to store and save the data inside the model.
 
     Args:
-        request (WSGIRequest): The standard django request
+        request (WSGIRequest): The standard Django request.
 
     Returns:
-        HttpResponse: Returns the template and context to render
+        HttpResponse: Returns the template and context to render.
     """
 
     context = gen_context(request)
@@ -318,19 +326,20 @@ def editor_menus(request: WSGIRequest) -> HttpResponse:
 
     return render(request, "simplewiki/editor/editor_menus.html", context)
 
+
 @login_required
 @permission_required("simplewiki.editor_access")
 def editor_sections(request: WSGIRequest) -> HttpResponse:
     """
-    Admin Sections View, this view is responsible for handling all list, create, edit
-    and delete operations related to sections. It uses GET requests to check what button 
-    was pressed and then uses POST requests to store and save the data inside the model
+    This function is a Django view that handles all list, create, edit and delete operations related to sections.
+    It requires the user to be logged in and have the "simplewiki.editor_access" permission.
+    It uses GET requests to check what button was pressed and then uses POST requests to store and save the data inside the model.
 
     Args:
-        request (WSGIRequest): The standard django request
+        request (WSGIRequest): The standard Django request object.
 
     Returns:
-        HttpResponse: Returns the template and context to render
+        HttpResponse: Returns the template and context to render.
     """
 
     context = gen_context(request)
@@ -384,6 +393,13 @@ def editor_markdown_guide(request: WSGIRequest) -> HttpResponse:
 @login_required
 @permission_required("simplewiki.editor_access")
 def editor_sort_post(request: WSGIRequest):
+    """
+    This function handles the sorting of menus in the editor view.
+    It receives a POST request with a JSON object containing the new order of the menus.
+    The function then updates the index and parent fields of each menu object in the database
+    based on the information provided in the JSON object.
+    If any error occurs during the process, the function returns a JSON response with an error message.
+    """
     try:
         data = json.loads(request.POST.get('data'))
 
