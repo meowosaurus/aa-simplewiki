@@ -11,7 +11,7 @@ from django.core.exceptions import ValidationError
 from django.db.models.deletion import ProtectedError
 
 # Custom imports
-from .models import *
+from .models import SectionItem
 
 def gen_error_context(context: dict, error_code: str, err_e: Exception):
     """
@@ -48,12 +48,11 @@ def create_new_section(request: WSGIRequest, context: dict) -> HttpResponse:
 
     # if do create operation
     if request.POST['confirm_create'] == '1':
-        new_section = Section()
+        new_section = SectionItem()
 
         try:
             new_section.title = request.POST['title']
-            menu_path = request.POST['menu_path']
-            new_section.menu = Menu.objects.get(path=menu_path)
+            new_section.menu_path = request.POST['menu_path']
             new_section.index = request.POST['index']
             new_section.icon = format_icon(request.POST['icon'])
             new_section.content = request.POST['content']
@@ -96,14 +95,14 @@ def edit_existing_section(request: WSGIRequest, context: dict, edit: str) -> Htt
     # if do edit operation
     if request.POST['confirm_edit'] == '1':
         try:
-            selected_section = Section.objects.get(title=edit)
+            selected_section = SectionItem.objects.get(title=edit)
         except SectionItem.DoesNotExist as e:
             context.update({'error_code': '#1015'})
             context.update({'error_django': str(e)})
             return render(request, 'simplewiki/error.html', context)
 
         # Check if user changed a value. If they did, save the new one.
-        keys = ['title', 'index', 'icon', 'content']
+        keys = ['title', 'menu_path', 'index', 'icon', 'content']
         for key in keys:
             try:
                 if request.POST[key]:
@@ -116,13 +115,6 @@ def edit_existing_section(request: WSGIRequest, context: dict, edit: str) -> Htt
                 return render(request, 'simplewiki/error.html', gen_error_context(context, '#1015', e))
 
         setattr(selected_section, 'icon', format_icon(request.POST['icon']))
-
-        # TODO: Add try & except
-        menu_path = request.POST['menu_path']
-        if menu_path is "":
-            selected_section.menu = None
-        else:
-            selected_section.menu = Menu.objects.get(path=menu_path)
 
         try:
             selected_section.save()
@@ -156,7 +148,7 @@ def delete_existing_section(request: WSGIRequest, context: dict, delete: str) ->
     # if do delete operation
     if request.POST['confirm_delete'] == '1':
         try:
-            selected_section = Section.objects.get(title=delete)
+            selected_section = SectionItem.objects.get(title=delete)
             selected_section.delete()
         except (SectionItem.DoesNotExist, ProtectedError) as e:
             context.update({'error_code': '#1017'})
@@ -186,8 +178,7 @@ def load_section_edit_form(request: WSGIRequest, context: dict, edit: str) -> Ht
     """
 
     try:
-        print(Section.objects.get(title=edit))
-        selected_section = Section.objects.get(title=edit)
+        selected_section = SectionItem.objects.get(title=edit)
         context.update({'selectedSection': selected_section})
     except SectionItem.DoesNotExist as e:
         context.update({'error_code': '#1018'})
@@ -214,7 +205,7 @@ def load_section_delete_form(request: WSGIRequest, context: dict, delete: str) -
     """
 
     try:
-        selected_section = Section.objects.get(title=delete)
+        selected_section = SectionItem.objects.get(title=delete)
         context.update({'selectedSection': selected_section})
     except SectionItem.DoesNotExist as e:
         context.update({'error_code': '#1018'})

@@ -1,0 +1,35 @@
+{% extends 'simplewiki/base.html' %}
+{% load i18n %}
+{% load humanize %}
+{% load static %}
+{% load markdown_filters %}
+
+{% block details %}
+    {% for item in available_sections %}
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <i class="{{ item.icon }}"></i>
+                {{ item.title }}
+            </div>
+        </div>
+        <div class="panel-body">
+            <p>
+                {{ item.content|markdown|safe }}
+            </p>
+        </div>
+    </div>
+    {% empty %}
+        {% if is_editor %}
+            <div class="alert alert-warning" role="alert">
+                No wiki pages found. You can add them under Editor -> <a href="{% url 'simplewiki:editor_menus' %}">Edit Menus</a> and <a href="{% url 'simplewiki:editor_sections' %}">Edit Sections</a>.
+            </div>
+        {% endif %}
+    {% endfor %}    
+{% endblock %}
+
+{% block extra_javascript %}
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}

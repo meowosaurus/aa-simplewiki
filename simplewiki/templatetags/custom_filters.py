@@ -1,6 +1,6 @@
 from django import template
 
-from simplewiki.models import MenuItem
+from simplewiki.models import *
 
 register = template.Library()
 
@@ -37,16 +37,19 @@ def has_menu_children(menu_item):
     return MenuItem.objects.filter(parent=menu_item.path).exists()
 
 def get_menu_children(menu_item):
-    return MenuItem.objects.filter(parent=menu_item.path).order_by('index')
+    return Menu.objects.filter(parent=menu_item.path).order_by('index')
 
 def get_submenu_paths(parent_menu_item):
     paths = []
 
-    children = get_menu_children(parent_menu_item)
+    children = Menu.objects.filter(parent=parent_menu_item).order_by('index')
     for child in children:
         paths.append("/wiki/" + child.path + "/")
 
     return paths
+
+def children_order_by(menu):
+    return Menu.objects.filter(parent=menu).order_by("index")
 
 @register.simple_tag
 def any_paths_current(current_path, children_paths):
@@ -65,6 +68,7 @@ register.filter('is_user_in_groups', is_user_in_groups)
 register.filter('add_group_space', add_group_space)
 register.filter('has_menu_children', has_menu_children)
 register.filter('get_menu_children', get_menu_children)
+register.filter('children_order_by', children_order_by)
 register.filter('get_submenu_paths', get_submenu_paths)
 register.filter('any_paths_current', any_paths_current)
 register.filter('user_access_any_submenus', user_access_any_submenus)

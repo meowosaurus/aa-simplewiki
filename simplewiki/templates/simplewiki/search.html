@@ -23,7 +23,7 @@
         <div class="panel-heading">
             <div class="panel-title">
                 <i class="{{ item.icon }}"></i>
-                <a href="{% url 'simplewiki:dynamic_menu' menu_name=item.menu_path %}">
+                <a href="{% url 'simplewiki:dynamic_menu' menu_path=item.menu.path %}">
                     {{ item.title }}
                 </a>
             </div>

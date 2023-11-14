@@ -46,9 +46,13 @@
                         {{ section_item.title }}
                     </td>
                     <td>
-                        <a href="{% url 'simplewiki:dynamic_menu' menu_name=section_item.menu_path %}">
-                          {% url 'simplewiki:dynamic_menu' menu_name=section_item.menu_path %}
-                        </a>
+                      {% if section_item.menu %}
+                      <a href="{% url 'simplewiki:dynamic_menu' menu_path=section_item.menu.path %}">
+                        {{ section_item.menu.title }}
+                      </a>
+                      {% else %}
+                      None
+                      {% endif %}
                     </td>
                     <td class="text-center">
                       <form method="GET" action="{% url 'simplewiki:editor_sections' %}">
@@ -131,6 +135,7 @@
         <div class="form-group">
           <label for="menuPathSelect">Menu:</label>
           <select class="form-control" name="menu_path" id="menuPathSelect">
+              <option value="">None</option>
             {% for menu_item in menu_items %}
               <option value="{{ menu_item.path }}">{{ menu_item.title }}</option>
             {% endfor %}
@@ -185,12 +190,12 @@
     document.getElementById("indexInput").value = '{{ selectedSection.index|escapejs }}';
     document.getElementById("iconInput").value = '{{ selectedSection.icon|escapejs }}';
     document.getElementById("titleInput").value = '{{ selectedSection.title|escapejs }}';
-    document.getElementById("menuPathInput").value = '{{ selectedSection.menu_path|escapejs }}';
+    document.getElementById("menuPathInput").value = '{{ selectedSection.menu.path|escapejs }}';
   </script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
         const menuPathSelect = document.getElementById('menuPathSelect');
-        const selectedPath = "{{ selectedSection.menu_path }}";
+        const selectedPath = "{{ selectedSection.menu.path }}";
 
         for (let i = 0; i < menuPathSelect.options.length; i++) {
             if (menuPathSelect.options[i].value == selectedPath) {

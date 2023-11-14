@@ -1,8 +1,10 @@
-<div class="form-group">
+  {% if False %}
+  <div class="form-group">
     <label for="exampleInputEmail1">Index:</label>
     <input type="text" class="form-control" name="index" id="indexInput" placeholder="{{ selectedMenu.index }}">
     <p class="help-block">Required: The navbar is sorted by this index. The lower the value, the further to the left is the menu.</p>
   </div>
+  {% endif %}
   <div class="form-group">
     <label for="exampleInputPassword1">Title:</label>
     <input type="text" class="form-control" name="title" id="titleInput" placeholder="{{ selectedMenu.title }}">

@@ -12,29 +12,20 @@
     Unable to save menu!
 </div>  
 
-<div class="panel panel-primary">
-    <div class="panel-heading">
-      <div class="panel-title">
-        <div class="text-center">
-          {% translate "Menu Layout Administration" %}  
-        </div>
-      </div>
-    </div>
-
-    <div class="panel-body">
-        <div class="dd" id="editmenus" style="padding-bottom: 1rem;">
-        <ol class="dd-list">
-            {% for menu_item in menu_items %}
-                {% if not menu_item.parent %}
-                <li class="dd-item list-group-item" data-id="{{ menu_item.title }}">
-                    <div class="dd-handle">
-                        <i class="{{ menu_item.icon }}"></i>
-                        {{ menu_item.title }}
-                    </div>
-                    {% if menu_item.children %}
-                    <ol class="dd-list">
-                        {% with submenu_paths=menu_item|get_submenu_paths %}
-                            {% for sub_menu_item in menu_item|children_order_by %}
+<div class="dd" id="editmenus" style="padding-bottom: 1rem;">
+    <ol class="dd-list">
+        {% for menu_item in menu_items %}
+            {% if not menu_item.parent %}
+            <li class="dd-item list-group-item" data-id="{{ menu_item.title }}">
+                <div class="dd-handle">
+                    <i class="{{ menu_item.icon }}"></i>
+                    {{ menu_item.title }}
+                </div>
+                {% if menu_item|has_menu_children %}
+                <ol class="dd-list">
+                    {% with submenu_paths=menu_item|get_submenu_paths %}
+                        {% with menu_children=menu_item|get_menu_children %}
+                            {% for sub_menu_item in menu_children %}
                             <li class="dd-item list-group-item" data-id="{{ sub_menu_item.title }}">
                                 <div class="dd-handle">
                                     <i class="{{ sub_menu_item.icon }}"></i>
@@ -43,15 +34,13 @@
                             </li>
                             {% endfor %}
                         {% endwith %}
-                    </ol>
-                    {% endif %}
-                </li>
+                    {% endwith %}
+                </ol>
                 {% endif %}
-            {% endfor %}
-        </ol>
-    </div>
-</div>
-
+            </li>
+            {% endif %}
+        {% endfor %}
+    </ol>
 </div>
 
 <button type="submit" name="confirm_create" value="0" class="btn btn-default">Cancel</button>

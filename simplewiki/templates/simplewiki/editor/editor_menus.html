@@ -49,15 +49,15 @@
                         {{ menu_item.title }}
                       </td>
                       <td>
-                        <a href="{% url 'simplewiki:dynamic_menu' menu_name=menu_item.path %}">
-                          {% url 'simplewiki:dynamic_menu' menu_name=menu_item.path %}
+                        <a href="{% url 'simplewiki:dynamic_menu' menu_path=menu_item.path %}">
+                          {% url 'simplewiki:dynamic_menu' menu_path=menu_item.path %}
                         </a>
                       </td>
                       <td>
                         {% if not menu_item.parent %}
                           None
                         {% else %}
-                          <a href="{% url 'simplewiki:dynamic_menu' menu_name=menu_item.parent %}">
+                          <a href="{% url 'simplewiki:dynamic_menu' menu_path=menu_item.parent %}">
                             {{ menu_item.parent }}
                           </a>
                         {% endif %}
@@ -144,7 +144,7 @@
 {# groupInput needs to be seperated, otherwise it won't find the input #}
 <script>
   const selectElement = document.getElementById("menuParentSelect");
-  const selectedPath = "{{ selectedMenu.menu_path }}";
+  const selectedPath = "{{ selectedMenu.parent.path }}";
 
   for (let i = 0; i < menuParentSelect.options.length; i++) {
           if (menuParentSelect.options[i].value == selectedPath) {
@@ -155,7 +155,7 @@
 
   document.addEventListener('DOMContentLoaded', function() {
       const menuParentSelect = document.getElementById('menuParentSelect');
-      const selectedPath = "{{ selectedMenu.parent }}";
+      const selectedPath = "{{ selectedMenu.parent.path }}";
 
       for (let i = 0; i < menuParentSelect.options.length; i++) {
           if (menuParentSelect.options[i].value == selectedPath) {
@@ -166,7 +166,6 @@
   });
 </script>
 <script>
-  document.getElementById("indexInput").value = '{{ selectedMenu.index|escapejs }}';
   document.getElementById("titleInput").value = '{{ selectedMenu.title|escapejs }}';
   document.getElementById("iconInput").value = '{{ selectedMenu.icon|escapejs }}';
 </script>

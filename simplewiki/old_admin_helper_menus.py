@@ -11,7 +11,7 @@ from django.core.exceptions import ValidationError
 from django.db.models.deletion import ProtectedError
 
 # Custom imports
-from .models import *
+from .models import MenuItem
 
 def gen_error_context(context: dict, error_code: str, error_e: Exception) -> dict:
     """
@@ -48,18 +48,16 @@ def create_new_menu(request: WSGIRequest, context: dict) -> HttpResponse:
     """
 
     if request.POST['confirm_create'] == '1':
-        new_menu = Menu()
-
-        # TODO: Error handling
-        index = Menu.objects.all().last().id
-        print(index)
-        setattr(new_menu, 'index', index)
+        new_menu = MenuItem()
 
         # Fill new_menu with variables and check for errors
-        keys = ['title', 'icon']
+        keys = ['index', 'title', 'icon']
         for key in keys:
             try:
-                setattr(new_menu, key, request.POST[key])
+                if key == 'index':
+                    setattr(new_menu, key, int(request.POST[key]))
+                else:
+                    setattr(new_menu, key, request.POST[key])
             except (KeyError, ValueError, TypeError) as e:
                 context.update({'error_code': '#1003'})
                 context.update({'error_django': str(e)})
@@ -76,16 +74,13 @@ def create_new_menu(request: WSGIRequest, context: dict) -> HttpResponse:
         group_string = str()
         
         try:
+            
             groups = request.POST.getlist('group_select')
 
-            if groups is "":
-                group_string = None
-            else:
-                for group_item in groups:
-                    group_string += group_item
-                    group_string += ","
-                group_string = group_string[:-1]
-
+            for group_item in groups:
+                group_string += group_item
+                group_string += ","
+            group_string = group_string[:-1]
         except Exception as e:
             return render(request, 'simplewiki/error.html', gen_error_context(context, '#1003', e))
         
@@ -93,12 +88,9 @@ def create_new_menu(request: WSGIRequest, context: dict) -> HttpResponse:
         try:
             new_menu.path = slugify(request.POST['title'])
             if request.POST['parent_select'] == "none":
-                new_menu.parent = None
+                new_menu.parent = ""
             else:
-                print(request.POST['parent_select'])
-                #new_menu.parent = request.POST['parent_select']
-                parent_path = request.POST['parent_select']
-                new_menu.parent = Menu.objects.get(path=parent_path)
+                new_menu.parent = request.POST['parent_select']
             new_menu.groups = group_string
         except (KeyError, ValueError, TypeError) as e:
                 context.update({'error_code': '#1004'})
@@ -138,8 +130,8 @@ def edit_existing_menu(request: WSGIRequest, context: dict, edit: str) -> HttpRe
     # If do edit operation
     if request.POST['confirm_edit'] == '1':
         try:
-            selected_menu = Menu.objects.get(path=edit)
-        except Menu.DoesNotExist as e:
+            selected_menu = MenuItem.objects.get(path=edit)
+        except MenuItem.DoesNotExist as e:
             context.update({'error_code': '#1006'})
             context.update({'error_django': str(e)})
             return render(request, 'simplewiki/error.html', context)
@@ -147,12 +139,15 @@ def edit_existing_menu(request: WSGIRequest, context: dict, edit: str) -> HttpRe
             return render(request, 'simplewiki/error.html', gen_error_context(context, '#1006', e))
 
         # Fill selected_menu with new variables and check for errors
-        keys = ['title', 'icon']
+        keys = ['index', 'title', 'icon']
         for key in keys:
             try: 
                 # Check if user changed a value. If they did, save the new one.
                 if request.POST[key]:
-                    setattr(selected_menu, key, request.POST[key])
+                    if key == 'index':
+                        setattr(selected_menu, key, int(request.POST[key]))
+                    else:
+                        setattr(selected_menu, key, request.POST[key])
             except (KeyError, ValueError, TypeError) as e:
                 context.update({'error_code': '#1007'})
                 context.update({'error_django': str(e)})
@@ -178,15 +173,13 @@ def edit_existing_menu(request: WSGIRequest, context: dict, edit: str) -> HttpRe
         except Exception as e:
             return render(request, 'simplewiki/error.html', gen_error_context(context, '#1008', e))
 
-        # Taking the title and converting it into a url suitable string
+        # Taking the titel and converting it into a url suitable string
         try:
             selected_menu.path = slugify(request.POST['title'])
-            # Save the parent menu key
             if request.POST['parent_select'] == "none":
-                selected_menu.parent = None
+                selected_menu.parent = ""
             else:
-                parent_path = request.POST['parent_select']
-                selected_menu.parent = Menu.objects.get(path=parent_path)
+                selected_menu.parent = request.POST['parent_select']
             selected_menu.groups = group_string
         except (KeyError, ValueError, TypeError) as e:
             context.update({'error_code': '#1009'})
@@ -228,9 +221,9 @@ def delete_existing_menu(request: WSGIRequest, context: dict, delete: str) -> Ht
     # If do delete operation
     if request.POST['confirm_delete'] == '1':
         try:
-            selected_menu = Menu.objects.get(path=delete)
+            selected_menu = MenuItem.objects.get(path=delete)
             selected_menu.delete()
-        except (Menu.DoesNotExist, ProtectedError) as e:
+        except (MenuItem.DoesNotExist, ProtectedError) as e:
             context.update({'error_code': '#1011'})
             context.update({'error_django': str(e)})
             return render(request, 'simplewiki/error.html', context)
@@ -258,10 +251,10 @@ def load_menu_edit_form(request: WSGIRequest, context: dict, edit: str) -> HttpR
     """
 
     try:
-        selected_menu = Menu.objects.get(path=edit)
+        selected_menu = MenuItem.objects.get(path=edit)
         context.update({'selectedMenu': selected_menu})
         context.update({'user_action': 'edit'})
-    except Menu.DoesNotExist as e:
+    except MenuItem.DoesNotExist as e:
         context.update({'error_code': '#1012'})
         context.update({'error_django': str(e)})
         return render(request, 'simplewiki/error.html', context)
@@ -284,7 +277,7 @@ def load_menu_delete_form(request: WSGIRequest, context: dict, delete: str) -> H
     """
 
     try:
-        selected_menu = Menu.objects.get(path=delete)
+        selected_menu = MenuItem.objects.get(path=delete)
         context.update({'selectedMenu': selected_menu})
         context.update({'user_action': 'delete'})
     except MenuItem.DoesNotExist as e:

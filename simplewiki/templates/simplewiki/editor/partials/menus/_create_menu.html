@@ -1,8 +1,10 @@
-<div class="form-group">
+  {% if False %}
+  <div class="form-group">
     <label for="exampleInputEmail1">Index:</label>
-    <input type="text" class="form-control" name="index" placeholder="For example: {{ menu_items.count }}" required>
+    <input type="text" class="form-control" name="index" placeholder="For example: {{ menu_items.count }}">
     <p class="help-block">Required: The navbar is sorted by this index. The lower the value, the further to the left is the menu.</p>
   </div>
+  {% endif %}
   <div class="form-group">
     <label for="exampleInputPassword1">Title:</label>
     <input type="text" class="form-control" name="title" placeholder="For example: Moon Mining Policies" required>
@@ -28,7 +30,7 @@
   <div class="form-group">
     <label for="menuPathSelect">Groups:</label>
     <select multiple class="form-control" name="group_select" id="menuGroupSelect">
-      <option value="none" selected>None</option>
+      <option value="" selected>None</option>
       {% for group_item in all_groups %}
         <option value="{{ group_item.name }}">{{ group_item.name }}</option>
       {% endfor %}

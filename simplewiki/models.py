@@ -20,6 +20,73 @@ class General(models.Model):
         permissions = (("basic_access", "Can access this app"),
                        ("editor_access", "Can edit menues and sections"))
 
+# v2
+
+class Menu(models.Model):
+    index = models.IntegerField(default=0,
+                                unique=False,
+                                null=False)
+    title = models.CharField(max_length=255,
+                             unique=False,
+                             null=False)
+    icon = models.CharField(max_length=255,
+                            unique=False,
+                            null=False,
+                            blank=True)
+    path = models.CharField(max_length=255,
+                            unique=True,
+                            null=False)
+    parent = models.ForeignKey(
+        'self',
+        on_delete=models.SET_NULL,
+        related_name='children',
+        null=True,
+        blank=True
+    )
+    groups = models.CharField(max_length=255,
+                              null=False,
+                              blank=True)
+    states = models.CharField(max_length=255,
+                              null=False,
+                              blank=True)
+
+    def __str__(self):
+        if self.parent:
+            return self.title + " (Parent: " + self.parent.title + ")" 
+        else:
+            return self.title
+
+class Section(models.Model):
+    title = models.CharField(max_length=255,
+                             null=False,
+                             blank=False,
+                             unique=True)
+    menu = models.ForeignKey(
+        Menu,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+    index = models.IntegerField(default=0,
+                                null=False,
+                                blank=True,
+                                unique=False)
+    icon = models.CharField(max_length=255,
+                            unique=False,
+                            null=False,
+                            blank=True)
+    content = models.TextField(null=False,
+                               blank=True)
+
+    def __str__(self):
+        if self.menu:
+            return self.title + " (" + self.menu.title + ")"
+        else:
+            return self.title
+
+# v1
+# TODO: Will be removed in a later version, used for now to store old data
+
 class MenuItem(models.Model):
     """
     Menu item model for wiki menu entries
@@ -36,27 +103,27 @@ class MenuItem(models.Model):
     # Icon next to the menu
     icon = models.CharField(max_length=255, 
                             unique=False, 
-                            null=False, 
+                            null=True, 
                             blank=True,
                             help_text='Optional: Go to https://fontawesome.com/v5/search to find matching icons. We only support free icons. Format example: fas fa-hand-spock')
     # The url path of the menu, set automatically based on the title 
     path = models.CharField(max_length=255, 
                             unique=True,
-                            null=False,
+                            null=True,
                             help_text='Required: The path of the URL. You will find that page under https://{your_auth_domain}/simplewiki/{name}.')
     # Parent menu window, blank means it's the parent menu
     parent = models.CharField(max_length=255,
-                              null=False,
+                              null=True,
                               blank=True,
                               help_text='Optional: Write the path of the parent menu. If you want this menu to be the parent leave this field empty.')
     # Menu visibility is filter by these groups
     groups = models.CharField(max_length=255, 
-                             null=False,
+                             null=True,
                              blank=True,
                              help_text='Optional: Do you only want to show this page to one group of people? Insert the group name here and only they will be able to see the post and all of it\'s sections.')
     # Menu visibility is filter by these states
     states = models.CharField(max_length=255, 
-                             null=False,
+                             null=True,
                              blank=True,
                              help_text='Optional: Do you only want to show this page to one state? Insert the state name here and only they will be able to see the post and all of it\'s sections.')
 
