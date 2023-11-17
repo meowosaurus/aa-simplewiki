@@ -23,6 +23,18 @@ class General(models.Model):
 # v2
 
 class Menu(models.Model):
+    """
+    Represents a menu item in the SimpleWiki application.
+
+    Attributes:
+        index (int): The index of the menu item.
+        title (str): The title of the menu item.
+        icon (str): The icon of the menu item.
+        path (str): The path of the menu item.
+        parent (Menu): The parent menu item, if any.
+        groups (str): The groups that have access to the menu item.
+        states (str): The states in which the menu item is visible.
+    """
     index = models.IntegerField(default=0,
                                 unique=False,
                                 null=False)
@@ -57,6 +69,12 @@ class Menu(models.Model):
             return self.title
 
 class Section(models.Model):
+    """
+    Represents a section in the SimpleWiki application.
+
+    A section is a container for content that is organized under a title and an optional menu.
+    """
+
     title = models.CharField(max_length=255,
                              null=False,
                              blank=False,

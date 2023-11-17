@@ -26,7 +26,7 @@ def gen_error_context(context: dict, error_code: str, err_e: Exception):
         dict: Return the updated context
     """
 
-    context.update({'error_code': '#1014'})
+    context.update({'error_code': 'EDITOR_SECTION_ERROR_UNKNOWN'})
     frame = inspect.currentframe()
     context.update({'error_django': str(str(err_e))})
     filename = inspect.getframeinfo(frame).filename
@@ -50,6 +50,7 @@ def create_new_section(request: WSGIRequest, context: dict) -> HttpResponse:
     if request.POST['confirm_create'] == '1':
         new_section = Section()
 
+        # Check if user changed a value. If they did, save the new one.
         try:
             new_section.title = request.POST['title']
             menu_path = request.POST['menu_path']
@@ -61,20 +62,21 @@ def create_new_section(request: WSGIRequest, context: dict) -> HttpResponse:
             new_section.icon = format_icon(request.POST['icon'])
             new_section.content = request.POST['content']
         except (KeyError, ValueError, TypeError) as e:
-            context.update({'error_code': '#1014'})
+            context.update({'error_code': 'EDITOR_SECTION_CREATE'})
             context.update({'error_django': str(e)})
             return render(request, 'simplewiki/error.html', context)
         except Exception as e:
-            return render(request, 'simplewiki/error.html', gen_error_context(context, '#1014', e))
+            return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_SECTION_CREATE_UNKNOWN', e))
 
+        # Save the object
         try:
             new_section.save()
         except (ValidationError, IntegrityError) as e:
-            context.update({'error_code': '#1014'})
+            context.update({'error_code': 'EDITOR_SECTION_CREATE_SAVE'})
             context.update({'error_django': str(e)})
             return render(request, 'simplewiki/error.html', context)
         except Exception as e:
-            return render(request, 'simplewiki/error.html', gen_error_context(context, '#1014', e))
+            return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_SECTION_CREATE_SAVE_UNKNOWN', e))
                 
         return redirect('simplewiki:editor_sections')
     # if cancel create operation
@@ -98,10 +100,11 @@ def edit_existing_section(request: WSGIRequest, context: dict, edit: str) -> Htt
 
     # if do edit operation
     if request.POST['confirm_edit'] == '1':
+        # Get the object
         try:
             selected_section = Section.objects.get(title=edit)
         except SectionItem.DoesNotExist as e:
-            context.update({'error_code': '#1015'})
+            context.update({'error_code': 'EDITOR_SECTION_EDIT_GET'})
             context.update({'error_django': str(e)})
             return render(request, 'simplewiki/error.html', context)
 
@@ -112,34 +115,46 @@ def edit_existing_section(request: WSGIRequest, context: dict, edit: str) -> Htt
                 if request.POST[key]:
                     setattr(selected_section, key, request.POST[key])
             except (KeyError, ValueError, TypeError) as e:
-                context.update({'error_code': '#1015'})
+                context.update({'error_code': 'EDITOR_SECTION_EDIT_VALUES'})
                 context.update({'error_django': str(e)})
                 return render(request, 'simplewiki/error.html', context)
             except Exception as e:
-                return render(request, 'simplewiki/error.html', gen_error_context(context, '#1015', e))
+                return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_SECTION_EDIT_VALUES_UNKNOWN', e))
 
-        setattr(selected_section, 'icon', format_icon(request.POST['icon']))
+        # Check if user changed the icon. If they did, save the new one.
+        try:
+            setattr(selected_section, 'icon', format_icon(request.POST['icon']))
+        except Exception as e:
+            return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_SECTION_EDIT_ICON', e))
 
-        index = 0
-        if isinstance(request.POST['index'], int):
-            index = request.POST['index']
-        selected_section.index = index
+        # Check if user changed the index. If they did, save the new one.
+        try:
+            index = 0
+            if isinstance(request.POST['index'], int):
+                index = request.POST['index']
+            selected_section.index = index
+        except Exception as e:
+            return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_SECTION_EDIT_INDEX', e))
 
-        # TODO: Add try & except
-        menu_path = request.POST['menu_path']
-        if menu_path is "":
-            selected_section.menu = None
-        else:
-            selected_section.menu = Menu.objects.get(path=menu_path)
+        # Check if user changed the menu. If they did, save the new one.
+        try:
+            menu_path = request.POST['menu_path']
+            if menu_path is "":
+                selected_section.menu = None
+            else:
+                selected_section.menu = Menu.objects.get(path=menu_path)
+        except Exception as e:
+            return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_SECTION_EDIT_MENU', e))
 
+        # Save the object
         try:
             selected_section.save()
         except (ValidationError, IntegrityError) as e:
-            context.update({'error_code': '#1016'})
+            context.update({'error_code': 'EDITOR_SECTION_EDIT_SAVE'})
             context.update({'error_django': str(e)})
             return render(request, 'simplewiki/error.html', context)
         except Exception as e:
-            return render(request, 'simplewiki/error.html', gen_error_context(context, '#1016', e))
+            return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_SECTION_EDIT_SAVE_UNKNOWN', e))
 
         return redirect('simplewiki:editor_sections')
     # if cancel edit operation
@@ -167,11 +182,11 @@ def delete_existing_section(request: WSGIRequest, context: dict, delete: str) ->
             selected_section = Section.objects.get(title=delete)
             selected_section.delete()
         except (SectionItem.DoesNotExist, ProtectedError) as e:
-            context.update({'error_code': '#1017'})
+            context.update({'error_code': 'EDITOR_SECTION_DELETE'})
             context.update({'error_django': str(e)})
             return render(request, 'simplewiki/error.html', context)
         except Exception as e:
-            return render(request, 'simplewiki/error.html', gen_error_context(context, '#1017', e))
+            return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_SECTION_DELETE_UNKNOWN', e))
         
         return redirect('simplewiki:editor_sections')
     # if cancel delete operation
@@ -197,11 +212,11 @@ def load_section_edit_form(request: WSGIRequest, context: dict, edit: str) -> Ht
         selected_section = Section.objects.get(title=edit)
         context.update({'selectedSection': selected_section})
     except SectionItem.DoesNotExist as e:
-        context.update({'error_code': '#1018'})
+        context.update({'error_code': 'EDITOR_SECTION_LOAD_EDIT_FORM'})
         context.update({'error_django': str(e)})
         return render(request, 'simplewiki/error.html', context)
     except Exception as e:
-        return render(request, 'simplewiki/error.html', gen_error_context(context, '#1018', e))
+        return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_SECTION_LOAD_EDIT_FORM_UNKNOWN', e))
     
     context.update({'user_action': 'edit'})
 
@@ -224,24 +239,39 @@ def load_section_delete_form(request: WSGIRequest, context: dict, delete: str) -
         selected_section = Section.objects.get(title=delete)
         context.update({'selectedSection': selected_section})
     except SectionItem.DoesNotExist as e:
-        context.update({'error_code': '#1018'})
+        context.update({'error_code': 'EDITOR_SECTION_LOAD_DELETE_FORM'})
         context.update({'error_django': str(e)})
         return render(request, 'simplewiki/error.html', context)
     except Exception as e:
-        return render(request, 'simplewiki/error.html', gen_error_context(context, '#1014', e))
+        return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_SECTION_LOAD_DELETE_FORM_UNKNOWN', e))
     
     context.update({'user_action': 'delete'})
 
 def format_icon(icon: str) -> str:
-    if len(icon) > 0:
-        pattern = re.compile(r'^<i class="fas fa-(.*?)"></i>$')
-        if pattern.match(icon):
-            icon = "fas fa-" + pattern.match(icon).group(1)
-        elif not "fas" in icon:
-            if not "fa-" in icon:
-                icon = "fas fa-" + icon
-            else:
-                icon = "fas " + icon
+    """
+    Formats the given icon string to match the FontAwesome icon class format.
 
-    return icon
+    Args:
+        icon (str): The icon string to format.
+
+    Returns:
+        str: The formatted icon string.
+    """
+    try:
+        if len(icon) > 0:
+            pattern = re.compile(r'^<i class="fas fa-(.*?)"></i>$')
+            if pattern.match(icon):
+                icon = "fas fa-" + pattern.match(icon).group(1)
+            elif not "fas" in icon:
+                if not "fa-" in icon:
+                    icon = "fas fa-" + icon
+                else:
+                    icon = "fas " + icon
+
+        return icon
+    except Exception as e:
+        logger_msg = f'Unable to convert {icon} into "fas fa-<name>" format, proceeding without it.'
+        logger.info(logger_msg)
+
+        return ""
 

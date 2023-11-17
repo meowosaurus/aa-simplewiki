@@ -10,8 +10,14 @@ from django.utils.text import slugify
 from django.core.exceptions import ValidationError
 from django.db.models.deletion import ProtectedError
 
+from allianceauth.services.hooks import get_extension_logger
+from app_utils.logging import LoggerAddTag
+
 # Custom imports
 from .models import *
+from . import __title__
+
+logger = LoggerAddTag(get_extension_logger(__name__), __title__)
 
 def gen_error_context(context: dict, error_code: str, error_e: Exception) -> dict:
     """
@@ -30,7 +36,7 @@ def gen_error_context(context: dict, error_code: str, error_e: Exception) -> dic
     frame = inspect.currentframe()
     context.update({'error_django': str(str(error_e))})
     filename = inspect.getframeinfo(frame).filename
-    context.update({'error_code': error_code})
+    context.update({'error_code': "EDITOR_MENU_UNKNOWN_ERROR"})
     context.update({'error_msg': 'Unknown error in ' + filename})
     return context
 
@@ -50,10 +56,14 @@ def create_new_menu(request: WSGIRequest, context: dict) -> HttpResponse:
     if request.POST['confirm_create'] == '1':
         new_menu = Menu()
 
-        # TODO: Error handling
-        index = Menu.objects.all().last().id
-        print(index)
-        setattr(new_menu, 'index', index)
+        try:
+            if Menu.objects.all().count() > 0:
+                index = Menu.objects.all().last().id
+            else:
+                index = 0
+            setattr(new_menu, 'index', index)
+        except Exception as e:
+            return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_MENU_ADD_NO_INDEX', e))
 
         # Fill new_menu with variables and check for errors
         keys = ['title', 'icon']
@@ -61,18 +71,17 @@ def create_new_menu(request: WSGIRequest, context: dict) -> HttpResponse:
             try:
                 setattr(new_menu, key, request.POST[key])
             except (KeyError, ValueError, TypeError) as e:
-                context.update({'error_code': '#1003'})
+                context.update({'error_code': 'EDITOR_MENU_ADD_BAD_KEYS'})
                 context.update({'error_django': str(e)})
                 return render(request, 'simplewiki/error.html', context)
             except Exception as e:
-                return render(request, 'simplewiki/error.html', gen_error_context(context, '#1003', e))
+                return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_MENU_ADD_UNKNOWN_KEYS', e))
 
-        # TODO: Add try & except
         try:
             menu_icon = format_icon(request.POST['icon'])
             setattr(new_menu, 'icon', menu_icon)
         except Exception as e:
-            return render(request, 'simplewiki/error.html', gen_error_context(context, '#1009', e))
+            return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_MENU_ADD_BAD_ICON', e))
 
         # Take all inputs from the group multiple select and put them in a string, seperated by a comma
         group_string = str()
@@ -80,7 +89,7 @@ def create_new_menu(request: WSGIRequest, context: dict) -> HttpResponse:
         try:
             groups = request.POST.getlist('group_select')
 
-            if groups is "":
+            if groups == "":
                 group_string = None
             else:
                 for group_item in groups:
@@ -88,15 +97,14 @@ def create_new_menu(request: WSGIRequest, context: dict) -> HttpResponse:
                     group_string += ","
                 group_string = group_string[:-1]
         except Exception as e:
-            return render(request, 'simplewiki/error.html', gen_error_context(context, '#1003', e))
+            return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_MENU_ADD_BAD_GROUP', e))
 
         # Take all inputs from the state multiple select and put them in a string, seperated by a comma
         state_string = str()
-
         try:
             states = request.POST.getlist('state_select')
 
-            if states is "":
+            if states == "":
                 state_string = None
             else:  
                 for state_item in states:
@@ -104,7 +112,7 @@ def create_new_menu(request: WSGIRequest, context: dict) -> HttpResponse:
                     state_string += ","
                 state_string = state_string[:-1]
         except Exception as e:
-            return render(request, 'simplewiki/error.html', gen_error_context(context, '#1003', e))
+            return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_MENU_ADD_BAD_STATE', e))
         
         # Taking the titel and converting it into a url suitable string
         try:
@@ -112,28 +120,26 @@ def create_new_menu(request: WSGIRequest, context: dict) -> HttpResponse:
             if request.POST['parent_select'] == "none":
                 new_menu.parent = None
             else:
-                print(request.POST['parent_select'])
-                #new_menu.parent = request.POST['parent_select']
                 parent_path = request.POST['parent_select']
                 new_menu.parent = Menu.objects.get(path=parent_path)
             new_menu.groups = group_string
             new_menu.states = state_string
         except (KeyError, ValueError, TypeError) as e:
-                context.update({'error_code': '#1004'})
+                context.update({'error_code': 'EDITOR_MENU_TITLE_BAD_URL'})
                 context.update({'error_django': str(e)})
                 return render(request, 'simplewiki/error.html', context)
         except Exception as e:
-                return render(request, 'simplewiki/error.html', gen_error_context(context, '#1004', e))
+                return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_MENU_ADD_TITLE_URL_UNKNOWN', e))
                 
         # Save new_menu and check for errors
         try:
             new_menu.save()
         except (IntegrityError, ValidationError) as e:
-            context.update({'error_code': '#1005'})
+            context.update({'error_code': 'EDITOR_MENU_ERROR_SAVE'})
             context.update({'error_django': str(e)})
             return render(request, 'simplewiki/error.html', context)
         except Exception as e:
-            return render(request, 'simplewiki/error.html', gen_error_context(context, '#1005', e))
+            return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_MENU_ADD_SAVE_UNKNOWN', e))
         return redirect("simplewiki:editor_menus")
     else:
         return redirect("simplewiki:editor_menus")
@@ -158,11 +164,11 @@ def edit_existing_menu(request: WSGIRequest, context: dict, edit: str) -> HttpRe
         try:
             selected_menu = Menu.objects.get(path=edit)
         except Menu.DoesNotExist as e:
-            context.update({'error_code': '#1006'})
+            context.update({'error_code': 'EDITOR_MENU_EDIT_NO_MENU'})
             context.update({'error_django': str(e)})
             return render(request, 'simplewiki/error.html', context)
         except Exception as e:
-            return render(request, 'simplewiki/error.html', gen_error_context(context, '#1006', e))
+            return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_MENU_EDIT_BAD_SELECTED_MENU', e))
 
         # Fill selected_menu with new variables and check for errors
         keys = ['title', 'icon']
@@ -176,16 +182,16 @@ def edit_existing_menu(request: WSGIRequest, context: dict, edit: str) -> HttpRe
                 context.update({'error_django': str(e)})
                 return render(request, 'simplewiki/error.html', context)
             except Exception as e:
-                return render(request, 'simplewiki/error.html', gen_error_context(context, '#1007', e))
+                return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_MENU_EDIT_BAD_TITLE', e))
 
-        # Format the icon and save it
+        # Check if user changed the icon. If they did, format and save the new one.
         try:
             menu_icon = format_icon(request.POST['icon'])
             setattr(selected_menu, 'icon', menu_icon)
         except Exception as e:
-            return render(request, 'simplewiki/error.html', gen_error_context(context, '#1009', e))
+            return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_MENU_EDIT_BAD_ICON', e))
         
-        # TODO: Error 'groups'
+        # Take all inputs from the group multiple select and put them in a string, seperated by a comma
         try:
             groups = request.POST.getlist('group_select')
             group_string = ""
@@ -197,9 +203,9 @@ def edit_existing_menu(request: WSGIRequest, context: dict, edit: str) -> HttpRe
                 group_string += ","
             group_string = group_string[:-1]
         except Exception as e:
-            return render(request, 'simplewiki/error.html', gen_error_context(context, '#1008', e))
+            return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_MENU_EDIT_BAD_GROUP', e))
 
-        # TODO: Error 'states'
+        # Take all inputs from the state multiple select and put them in a string, seperated by a comma
         try:
             states = request.POST.getlist('state_select')
             state_string = str()
@@ -211,7 +217,7 @@ def edit_existing_menu(request: WSGIRequest, context: dict, edit: str) -> HttpRe
                 state_string += ","
             state_string = state_string[:-1]
         except Exception as e:
-            return render(request, 'simplewiki/error.html', gen_error_context(context, '#1008', e))
+            return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_MENU_EDIT_BAD_STATE', e))
 
         # Taking the title and converting it into a url suitable string
         try:
@@ -225,21 +231,21 @@ def edit_existing_menu(request: WSGIRequest, context: dict, edit: str) -> HttpRe
             selected_menu.groups = group_string
             selected_menu.states = state_string
         except (KeyError, ValueError, TypeError) as e:
-            context.update({'error_code': '#1009'})
+            context.update({'error_code': 'EDITOR_MENU_EDIT_BAD_TITLE'})
             context.update({'error_django': str(e)})
             return render(request, 'simplewiki/error.html', context)
         except Exception as e:
-            return render(request, 'simplewiki/error.html', gen_error_context(context, '#1009', e))
+            return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_MENU_EDIT_BAD_TITLE_UNKNOWN', e))
 
         # Save selected_menu and check for errors
         try:
             selected_menu.save()
         except (ValidationError, IntegrityError) as e:
-            context.update({'error_code': '#1010'})
+            context.update({'error_code': 'EDITOR_MENU_EDIT_SAVE'})
             context.update({'error_django': str(e)})
             return render(request, 'simplewiki/error.html', context)
         except Exception as e:
-            return render(request, 'simplewiki/error.html', gen_error_context(context, '#1010', e))
+            return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_MENU_EDIT_SAVE_UNKNOWN', e))
                 
         return redirect("simplewiki:editor_menus")
     # If cancel edit operation
@@ -267,11 +273,11 @@ def delete_existing_menu(request: WSGIRequest, context: dict, delete: str) -> Ht
             selected_menu = Menu.objects.get(path=delete)
             selected_menu.delete()
         except (Menu.DoesNotExist, ProtectedError) as e:
-            context.update({'error_code': '#1011'})
+            context.update({'error_code': 'EDITOR_MENU_DELETE_404_PROTECTED'})
             context.update({'error_django': str(e)})
             return render(request, 'simplewiki/error.html', context)
         except Exception as e:
-            return render(request, 'simplewiki:error.html', gen_error_context(context, '#1011', e))
+            return render(request, 'simplewiki:error.html', gen_error_context(context, 'EDITOR_MENU_DELETE_UNKNOWN', e))
                 
         return redirect("simplewiki:editor_menus")
     # If cancel delete operation
@@ -298,11 +304,11 @@ def load_menu_edit_form(request: WSGIRequest, context: dict, edit: str) -> HttpR
         context.update({'selectedMenu': selected_menu})
         context.update({'user_action': 'edit'})
     except Menu.DoesNotExist as e:
-        context.update({'error_code': '#1012'})
+        context.update({'error_code': 'EDITOR_MENU_EDIT_LOAD_FORM'})
         context.update({'error_django': str(e)})
         return render(request, 'simplewiki/error.html', context)
     except Exception as e:
-        return render(request, 'simplewiki/error.html', gen_error_context(context, '#1012', e))
+        return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_MENU_EDIT_LOAD_FORM_UNKNOWN', e))
     
 def load_menu_delete_form(request: WSGIRequest, context: dict, delete: str) -> HttpResponse:
     """
@@ -324,21 +330,36 @@ def load_menu_delete_form(request: WSGIRequest, context: dict, delete: str) -> H
         context.update({'selectedMenu': selected_menu})
         context.update({'user_action': 'delete'})
     except MenuItem.DoesNotExist as e:
-        context.update({'error_code': '#1013'})
+        context.update({'error_code': 'EDITOR_MENU_DELETE_LOAD_FORM'})
         context.update({'error_django': str(e)})
         return render(request, 'simplewiki/error.html', context)
     except Exception as e:
-        return render(request, 'simplewiki/error.html', gen_error_context(context, '#1013', e))
+        return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_MENU_DELETE_LOAD_FORM_UNKNOWN', e))
 
 def format_icon(icon: str) -> str:
-    if len(icon) > 0:
-        pattern = re.compile(r'^<i class="fas fa-(.*?)"></i>$')
-        if pattern.match(icon):
-            icon = "fas fa-" + pattern.match(icon).group(1)
-        elif not "fas" in icon:
-            if not "fa-" in icon:
-                icon = "fas fa-" + icon
-            else:
-                icon = "fas " + icon
+    """
+    Formats the icon string to match the expected format for Font Awesome icons.
 
-    return icon
+    Args:
+        icon (str): The icon string to format.
+
+    Returns:
+        str: The formatted icon string.
+    """
+    try:
+        if len(icon) > 0:
+            pattern = re.compile(r'^<i class="fas fa-(.*?)"></i>$')
+            if pattern.match(icon):
+                icon = "fas fa-" + pattern.match(icon).group(1)
+            elif not "fas" in icon:
+                if not "fa-" in icon:
+                    icon = "fas fa-" + icon
+                else:
+                    icon = "fas " + icon
+
+        return icon
+    except Exception as e:
+        logger_msg = f'Unable to convert {icon} into "fas fa-<name>" format, proceeding without it.'
+        logger.info(logger_msg)
+
+        return ""

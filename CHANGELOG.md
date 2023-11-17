@@ -11,10 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [1.1.0]
 New features:
 - Drag and drop system for rearranging menus
-- Menus are now accessable by user's state
+- Menus are now accessable by a user's state
 
 Fixed bugs:
-- Index page redirects now to first menu based on index, not oldest menu
+- Index page redirects now to first menu, not oldest menu
 - Menu dropdown items no longer expand outside the screen
 - Navbar no longer doubles it's size on some resolutions
 - Add link on editor dropdown menu to the markdown guide
@@ -24,6 +24,13 @@ Fixed bugs:
 - Fontawesome link now only shows free icons (premium icons are not usable anyway)
 - Icon names are no longer required to be formatted as "fas fa-<name>", you can either use the name, html or old format
 - Editor dropdown menus now show which sub-menu is active
+
+Internal Optimizations:
+- Reworked the menu and section models
+- Changed error code to error strings
+- Add logging for helper functions
+
+## Released
 
 ## [1.0.5]
 New minor features:

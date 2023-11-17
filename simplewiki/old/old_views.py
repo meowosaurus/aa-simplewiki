@@ -185,8 +185,6 @@ def dynamic_menus(request: WSGIRequest, menu_name: str) -> HttpResponse:
 
     context.update({'group_names': group_names})
 
-    print(not requested_menu.states)
-
     #if not requested_menu.groups or requested_menu.groups in list(request.user.groups.values_list('name', flat=True)):
     if any(group_name in request.user.groups.values_list('name', flat=True) for group_name in group_names) or any(element == "none" or not element for element in group_names):
         
@@ -247,7 +245,6 @@ def search(request: WSGIRequest) -> HttpResponse:
             
             # Get the menu for every search results
             for result in search_results:
-                print(result)
                 result_menu = MenuItem.objects.get(path=result.menu_path)
 
                 group_names = result_menu.groups.split(',')

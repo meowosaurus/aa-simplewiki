@@ -66,7 +66,8 @@ def gen_context(request: WSGIRequest):
                'user_state': user_state,
                'current_path': current_path,
                'all_groups': all_groups,
-               'all_states': all_states}
+               'all_states': all_states,
+               'request': request}
 
     return context
 
@@ -94,25 +95,61 @@ def index(request: WSGIRequest) -> HttpResponse:
 
             child_menus = menu.children.all().order_by("index")
 
+            user_groups = list(request.user.groups.values_list('name', flat=True))
+
+            #print(menu.title + ": " + str(children_accessable(request, child_menus)))
+
+            # If this menu is accessable, otherwise skip
+            if menu.parent is None and menu.groups and menu.groups not in user_groups:
+                continue
+
+            # If the parent menu of this menu is accessable, otherwise skip
+            if menu.parent and menu.parent.groups and menu.parent.groups not in user_groups:
+                continue
+
             if child_menus.count() > 0:
-                print(menu.title)
+                
+                menu_groups = menu.groups.split(',')
 
-                for child_menu in child_menus:
-                    if child_menu.groups or child_menu.states:
-                        group_names = child_menu.groups.split(',')
-                        user_groups = list(request.user.groups.values_list('name', flat=True))
+                # If the user has the right to access this menu
 
-                        logger_msg = f'Menu "{menu.title}" has submenu "{child_menu.title}", checking if user "{request.user}" has permission to access it.'
-                        logger.info(logger_msg)
+                logger_msg = f'Menu "{menu.title}" has submenus, checking if user "{request.user}" has permission to access the parent menu.'
 
-                        # If the user has the right to access this submenu
-                        if any(group_name in user_groups for group_name in group_names) or any(element == "none" for element in group_names):
+                
+
+                #if (any(group_name in user_groups for group_name in menu_groups) or any(element == "none" for element in menu_groups)) or (any(state_name == request.user.profile.state.name for state_name in menu.states)):
+                #    print("Test")
+                #    print(menu.title)
+
+                #print(any(group_name in user_groups for group_name in menu_groups))
+
+                #if any(group_name in user_groups for child_menu in child_menus)
+
+                #print("User groups: ")
+                #print(request.user.groups.values_list('name', flat=True))
+                #print("Menu groups: " + menu.groups)
+                #print(any(group_name in user_groups for group_name in menu_groups))
+                
+
+                if (any(group_name in user_groups for group_name in menu_groups)) or (not menu.states or request.user.profile.state.name in menu.states.split(',')):
+                    #print(menu.title)
+                    for child_menu in child_menus:
+                        
+
+                        if child_menu.groups or child_menu.states:
+                            group_names = child_menu.groups.split(',')
+                            #user_groups = list(request.user.groups.values_list('name', flat=True))
+
+                            logger_msg = f'Menu "{menu.title}" has submenu "{child_menu.title}", checking if user "{request.user}" has permission to access it.'
+                            logger.info(logger_msg)
+
+                            # If the user has the right to access this submenu
+                            if any(group_name in user_groups for group_name in group_names) or any(element == "none" for element in group_names):
+                                return redirect('simplewiki:dynamic_menu', child_menu.path)
+                            elif any(state_name == request.user.profile.state.name for state_name in child_menu.states):
+                                return redirect('simplewiki:dynamic_menu', child_menu.path)
+                        else:
                             return redirect('simplewiki:dynamic_menu', child_menu.path)
-                        elif any(state_name == request.user.profile.state.name for state_name in child_menu.states):
-                            print("Yes")
-                            return redirect('simplewiki:dynamic_menu', child_menu.path)
-                    else:
-                        return redirect('simplewiki:dynamic_menu', child_menu.path)
             # If the menu doesn't have submenus
             else:
                 logger_msg = f'Unable to find any submenus for "{menu}", checking if user "{request.user}" has permission to access it.'
@@ -120,7 +157,6 @@ def index(request: WSGIRequest) -> HttpResponse:
 
                 # If the parent menu has any groups
                 if menu.groups or menu.states:
-                    print("Yes")
                     group_names = menu.groups.split(',')
                     state_names = menu.states.split(',')
 
@@ -139,7 +175,7 @@ def index(request: WSGIRequest) -> HttpResponse:
         # If there are no menus the user has permission to access
         error_code = "#1000"
         error_message = "You don't have the permission to access any menus. Please contact the administrator."
-        context.update({'error_code': error_code})
+        context.update({'error_code': "USER_NO_PERMISSION_ANY_MENU"})
         context.update({'error_msg': error_message})
 
         logger_msg = f'Unable to render any menus: User "{request.user}" doesn\'t have the permission to access any menus.'
@@ -149,8 +185,8 @@ def index(request: WSGIRequest) -> HttpResponse:
     # Show a default "create your first menu.." error page
     else:
         error_code = "#1000"
-        error_message = "So far you didn't create any menus. Please create one under Admin -> Menus"
-        context.update({'error_code': error_code})
+        error_message = "So far you didn't create any menus. Please create one under Editor -> Edit Menus"
+        context.update({'error_code': "NO_MENU_AVAILABLE"})
         context.update({'error_msg': error_message})
 
         logger_msg = f'Unable to render any menus: No menus created.'
@@ -200,7 +236,7 @@ def dynamic_menus(request: WSGIRequest, menu_path: str) -> HttpResponse:
 
             return render(request, 'simplewiki/dynamic_page.html', context)
         else:
-            context.update({'error_code': 'SIMPLEWIKI_PERMISSION_MISSING_STATE'})
+            context.update({'error_code': 'USER_PERMISSION_MISSING_STATE'})
             error_message = "You don\'t have the permissions to access this page. You need to be in the <b>" + menu.states + "</b> state."
             context.update({'error_msg': error_message})
         
@@ -215,7 +251,7 @@ def dynamic_menus(request: WSGIRequest, menu_path: str) -> HttpResponse:
             group_plural = "groups"
         else:
             group_plural = "group"
-        context.update({'error_code': 'SIMPLEWIKI_PERMISSION_MISSING_GROUP'})
+        context.update({'error_code': 'USER_PERMISSION_MISSING_GROUP'})
         error_message = "You don\'t have the permissions to access this page. You need to be in the <b>" + menu.groups.replace(',', ', ') + "</b> " + group_plural + " on auth."
         context.update({'error_msg': error_message})
         
@@ -260,18 +296,19 @@ def search(request: WSGIRequest) -> HttpResponse:
 
                 # TODO: Really bad, sometimes groups is "none" and sometimes "None", fix asap
                 # Check if the user can access the corresponding menu
-                if result_menu.groups == "none" or len(result_menu.groups) == 0 or any(group_name in user_groups for group_name in group_names):
-                    available_results.append(result)
+                if result_menu.groups == "" or len(result_menu.groups) == 0 or any(group_name in user_groups for group_name in group_names):
+                    if result_menu.states == "" or len(result_menu.states) == 0 or request.user.profile.state.name in result_menu.states.split(','):
+                        available_results.append(result)
             
             context.update({'available_results': available_results})
             context.update({'oldQuery': query})
     except PermissionDenied as e:
-        context.update({'error_code': 'SIMPLEWIKI_SEARCH_NO_PERMISSIONS'})
+        context.update({'error_code': 'USER_SEARCH_NO_PERMISSIONS'})
         context.update({'error_msg': 'Unable to complete search: Do you have the right permissions to access this search?'})
         return render(request, 'simplewiki/error.html', context)
     except Exception as e:
         frame = inspect.currentframe()
-        context.update({'error_code': 'SIMPLEWIKI_SEARCH_UNKNOWN'})
+        context.update({'error_code': 'USER_SEARCH_UNKNOWN'})
         context.update({'error_django': str(e)})
         file_name = inspect.getframeinfo(frame).filename
         line_number = inspect.getframeinfo(frame).lineno
@@ -376,6 +413,15 @@ def editor_sections(request: WSGIRequest) -> HttpResponse:
 @login_required
 @permission_required("simplewiki.editor_access")
 def editor_sort(request: WSGIRequest) -> HttpResponse:
+    """
+    Renders the sortable menu editor view.
+
+    Args:
+        request (WSGIRequest): The HTTP request object.
+
+    Returns:
+        HttpResponse: The HTTP response object.
+    """
     context = gen_context(request)
 
     return render(request, "simplewiki/editor/editor_sort.html", context)
@@ -385,11 +431,21 @@ def editor_sort(request: WSGIRequest) -> HttpResponse:
 @login_required
 @permission_required("simplewiki.editor_access")
 def editor_markdown_guide(request: WSGIRequest) -> HttpResponse:
+    """
+    Renders the markdown guide for the editor.
+
+    Args:
+        request (WSGIRequest): The HTTP request.
+
+    Returns:
+        HttpResponse: The HTTP response containing the rendered markdown guide.
+    """
     context = gen_context(request)
 
     return render(request, "simplewiki/guides/markdown.html", context)
 
 ### JSON post 
+
 @login_required
 @permission_required("simplewiki.editor_access")
 def editor_sort_post(request: WSGIRequest):
@@ -432,3 +488,15 @@ def editor_sort_post(request: WSGIRequest):
         return JsonResponse({"status": "success"})
     except Exception as e:
         return JsonResponse({"status": "error", "message": str(e)})
+
+def children_accessable(request, children):
+
+    user_groups = list(request.user.groups.values_list('name', flat=True))
+
+    for child in children:
+        if not child.groups or child.groups in user_groups:
+            if not child.states or child.states == request.user.profile.state.name:
+                return True
+
+    return False
+

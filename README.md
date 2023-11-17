@@ -30,17 +30,16 @@ A simple wiki plugin for alliance auth. It supports multiple pages with differen
 * Editor interface
   * Users with editor permission can create, edit and delete custom menus and sections (editor_access)
   * Users with editor permission see edit and delete buttons above all sections (editor_access)
+  * Change menu position's with a drag and drop system
 
 ## TODO:
 * Quality-of-life updates
 * Implement better logging
 * Improve code documentation
-* Clean-up code
 * Markdown
   * Buttons
 
 ## Planned
-* Drag and drop system to make indexing menus and sections easier
 * Add translations for 
   * German
   * Spanish
