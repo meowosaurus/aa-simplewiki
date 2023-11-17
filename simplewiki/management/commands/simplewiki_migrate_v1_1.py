@@ -3,7 +3,13 @@ from django.db.models import Q
 
 from simplewiki.models import *
 
+# Command to migrate data from 1.0.x to 1.1.x, because of the move from strings to foreign keys
 class Command(BaseCommand):
+    """
+    A management command to migrate data for SimpleWiki from version 1.0.x to 1.1.x
+
+    This command handles the migration of menu items and sections from the previous version.
+    """
 
     def handle(self, *args, **kwargs):
         # ANSI escape codes for some colors
@@ -31,6 +37,15 @@ class Command(BaseCommand):
         print(GREEN + "Successfully migrated all data" + RESET)
 
 def import_parent_menus(menu_item_parents):
+    """
+    Imports parent menus from version 1.0.x to version 1.1.x.
+
+    Args:
+        menu_item_parents (list): A list of menu item parents to be imported.
+
+    Returns:
+        None
+    """
     # ANSI escape codes for some colors
     RED = '\033[91m'
     GREEN = '\033[92m'
@@ -44,7 +59,7 @@ def import_parent_menus(menu_item_parents):
 
         new_menu = Menu()
         if old_menu_parent.index:
-            new_menu.index = old_menu_parent.index#
+            new_menu.index = old_menu_parent.index
         else:
             new_menu.index = 0
         if old_menu_parent.title:
@@ -67,7 +82,7 @@ def import_parent_menus(menu_item_parents):
         else:
             new_menu.groups = ""
         new_menu.states = ""
-        
+
         try:
             new_menu.save()
             test_saved_menu = Menu.objects.filter(path=old_menu_parent.path)
@@ -79,6 +94,15 @@ def import_parent_menus(menu_item_parents):
     print(GREEN + "Successfully migrated all parent menus from 1.0.x to 1.1.x" + RESET)
 
 def import_child_menus(menu_item_children):
+    """
+    Import child menus from version 1.0.x to version 1.1.x.
+
+    Args:
+        menu_item_children (list): List of child menu items to be imported.
+
+    Returns:
+        None
+    """
     # ANSI escape codes for some colors
     RED = '\033[91m'
     GREEN = '\033[92m'
@@ -133,6 +157,15 @@ def import_child_menus(menu_item_children):
     print(GREEN + "Successfully migrated all child menus from 1.0.x to 1.1.x" + RESET)
 
 def import_sections(section_items):
+    """
+    Import sections from section_items and migrate them from version 1.0.x to 1.1.x.
+
+    Args:
+        section_items (list): A list of section items to import.
+
+    Returns:
+        None
+    """
     # ANSI escape codes for some colors
     RED = '\033[91m'
     GREEN = '\033[92m'
