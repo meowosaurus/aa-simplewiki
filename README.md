@@ -131,6 +131,9 @@ Perm | Admin Site | Auth Site
 basic_access | None | Can view all wiki pages
 editor_access | None | Can create, edit and delete wiki pages and menus
 
+## Commands
+- Migrate all data from 1.0.x to 1.1.x: `python manage.py simplewiki_migrate_v1_1`
+
 ## Dependencies
 - [Alliance Auth](https://gitlab.com/allianceauth/allianceauth)
 - [allianceauth-app-utils](https://gitlab.com/ErikKalkoken/allianceauth-app-utils)
