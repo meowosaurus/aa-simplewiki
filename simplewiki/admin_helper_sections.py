@@ -103,7 +103,7 @@ def edit_existing_section(request: WSGIRequest, context: dict, edit: str) -> Htt
         # Get the object
         try:
             selected_section = Section.objects.get(title=edit)
-        except SectionItem.DoesNotExist as e:
+        except Section.DoesNotExist as e:
             context.update({'error_code': 'EDITOR_SECTION_EDIT_GET'})
             context.update({'error_django': str(e)})
             return render(request, 'simplewiki/error.html', context)
@@ -181,7 +181,7 @@ def delete_existing_section(request: WSGIRequest, context: dict, delete: str) ->
         try:
             selected_section = Section.objects.get(title=delete)
             selected_section.delete()
-        except (SectionItem.DoesNotExist, ProtectedError) as e:
+        except (Section.DoesNotExist, ProtectedError) as e:
             context.update({'error_code': 'EDITOR_SECTION_DELETE'})
             context.update({'error_django': str(e)})
             return render(request, 'simplewiki/error.html', context)
@@ -211,7 +211,7 @@ def load_section_edit_form(request: WSGIRequest, context: dict, edit: str) -> Ht
     try:
         selected_section = Section.objects.get(title=edit)
         context.update({'selectedSection': selected_section})
-    except SectionItem.DoesNotExist as e:
+    except Section.DoesNotExist as e:
         context.update({'error_code': 'EDITOR_SECTION_LOAD_EDIT_FORM'})
         context.update({'error_django': str(e)})
         return render(request, 'simplewiki/error.html', context)
@@ -238,7 +238,7 @@ def load_section_delete_form(request: WSGIRequest, context: dict, delete: str) -
     try:
         selected_section = Section.objects.get(title=delete)
         context.update({'selectedSection': selected_section})
-    except SectionItem.DoesNotExist as e:
+    except Section.DoesNotExist as e:
         context.update({'error_code': 'EDITOR_SECTION_LOAD_DELETE_FORM'})
         context.update({'error_django': str(e)})
         return render(request, 'simplewiki/error.html', context)

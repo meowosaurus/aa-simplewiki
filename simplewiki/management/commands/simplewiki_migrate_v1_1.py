@@ -22,17 +22,26 @@ class Command(BaseCommand):
 
         menu_item_parents = MenuItem.objects.filter(parent="")
 
-        import_parent_menus(menu_item_parents)
+        if import_parent_menus(menu_item_parents):
+            print(GREEN + "Successfully migrated all parent menus from 1.0.x to 1.1.x" + RESET)
+        else:
+            print(RED + "Encountered errors while migrating all parent menus from 1.0.x to 1.1.x" + RESET)
 
         menu_item_children = MenuItem.objects.exclude(parent='')
 
-        import_child_menus(menu_item_children)
+        if import_child_menus(menu_item_children):
+            print(GREEN + "Successfully migrated all child menus from 1.0.x to 1.1.x" + RESET)
+        else:
+            print(RED + "Encountered errors while migrating all child menus from 1.0.x to 1.1.x" + RESET)
 
         print("===== Section =====")
 
         section_items = SectionItem.objects.all()
 
-        import_sections(section_items)
+        if import_sections(section_items):
+            print(GREEN + "Successfully migrated all sections from 1.0.x to 1.1.x" + RESET)
+        else:
+            print(RED + "Encountered errors while migrating all sections from 1.0.x to 1.1.x" + RESET)
 
         print(GREEN + "Successfully migrated all data" + RESET)
 
@@ -78,7 +87,10 @@ def import_parent_menus(menu_item_parents):
             continue
         new_menu.parent = None
         if old_menu_parent.groups:
-            new_menu.groups = old_menu_parent.groups
+            if old_menu_parent.groups == "none":
+                new_menu.groups = ""
+            else:
+                new_menu.groups = old_menu_parent.groups
         else:
             new_menu.groups = ""
         new_menu.states = ""
@@ -87,11 +99,12 @@ def import_parent_menus(menu_item_parents):
             new_menu.save()
             test_saved_menu = Menu.objects.filter(path=old_menu_parent.path)
             if test_saved_menu.exists():
-                print(GREEN + "Successfully migrated parent menu " + RESET + test_saved_menu.first().title)
+                print("Successfully migrated parent menu " + test_saved_menu.first().title)
         except Exception as e:
             print(RED + "Error while migrating parent menu " + old_menu_parent.title + " from 1.0.x to 1.1.x: " + RESET + str(e))
+            return False
 
-    print(GREEN + "Successfully migrated all parent menus from 1.0.x to 1.1.x" + RESET)
+    return True
 
 def import_child_menus(menu_item_children):
     """
@@ -150,11 +163,12 @@ def import_child_menus(menu_item_children):
             new_menu_child.save()
             test_saved_menu = Menu.objects.filter(path=old_menu_child.path)
             if test_saved_menu.exists():
-                print(GREEN + "Successfully migrated child menu " + RESET + test_saved_menu.first().title)
+                print("Successfully migrated child menu " + test_saved_menu.first().title)
         except Exception as e:
             print(RED + "Error while migrating child menu " + old_menu_child.title + " from 1.0.x to 1.1.x: " + RESET + str(e))
+            return False
 
-    print(GREEN + "Successfully migrated all child menus from 1.0.x to 1.1.x" + RESET)
+    return True
 
 def import_sections(section_items):
     """
@@ -206,8 +220,9 @@ def import_sections(section_items):
             new_section.save()
             test_saved_section = Section.objects.filter(title=section_item.title)
             if test_saved_section.exists():
-                print(GREEN + "Successfully migrated section " + RESET + test_saved_section.first().title + GREEN + " from 1.0.x to 1.1.x" + RESET)
+                print("Successfully migrated section " + test_saved_section.first().title + " from 1.0.x to 1.1.x")
         except Exception as e:
             print(RED + "Error while migrating section " + RESET + section_item.title + RED + " from 1.0.x to 1.1.x: " + RESET + str(e))
-    
-    print(GREEN + "Successfully migrated all sections from 1.0.x to 1.1.x" + RESET)
+            return False
+
+    return True

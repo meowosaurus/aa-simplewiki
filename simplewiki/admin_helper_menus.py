@@ -319,7 +319,7 @@ def load_menu_delete_form(request: WSGIRequest, context: dict, delete: str) -> H
         selected_menu = Menu.objects.get(path=delete)
         context.update({'selectedMenu': selected_menu})
         context.update({'user_action': 'delete'})
-    except MenuItem.DoesNotExist as e:
+    except Menu.DoesNotExist as e:
         context.update({'error_code': 'EDITOR_MENU_DELETE_LOAD_FORM'})
         context.update({'error_django': str(e)})
         return render(request, 'simplewiki/error.html', context)
