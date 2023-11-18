@@ -26,10 +26,8 @@
                     {% url 'simplewiki:dynamic_menu' menu_path=menu_item.path as expected_path %}
                     {% if not menu_item.parent %}
                         {% if menu_item.children.count > 0 %}
-                        {% if not menu_item.groups or menu_item|is_user_in_groups:user_groups %}
-                        {% if not menu_item.states or menu_item|is_user_in_groups:user_state %}
-                        {% user_access_any_submenus menu_item user_groups user_state as has_permission %}
-                        {% if has_permission %}
+                        {% if not menu_item.groups or menu_item.groups|is_user_in_groups:user_groups %}
+                        {% if not menu_item.states or menu_item.states|is_user_in_groups:user_state %}
                         {% with submenu_paths=menu_item|get_submenu_paths %}
                         <li class="dropdown {% if current_path|any_paths_current:submenu_paths %}active{% endif %}">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -53,7 +51,6 @@
                             </ul>
                         </li>
                         {% endwith %}
-                        {% endif %}
                         {% endif %}
                         {% endif %}
                         {% else %}

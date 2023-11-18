@@ -88,113 +88,61 @@ def index(request: WSGIRequest) -> HttpResponse:
 
     context = gen_context(request)
 
-    menus = Menu.objects.all().order_by("index")
+    # Only get parent menus
+    menus = Menu.objects.filter(parent=None).order_by("index")
+
+    user_groups = list(request.user.groups.values_list('name', flat=True))
+    user_states = request.user.profile.state.name
 
     if menus.count() > 0:
-        for menu in menus:
+        for parent_menu in menus:
+            # Extract and format permissions for parent menu
+            group_names, state_names = "", ""
+            if parent_menu.groups or parent_menu.states:
+                group_names = parent_menu.groups.split(',')
+                state_names = parent_menu.states.split(',')
 
-            child_menus = menu.children.all().order_by("index")
-
-            user_groups = list(request.user.groups.values_list('name', flat=True))
-
-            #print(menu.title + ": " + str(children_accessable(request, child_menus)))
-
-            # If this menu is accessable, otherwise skip
-            if menu.parent is None and menu.groups and menu.groups not in user_groups:
+            # If parent menu has groups AND user does not have permission to access the parent menu
+            if parent_menu.groups and not any(group_name in user_groups for group_name in group_names):
                 continue
 
-            # If the parent menu of this menu is accessable, otherwise skip
-            if menu.parent and menu.parent.groups and menu.parent.groups not in user_groups:
+            # If parent menu has states AND user does not have permission to access the parent menu
+            if parent_menu.states and not user_states in state_names:
                 continue
+
+            # Get all child menus associated with parent_menu
+            child_menus = parent_menu.children.all().order_by("index")
 
             if child_menus.count() > 0:
-                
-                menu_groups = menu.groups.split(',')
+                for child_menu in child_menus:
+                    # Extract and format permission for child menu
+                    child_group_names, child_state_names = None, None
+                    if child_menu.groups is not None or child_menu.states is not None:
+                        child_group_names = child_menu.groups.split(',')
+                        child_state_names = child_menu.groups.split(',')
 
-                # If the user has the right to access this menu
+                    # If child menu has groups AND user does not have permission to access the child menu
+                    if (child_menu.groups and not any(child_group_name in user_groups for child_group_name in child_group_names)):
+                        continue
+                    # If child menu has states AND user does not have permission to access the child menu
+                    elif child_menu.states and not user_states in child_state_names:
+                        continue
+                    else:
+                        return redirect('simplewiki:dynamic_menu', child_menu.path)  
 
-                logger_msg = f'Menu "{menu.title}" has submenus, checking if user "{request.user}" has permission to access the parent menu.'
-
-                
-
-                #if (any(group_name in user_groups for group_name in menu_groups) or any(element == "none" for element in menu_groups)) or (any(state_name == request.user.profile.state.name for state_name in menu.states)):
-                #    print("Test")
-                #    print(menu.title)
-
-                #print(any(group_name in user_groups for group_name in menu_groups))
-
-                #if any(group_name in user_groups for child_menu in child_menus)
-
-                #print("User groups: ")
-                #print(request.user.groups.values_list('name', flat=True))
-                #print("Menu groups: " + menu.groups)
-                #print(any(group_name in user_groups for group_name in menu_groups))
-                
-
-                if (any(group_name in user_groups for group_name in menu_groups)) or (not menu.states or request.user.profile.state.name in menu.states.split(',')):
-                    #print(menu.title)
-                    for child_menu in child_menus:
-                        
-
-                        if child_menu.groups or child_menu.states:
-                            group_names = child_menu.groups.split(',')
-                            #user_groups = list(request.user.groups.values_list('name', flat=True))
-
-                            logger_msg = f'Menu "{menu.title}" has submenu "{child_menu.title}", checking if user "{request.user}" has permission to access it.'
-                            logger.info(logger_msg)
-
-                            # If the user has the right to access this submenu
-                            if any(group_name in user_groups for group_name in group_names) or any(element == "none" for element in group_names):
-                                return redirect('simplewiki:dynamic_menu', child_menu.path)
-                            elif any(state_name == request.user.profile.state.name for state_name in child_menu.states):
-                                return redirect('simplewiki:dynamic_menu', child_menu.path)
-                        else:
-                            return redirect('simplewiki:dynamic_menu', child_menu.path)
-            # If the menu doesn't have submenus
+                # Navigate to the next menu parent if no children are accessable
+                continue
             else:
-                logger_msg = f'Unable to find any submenus for "{menu}", checking if user "{request.user}" has permission to access it.'
-                logger.info(logger_msg)
+                return redirect('simplewiki:dynamic_menu', parent_menu.path)
 
-                # If the parent menu has any groups
-                if menu.groups or menu.states:
-                    group_names = menu.groups.split(',')
-                    state_names = menu.states.split(',')
+    error_message = "So far you didn't create any menus. Please create one under Editor -> Edit Menus"
+    context.update({'error_code': "NO_MENU_AVAILABLE"})
+    context.update({'error_msg': error_message})
 
-                    user_groups = list(request.user.groups.values_list('name', flat=True))
+    logger_msg = f'Unable to render any menus: No menus created.'
+    logger.error(logger_msg)
 
-                    # If the user has the right group to access the parent menu
-                    if any(group_name in user_groups for group_name in group_names) or any(element == "none" for element in group_names):
-                        return redirect('simplewiki:dynamic_menu', menu.path)
-                    # If the user has the right state to access the parent menu
-                    elif any(state_name == request.user.profile.state.name for state_name in state_names):
-                        return redirect('simplewiki:dynamic_menu', menu.path)
-                # If the parent menu doesn't have any groups
-                else:
-                    return redirect('simplewiki:dynamic_menu', menu.path)
-            
-        # If there are no menus the user has permission to access
-        error_code = "#1000"
-        error_message = "You don't have the permission to access any menus. Please contact the administrator."
-        context.update({'error_code': "USER_NO_PERMISSION_ANY_MENU"})
-        context.update({'error_msg': error_message})
-
-        logger_msg = f'Unable to render any menus: User "{request.user}" doesn\'t have the permission to access any menus.'
-        logger.error(logger_msg)
-
-        return render(request, "simplewiki/error.html", context)
-    # Show a default "create your first menu.." error page
-    else:
-        error_code = "#1000"
-        error_message = "So far you didn't create any menus. Please create one under Editor -> Edit Menus"
-        context.update({'error_code': "NO_MENU_AVAILABLE"})
-        context.update({'error_msg': error_message})
-
-        logger_msg = f'Unable to render any menus: No menus created.'
-        logger.error(logger_msg)
-
-        return render(request, "simplewiki/error.html", context)
-        
-    return redirect('simplewiki:dynamic_menu', menus.first().path)
+    return render(request, "simplewiki/error.html", context)
 
 
 @login_required
