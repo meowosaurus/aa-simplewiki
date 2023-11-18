@@ -57,6 +57,7 @@ def gen_context(request: WSGIRequest):
 
     all_groups = Group.objects.all()
     all_states = State.objects.all()
+    user_groups = list(request.user.groups.values_list('name', flat=True))
     user_state = request.user.profile.state.name
 
     context = {'menu_items': menu_items, 
@@ -68,6 +69,8 @@ def gen_context(request: WSGIRequest):
                'all_groups': all_groups,
                'all_states': all_states,
                'request': request}
+
+    generate_menu(context, user_groups, user_state)
 
     return context
 
@@ -92,7 +95,7 @@ def index(request: WSGIRequest) -> HttpResponse:
     menus = Menu.objects.filter(parent=None).order_by("index")
 
     user_groups = list(request.user.groups.values_list('name', flat=True))
-    user_states = request.user.profile.state.name
+    user_state = request.user.profile.state.name
 
     if menus.count() > 0:
         for parent_menu in menus:
@@ -107,7 +110,7 @@ def index(request: WSGIRequest) -> HttpResponse:
                 continue
 
             # If parent menu has states AND user does not have permission to access the parent menu
-            if parent_menu.states and not user_states in state_names:
+            if parent_menu.states and not any(user_state == state for state in state_names):
                 continue
 
             # Get all child menus associated with parent_menu
@@ -119,13 +122,13 @@ def index(request: WSGIRequest) -> HttpResponse:
                     child_group_names, child_state_names = None, None
                     if child_menu.groups is not None or child_menu.states is not None:
                         child_group_names = child_menu.groups.split(',')
-                        child_state_names = child_menu.groups.split(',')
+                        child_state_names = child_menu.states.split(',')
 
                     # If child menu has groups AND user does not have permission to access the child menu
                     if (child_menu.groups and not any(child_group_name in user_groups for child_group_name in child_group_names)):
                         continue
                     # If child menu has states AND user does not have permission to access the child menu
-                    elif child_menu.states and not user_states in child_state_names:
+                    elif child_menu.states and not any(user_state == state for state in child_state_names):
                         continue
                     else:
                         return redirect('simplewiki:dynamic_menu', child_menu.path)  
@@ -447,4 +450,67 @@ def children_accessable(request, children):
                 return True
 
     return False
+
+def generate_menu(context, user_groups, user_state):
+    navbar = []
+
+    parent_menus = Menu.objects.filter(parent=None).order_by('index')
+
+    for parent_menu in parent_menus:
+
+        # Extract and format permissions for parent menu
+        group_names, state_names = "", ""
+        if parent_menu.groups or parent_menu.states:
+            group_names = parent_menu.groups.split(',')
+            state_names = parent_menu.states.split(',')
+
+        # If parent menu has groups AND user does not have permission to access the parent menu
+        if parent_menu.groups and not any(group_name in user_groups for group_name in group_names):
+            continue
+
+        # If parent menu has states AND user does not have permission to access the parent menu
+        if parent_menu.states and not any(user_state == state for state in state_names):
+            continue
+
+        parent_item = {'title': parent_menu.title, 'path': parent_menu.path, 'icon': parent_menu.icon}
+
+        child_menus = parent_menu.children.all().order_by('index')
+
+        parent_item['submenus'] = []
+
+        if child_menus.count() > 0:
+
+            for child_menu in child_menus:
+                # Extract and format permission for child menu
+                child_group_names, child_state_names = None, None
+                if child_menu.groups is not None or child_menu.states is not None:
+                    child_group_names = child_menu.groups.split(',')
+                    child_state_names = child_menu.groups.split(',')
+
+                # If child menu has groups AND user does not have permission to access the child menu
+                if (child_menu.groups and not any(child_group_name in user_groups for child_group_name in child_group_names)):
+                    continue
+                
+                # If child menu has states AND user does not have permission to access the child menu
+                #if child_menu.states and not any(user_state == state for state in child_state_names):
+                if child_menu.states and not user_state in child_menu.states.split(','):
+                    continue
+
+                print("Hello")
+
+                sub_item = {'title': child_menu.title, 'path': child_menu.path, 'icon': child_menu.icon}
+                parent_item['submenus'].append(sub_item)
+
+            #print(parent_item)
+
+        #print(parent_item['submenus'])
+
+        if len(parent_item['submenus']) == 0 and child_menus.count() > 0:
+            continue
+        
+        navbar.append(parent_item)
+
+    #print(navbar)
+
+    context.update({'navbar': navbar})
 

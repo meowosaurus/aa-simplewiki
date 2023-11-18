@@ -74,7 +74,7 @@ def has_menu_children(menu_item):
 def get_menu_children(menu_item):
     return Menu.objects.filter(parent=menu_item.path).order_by('index')
 
-def get_submenu_paths(parent_menu_item):
+def get_submenu_paths(parent_menu_path):
     """
     Returns a list of paths for the submenus of a given parent menu item.
 
@@ -86,7 +86,7 @@ def get_submenu_paths(parent_menu_item):
     """
     paths = []
 
-    children = Menu.objects.filter(parent=parent_menu_item).order_by('index')
+    children = Menu.objects.get(path=parent_menu_path).children.order_by('index')
     for child in children:
         paths.append("/wiki/" + child.path + "/")
 
