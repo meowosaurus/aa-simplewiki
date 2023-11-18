@@ -150,6 +150,7 @@
 {% block extra_javascript %}
 {% if user_action == 'edit' %}
 {# groupInput needs to be seperated, otherwise it won't find the input #}
+{% if False %}
 <script>
   const selectElement = document.getElementById("menuParentSelect");
   const selectedPath = "{{ selectedMenu.parent.path }}";
@@ -173,6 +174,7 @@
       }
   });
 </script>
+{% endif %}
 <script>
   document.getElementById("titleInput").value = '{{ selectedMenu.title|escapejs }}';
   document.getElementById("iconInput").value = '{{ selectedMenu.icon|escapejs }}';

@@ -117,11 +117,7 @@ def create_new_menu(request: WSGIRequest, context: dict) -> HttpResponse:
         # Taking the titel and converting it into a url suitable string
         try:
             new_menu.path = slugify(request.POST['title'])
-            if request.POST['parent_select'] == "none":
-                new_menu.parent = None
-            else:
-                parent_path = request.POST['parent_select']
-                new_menu.parent = Menu.objects.get(path=parent_path)
+            new_menu.parent = None
             new_menu.groups = group_string
             new_menu.states = state_string
         except (KeyError, ValueError, TypeError) as e:
@@ -222,12 +218,6 @@ def edit_existing_menu(request: WSGIRequest, context: dict, edit: str) -> HttpRe
         # Taking the title and converting it into a url suitable string
         try:
             selected_menu.path = slugify(request.POST['title'])
-            # Save the parent menu key
-            if request.POST['parent_select'] == "none":
-                selected_menu.parent = None
-            else:
-                parent_path = request.POST['parent_select']
-                selected_menu.parent = Menu.objects.get(path=parent_path)
             selected_menu.groups = group_string
             selected_menu.states = state_string
         except (KeyError, ValueError, TypeError) as e:

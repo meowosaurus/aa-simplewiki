@@ -136,9 +136,9 @@
           <label for="menuPathSelect">Menu:</label>
           <select class="form-control" name="menu_path" id="menuPathSelect">
               <option value="">None</option>
-            {% for menu_item in menu_items %}
+              {% for menu_item in menu_items %}
               <option value="{{ menu_item.path }}">{{ menu_item.title }}</option>
-            {% endfor %}
+              {% endfor %}
           </select>
           <p class="help-block">Required: Menu under which this section should be displayed.</p>
         </div>

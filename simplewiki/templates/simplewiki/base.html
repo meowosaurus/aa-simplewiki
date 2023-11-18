@@ -27,6 +27,9 @@
                         {% with submenu_paths=item.path|get_submenu_paths %}
                         <li class="dropdown {% if current_path|any_paths_current:submenu_paths %}active{% endif %}">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                {% if item.icon|length > 0 %}
+                                    <i class="{{ item.icon }}" style="display: inline-block;"></i>
+                                {% endif %}
                                 {{ item.title }}
                                 <span class="caret"></span>
                             </a>
@@ -34,6 +37,9 @@
                                 {% for submenu in item.submenus %}
                                 <li class="{% if submenu.path in current_path %}active{% endif %}">
                                     <a href="{% url 'simplewiki:dynamic_menu' menu_path=submenu.path %}">
+                                        {% if item.icon|length > 0 %}
+                                            <i class="{{ submenu.icon }}" style="display: inline-block;"></i>
+                                        {% endif %}
                                         {{ submenu.title }}
                                     </a>
                                 </li>
@@ -44,6 +50,9 @@
                         {% else %}
                         <li class="nav-item {% if item.path in current_path %}active{% endif %}">
                             <a class="nav-link" href="{% url 'simplewiki:dynamic_menu' menu_path=item.path %}">
+                                {% if item.icon|length > 0 %}
+                                    <i class="{{ item.icon }}" style="display: inline-block;"></i>
+                                {% endif %}
                                 {{ item.title }}
                             </a>
                         </li>
