@@ -182,27 +182,27 @@ def dynamic_menus(request: WSGIRequest, menu_path: str) -> HttpResponse:
         
         if not menu.states or request.user.profile.state.name in menu.states:
 
-            children = menu.children.all()
-
-            print(children.count())
-
+            # If menu is a menu with submenus, then throw an error
             if menu.children.count() > 0:
                 context.update({'error_code': 'USER_MENU_SUBMENU_ERROR'})
                 error_message = "This menu has at least one submenu, please navigate to that one instead."
                 context.update({'error_msg': error_message})
         
                 return render(request, 'simplewiki/error.html', context)
+            # If menu is a menu without submenus, render the page
             else:
                 logger_msg = f'Rendering wiki page "{menu_path}" for user "{request.user}".'
                 logger.info(logger_msg)
 
                 return render(request, 'simplewiki/dynamic_page.html', context)
+        # Missing state permission
         else:
             context.update({'error_code': 'USER_PERMISSION_MISSING_STATE'})
             error_message = "You don\'t have the permissions to access this page. You need to be in the <b>" + menu.states + "</b> state."
             context.update({'error_msg': error_message})
         
             return render(request, 'simplewiki/error.html', context)
+    # Missing group permission
     else:
         requested_groups = menu.groups.replace(',', ', ')
         logger_msg = f'Rejected rendering request for menu "{menu_path}", user "{request.user}" doesn\'t have neccessary groups "{requested_groups}"'

@@ -20,14 +20,14 @@ class Command(BaseCommand):
 
         print("===== Menu =====")
 
-        menu_item_parents = MenuItem.objects.filter(parent="")
+        menu_item_parents = MenuItem.objects.filter(Q(parent='') | Q(parent=None))
 
         if import_parent_menus(menu_item_parents):
             print(GREEN + "Successfully migrated all parent menus from 1.0.x to 1.1.x" + RESET)
         else:
             print(RED + "Encountered errors while migrating all parent menus from 1.0.x to 1.1.x" + RESET)
 
-        menu_item_children = MenuItem.objects.exclude(parent='')
+        menu_item_children = MenuItem.objects.exclude(Q(parent='') | Q(parent=None))
 
         if import_child_menus(menu_item_children):
             print(GREEN + "Successfully migrated all child menus from 1.0.x to 1.1.x" + RESET)
@@ -123,7 +123,7 @@ def import_child_menus(menu_item_children):
     RESET = '\033[0m'
 
     for old_menu_child in menu_item_children:
-        if Menu.objects.filter(path=old_menu_child.path).exists:
+        if Menu.objects.filter(path=old_menu_child.path).exists():
             print("Child menu " + old_menu_child.title + " already exists, skipping..")
             continue
 
@@ -205,7 +205,7 @@ def import_sections(section_items):
             new_section.icon = section_item.icon
         else:
             new_section.icon = ""
-        if new_section.content:
+        if section_item.content:
             new_section.content = section_item.content 
         else:
             new_section.content = ""
