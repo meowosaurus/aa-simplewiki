@@ -86,9 +86,12 @@ def get_submenu_paths(parent_menu_path):
     """
     paths = []
 
-    children = Menu.objects.get(path=parent_menu_path).children.order_by('index')
-    for child in children:
-        paths.append("/wiki/" + child.path + "/")
+    parent = Menu.objects.filter(path=parent_menu_path)
+    if parent.exists():
+        children = parent.first().children.order_by('index')
+
+        for child in children:
+            paths.append("/wiki/" + child.path + "/")
 
     return paths
 

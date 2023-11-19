@@ -33,7 +33,7 @@
                     </div>
                     {% if menu_item.children %}
                     <ol class="dd-list">
-                        {% with submenu_paths=menu_item|get_submenu_paths %}
+                        {% with submenu_paths=menu_item.path|get_submenu_paths %}
                             {% for sub_menu_item in menu_item|children_order_by %}
                             <li class="dd-item list-group-item" data-id="{{ sub_menu_item.title }}">
                                 <div class="dd-handle">
