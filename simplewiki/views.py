@@ -63,7 +63,7 @@ def gen_context(request: WSGIRequest):
     context = {'menu_items': menu_items, 
                'is_editor': is_editor, 
                'section_items': section_items,
-               'user_groups': list(request.user.groups.values_list('name', flat=True)),
+               'user_groups': user_groups,
                'user_state': user_state,
                'current_path': current_path,
                'all_groups': all_groups,
@@ -182,10 +182,21 @@ def dynamic_menus(request: WSGIRequest, menu_path: str) -> HttpResponse:
         
         if not menu.states or request.user.profile.state.name in menu.states:
 
-            logger_msg = f'Rendering wiki page "{menu_path}" for user "{request.user}".'
-            logger.info(logger_msg)
+            children = menu.children.all()
 
-            return render(request, 'simplewiki/dynamic_page.html', context)
+            print(children.count())
+
+            if menu.children.count() > 0:
+                context.update({'error_code': 'USER_MENU_SUBMENU_ERROR'})
+                error_message = "This menu has at least one submenu, please navigate to that one instead."
+                context.update({'error_msg': error_message})
+        
+                return render(request, 'simplewiki/error.html', context)
+            else:
+                logger_msg = f'Rendering wiki page "{menu_path}" for user "{request.user}".'
+                logger.info(logger_msg)
+
+                return render(request, 'simplewiki/dynamic_page.html', context)
         else:
             context.update({'error_code': 'USER_PERMISSION_MISSING_STATE'})
             error_message = "You don\'t have the permissions to access this page. You need to be in the <b>" + menu.states + "</b> state."
@@ -492,7 +503,6 @@ def generate_menu(context, user_groups, user_state):
                     continue
                 
                 # If child menu has states AND user does not have permission to access the child menu
-                #if child_menu.states and not any(user_state == state for state in child_state_names):
                 if child_menu.states and not user_state in child_menu.states.split(','):
                     continue
 
