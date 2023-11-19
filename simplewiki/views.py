@@ -496,21 +496,13 @@ def generate_menu(context, user_groups, user_state):
                 if child_menu.states and not user_state in child_menu.states.split(','):
                     continue
 
-                print("Hello")
-
                 sub_item = {'title': child_menu.title, 'path': child_menu.path, 'icon': child_menu.icon}
                 parent_item['submenus'].append(sub_item)
-
-            #print(parent_item)
-
-        #print(parent_item['submenus'])
 
         if len(parent_item['submenus']) == 0 and child_menus.count() > 0:
             continue
         
         navbar.append(parent_item)
-
-    #print(navbar)
 
     context.update({'navbar': navbar})
 

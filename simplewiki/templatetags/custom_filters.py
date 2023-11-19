@@ -17,42 +17,9 @@ def is_user_in_groups(user_groups, group_list) -> bool:
         bool: Returns true if the user is at least in one of the required groups
     """
 
-    print(user_groups)
-    print(group_list)
-
-    #print(user_groups.split(','))
-
-    #print(user_groups.split(','))
-    print(group_list)
-    print(user_groups in group_list)
-    #print(user_groups.split(',') in group_list)
-    #print(any(group in user_groups.split(',') for group in group_names))
-
     if user_groups in group_list:
         return True
     return False
-
-    #groupa_list = None
-    #group_names = group_list.split(',')
-    #print("Group names: " + group_names)
-
-    # Try to split group lists into any array based on comma
-    #try:
-    #    if group_list is not None:
-    #        print("test2")
-    #        print(type(group_list))
-    #    if isinstance(group_list, str):
-    #        print("test3")
-    #        group_names = group_list.split(',')
-    #    else:
-    #        return False
-    #except Exception as e:
-    #    return False
-
-    # Check if the user has any groups or if the menu doesn't even require any groups
-    #print("Test")
-    #print(str(any(group_name in user_groups for group_name in group_names)))
-    #return any(group_name in user_groups for group_name in group_names)
 
 def access_test(parent, user_groups):
     children = parent.children.all().order_by('index')
@@ -121,13 +88,7 @@ def user_access_any_submenus(parent_menu, user_groups, user_state):
     It returns True if the user has access to any submenus, False otherwise.
     """
     submenus = parent_menu.children.all()
-
-    #for submenu in submenus:
-    #    return
-        #if not submenu.groups or is_user_in_groups(user_groups, submenu.groups):
-        #    if not submenu.states or is_user_in_groups(user_state, submenu.states):
-        #        #print("User is accessing " + parent_menu.title + " has access to submenu: " + submenu.title)
-        #        return True
+    
     return False
 
 register.filter('is_user_in_groups', is_user_in_groups)
