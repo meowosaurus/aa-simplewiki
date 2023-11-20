@@ -5,95 +5,154 @@
 {% load custom_filters %}
 
 {% block details %}
-<script src="{% static 'simplewiki/Sortable.min.js' %}"></script>
+<div id="success-alert" class="alert alert-success" role="alert" style="display:none;">
+    Successfully saved menu layout! Reloading page in 3 seconds.
+</div>  
+<div id="error-alert" class="alert alert-danger" role="alert" style="display:none;">
+    Unable to save menu!
+</div>  
 
-<ul class="list-group custom-box" id="menu">
-    {% for menu in menu_items %}
-    <li class="list-group-item custom-box-header">
-        <h3 class="list-group-item-heading custom-box-title">
-            <i class="fas fa-arrows-alt handle" style="margin-right: 2rem;"></i>
-            <i class="{{ menu.icon }}" style="display: inline-block;"></i>
-            {{ menu.title }}
-            <button class="btn btn-default btn-sm pull-right">
-                Change submenus
-            </button>
-        </h3>
-        <!--<ul>
-            <li class="list-group-item custom-box-header">
-                <h3 class="list-group-item-heading custom-box-title">
-                    Hello
-                </h3>
-            </li>
-        </ul>-->
-    </li>
-    {% endfor %}
-</ul>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+      <div class="panel-title">
+        <div class="text-center">
+          {% translate "Menu Layout Administration" %}  
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-body">
+        <div class="dd" id="editmenus" style="padding-bottom: 1rem;">
+        <ol class="dd-list">
+            {% for menu_item in menu_items %}
+                {% if not menu_item.parent %}
+                <li class="dd-item list-group-item" data-id="{{ menu_item.title }}">
+                    <div class="dd-handle">
+                        <i class="{{ menu_item.icon }}"></i>
+                        {{ menu_item.title }}
+                    </div>
+                    {% if menu_item.children %}
+                    <ol class="dd-list">
+                        {% with submenu_paths=menu_item.path|get_submenu_paths %}
+                            {% for sub_menu_item in menu_item|children_order_by %}
+                            <li class="dd-item list-group-item" data-id="{{ sub_menu_item.title }}">
+                                <div class="dd-handle">
+                                    <i class="{{ sub_menu_item.icon }}"></i>
+                                    {{ sub_menu_item.title }}
+                                </div>
+                            </li>
+                            {% endfor %}
+                        {% endwith %}
+                    </ol>
+                    {% endif %}
+                </li>
+                {% endif %}
+            {% endfor %}
+        </ol>
+    </div>
+</div>
+
+</div>
+
+<button type="submit" name="confirm_create" value="0" class="btn btn-default">Cancel</button>
+<div class="pull-right">
+  <button type="submit" name="confirm_save" id="confirm_save" value="1" class="btn btn-success">Save</button>
+</div>
 {% endblock %}
 
 {% block extra_javascript %}
-<script>
-    const menu = document.getElementById('menu');
-    const sortable = Sortable.create(menu, {
-      group: 'nested',
-      handle: '.handle',
-      animation: 150,
-	  fallbackOnBody: true,
-	  swapThreshold: 0.65,
-      onEnd: function (evt) {
-        const item = evt.item;
-        const parent = item.parentNode;
-        const previousItem = item.previousElementSibling;
+{% endblock %}
 
-        
-
-        //const itemRect = item.getBoundingClientRect();
-        //const menuRect = menu.getBoundingClientRect();
-        //const relativeX = itemRect.left - menuRect.left + item.offsetLeft;
-        
-        //console.log(relativeX);
-        //console.log(menuRect.right);
+{% block extra_css %}
+<style type="text/css">
+  .dd { position: relative; display: block; margin: 0; padding: 0; max-width: 100%; list-style: none; line-height: 20px; }
   
-        // Check if the item was dropped inside another menu
-        if (item !== previousItem /*&& relativeX > menu.offsetWidth*/) {
-          // const previousItem = item.previousElementSibling;
+  .dd-list { display: block; position: relative; margin: 0; padding: 0px; padding-block: 1rem; padding-block-end: 0px; list-style: none; }
+  .dd-list .dd-list { padding-left: 4rem; }
+  .dd-list .dd-handle { margin-bottom: 0px; }
 
-          // Create a new submenu
-          const submenu = document.createElement('ul');
-
-            
-            
-            submenu.className = 'list-group custom-box';
-
-            // Append the dragged item to the submenu
-            submenu.appendChild(item);
-
-            // Replace the previous item's content with the submenu
-            //previousItem.innerHTML = '';
-            previousItem.appendChild(submenu);
+  .dd-placeholder,
+  .dd-empty { margin: 5px 0; padding: 0; min-height: 30px; background: #f2fbff; border: 1px dashed #b6bcbf; box-sizing: border-box; -moz-box-sizing: border-box; }
+  .dd-empty { border: 1px dashed #bbb; min-height: 100px; background-color: #e5e5e5;
+      background-size: 60px 60px;
+      background-position: 0 0, 30px 30px;
+  }
   
-          // Check if the previous item is a menu item (not a submenu)
-          /*if (previousItem && !previousItem.querySelector('ul')) {
-            // Create a new submenu
-            const submenu = document.createElement('ul');
-
-            
-            
-            submenu.className = 'list-group custom-box';
+  .dd-dragel { position: absolute; pointer-events: none; z-index: 9999; }
+  .dd-dragel > .dd-item .dd-handle { margin-top: 0; }
+  .dd-dragel .dd-handle {
+      -webkit-box-shadow: 2px 4px 6px 0 rgba(0,0,0,.1);
+              box-shadow: 2px 4px 6px 0 rgba(0,0,0,.1);
+  }
   
-            // Append the dragged item to the submenu
-            submenu.appendChild(item);
-  
-            // Replace the previous item's content with the submenu
-            previousItem.innerHTML = '';
-            previousItem.appendChild(submenu);
-          }*/
-        }
-      }
-    });
-</script>
-  
-  
+  .dd-hover > .dd-handle { background: #e52eb7 !important; }
+</style>
 {% endblock %}
 
 {% block extra_script %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="{% static 'simplewiki/jquery.nestable.js' %}"></script>
+
+<script>
+
+    var outputJSON;
+
+    $(document).ready(function()
+    {
+        // Update menu list JSON data 
+        var updateOutput = function(e)
+        {
+            var list   = e.length ? e : $(e.target),
+                output = list.data('output');
+            if (window.JSON) {
+                outputJSON = window.JSON.stringify(list.nestable('serialize'));
+                
+            } else {
+                console.log('JSON browser support required.');
+            }
+        };
+  
+        // Activate Nestable 
+        $('#editmenus').nestable({
+            group: 1
+        })
+        .on('change', updateOutput);
+        
+        updateOutput($('#editmenus').data('output', $('#editmenus-output')));
+    });
+
+    document.getElementById('confirm_save').addEventListener('click', function() {
+        $.ajax({
+            type: 'POST',
+            url: '/wiki/editor/sort/post/',
+            data: {
+                'data': outputJSON,
+                'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+            },
+            success: function(response) {
+                console.log("Success");
+
+                var alertElem = document.getElementById('success-alert');
+    
+                alertElem.style.display = 'block';
+    
+                setTimeout(function() {
+                    alertElem.style.display = 'none';
+                    location.reload();
+                }, 3000);
+            },
+            error: function(error) {
+                console.log("Error");
+
+                var alertElem = document.getElementById('error-alert');
+    
+                alertElem.style.display = 'block';
+    
+                setTimeout(function() {
+                    alertElem.style.display = 'none';
+                }, 3000);
+            }
+        });
+    });
+</script>
 {% endblock %}

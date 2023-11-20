@@ -22,42 +22,53 @@
     
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    {% for item in navbar %}
-                        {% if item.submenus %}
-                        {% with submenu_paths=item.path|get_submenu_paths %}
-                        <li class="dropdown {% if current_path|any_paths_current:submenu_paths %}active{% endif %}">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                {% if item.icon|length > 0 %}
-                                    <i class="{{ item.icon }}" style="display: inline-block;"></i>
-                                {% endif %}
-                                {{ item.title }}
-                                <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                {% for submenu in item.submenus %}
-                                <li class="{% if submenu.path in current_path %}active{% endif %}">
-                                    <a href="{% url 'simplewiki:dynamic_menu' menu_path=submenu.path %}">
-                                        {% if item.icon|length > 0 %}
-                                            <i class="{{ submenu.icon }}" style="display: inline-block;"></i>
-                                        {% endif %}
-                                        {{ submenu.title }}
+                {% for menu_item in menu_items %}
+                    {# Check if menu is the parent #}
+                    {% if not menu_item.parent %}
+                        {# Check if the menu has any children #}
+                        {% if menu_item|has_menu_children %}
+                            {# Check if the user is in at least one required group #}
+                            {% if menu_item|user_access_any_submenus:user_groups %}
+                                {% with submenu_paths=menu_item|get_submenu_paths %}
+                                <li class="dropdown {% if current_path|any_paths_current:submenu_paths %}active{% endif %}">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                        <i class="{{ menu_item.icon }}" style="display: inline-block;"></i>
+                                        {{ menu_item.title }} 
+                                        <span class="caret"></span>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                    {% with menu_children=menu_item|get_menu_children %}
+                                        {% for sub_menu_item in menu_children %}
+                                            {% if not sub_menu_item.groups or user_groups|is_user_in_groups:sub_menu_item.groups %}
+                                            <li class="{% if sub_menu_item.path in current_path %}active{% endif %}">
+                                                <a href="{% url 'simplewiki:dynamic_menu' menu_name=sub_menu_item.path %}">
+                                                    <i class="{{ sub_menu_item.icon }}" style="display: inline-block;"></i>
+                                                    {{ sub_menu_item.title }}
+                                                </a>
+                                            </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endwith %}
+                                    </ul>
+                                </li>
+                                {% endwith %}
+                            {% endif %}
+                        {# Check if the menu doesn't have any children -> must be a parent #}
+                        {% else %}
+                            {% url 'simplewiki:dynamic_menu' menu_name=menu_item.path as expected_path %}
+                            {% if not menu_item.groups or user_groups|is_user_in_groups:menu_item.groups %}
+                                {% if not menu_item.states or "Member" in user_state %}
+                                <li class="{% if current_path == expected_path %}active{% endif %}">
+                                    <a href="{% url 'simplewiki:dynamic_menu' menu_name=menu_item.path %}" style="display: inline-block;">
+                                        <i class="{{ menu_item.icon }}" style="display: inline-block;"></i>
+                                        {{ menu_item.title }} 
                                     </a>
                                 </li>
-                                {% endfor %}
-                            </ul>
-                        </li>
-                        {% endwith %}
-                        {% else %}
-                        <li class="nav-item {% if item.path in current_path %}active{% endif %}">
-                            <a class="nav-link" href="{% url 'simplewiki:dynamic_menu' menu_path=item.path %}">
-                                {% if item.icon|length > 0 %}
-                                    <i class="{{ item.icon }}" style="display: inline-block;"></i>
                                 {% endif %}
-                                {{ item.title }}
-                            </a>
-                        </li>
+                            {% endif %}
                         {% endif %}
-                    {% endfor %}
+                    {% endif %}
+                {% endfor %} 
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
@@ -104,7 +115,7 @@
                                 {% endif %}
                                 <li role="separator" class="divider"></li>
                                 <li>
-                                    <a href="https://github.com/meowosaurus/aa-simplewiki/wiki" target="_blank">
+                                    <a href="https://meowosaurus.github.io/aa-simplewiki/docs/" target="_blank">
                                         <i class="fas fa-question-circle"></i>
                                         Documentation
                                     </a>

@@ -22,9 +22,7 @@
     {% empty %}
         {% if is_editor %}
             <div class="alert alert-warning" role="alert">
-                No wiki pages found. You can add them under Admin -> SimpleWiki -> Page Items.<br /><br />
-    
-                If you created page items and they are not showing, please make sure your "menu name" is the same as the menu you want it to assign to.
+                No wiki pages found. You can add them under Editor -> <a href="{% url 'simplewiki:editor_menus' %}">Edit Menus</a> and <a href="{% url 'simplewiki:editor_sections' %}">Edit Sections</a>.
             </div>
         {% endif %}
     {% endfor %}    

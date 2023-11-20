@@ -20,6 +20,91 @@ class General(models.Model):
         permissions = (("basic_access", "Can access this app"),
                        ("editor_access", "Can edit menues and sections"))
 
+# v2
+
+class Menu(models.Model):
+    """
+    Represents a menu item in the SimpleWiki application.
+
+    Attributes:
+        index (int): The index of the menu item.
+        title (str): The title of the menu item.
+        icon (str): The icon of the menu item.
+        path (str): The path of the menu item.
+        parent (Menu): The parent menu item, if any.
+        groups (str): The groups that have access to the menu item.
+        states (str): The states in which the menu item is visible.
+    """
+    index = models.IntegerField(default=0,
+                                unique=False,
+                                null=False)
+    title = models.CharField(max_length=255,
+                             unique=False,
+                             null=False)
+    icon = models.CharField(max_length=255,
+                            unique=False,
+                            null=False,
+                            blank=True)
+    path = models.CharField(max_length=255,
+                            unique=True,
+                            null=False)
+    parent = models.ForeignKey(
+        'self',
+        on_delete=models.SET_NULL,
+        related_name='children',
+        null=True,
+        blank=True
+    )
+    groups = models.CharField(max_length=255,
+                              null=False,
+                              blank=True)
+    states = models.CharField(max_length=255,
+                              null=False,
+                              blank=True)
+
+    def __str__(self):
+        if self.parent:
+            return self.title + " (Parent: " + self.parent.title + ")" 
+        else:
+            return self.title
+
+class Section(models.Model):
+    """
+    Represents a section in the SimpleWiki application.
+
+    A section is a container for content that is organized under a title and an optional menu.
+    """
+
+    title = models.CharField(max_length=255,
+                             null=False,
+                             blank=False,
+                             unique=True)
+    menu = models.ForeignKey(
+        Menu,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+    index = models.IntegerField(default=0,
+                                null=False,
+                                blank=True,
+                                unique=False)
+    icon = models.CharField(max_length=255,
+                            unique=False,
+                            null=False,
+                            blank=True)
+    content = models.TextField(null=False,
+                               blank=True)
+
+    def __str__(self):
+        if self.menu:
+            return self.title + " (" + self.menu.title + ")"
+        else:
+            return self.title
+
+# v1
+# TODO: Will be removed in a later version, used for now to store old data
+
 class MenuItem(models.Model):
     """
     Menu item model for wiki menu entries
@@ -27,7 +112,7 @@ class MenuItem(models.Model):
 
     # Menu items are sorted after this index
     index = models.IntegerField(default=0, 
-                                unique=True,
+                                unique=False,
                                 help_text='Required: The navbar is sorted by this index. The lower the value, the further to the left is the menu.')
     # Public title for the menu
     title = models.CharField(max_length=255, 
@@ -54,6 +139,11 @@ class MenuItem(models.Model):
                              null=True,
                              blank=True,
                              help_text='Optional: Do you only want to show this page to one group of people? Insert the group name here and only they will be able to see the post and all of it\'s sections.')
+    # Menu visibility is filter by these states
+    states = models.CharField(max_length=255, 
+                             null=True,
+                             blank=True,
+                             help_text='Optional: Do you only want to show this page to one state? Insert the state name here and only they will be able to see the post and all of it\'s sections.')
 
     def __str__(self):
         return self.path

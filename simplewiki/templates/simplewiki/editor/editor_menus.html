@@ -32,32 +32,31 @@
             <table class="table table-striped">
                 <thead>
                   <tr>
-                    <th width="16%">Index</th>
                     <th width="17%">Menu Title</th>
                     <th width="17%">URL</th>
                     <th width="17%">Parent Menu</th>
                     <th width="17%">Groups</th>
+                    <th width="16%">States</th>
                     <th width="16%">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {% for menu_item in menu_items %}
                     <tr>
-                      <td>{{ menu_item.index }}</td>
                       <td>
                         <i class="{{ menu_item.icon }}"></i>
                         {{ menu_item.title }}
                       </td>
                       <td>
-                        <a href="{% url 'simplewiki:dynamic_menu' menu_name=menu_item.path %}">
-                          {% url 'simplewiki:dynamic_menu' menu_name=menu_item.path %}
+                        <a href="{% url 'simplewiki:dynamic_menu' menu_path=menu_item.path %}">
+                          {% url 'simplewiki:dynamic_menu' menu_path=menu_item.path %}
                         </a>
                       </td>
                       <td>
                         {% if not menu_item.parent %}
                           None
                         {% else %}
-                          <a href="{% url 'simplewiki:dynamic_menu' menu_name=menu_item.parent %}">
+                          <a href="{% url 'simplewiki:dynamic_menu' menu_path=menu_item.parent.path %}">
                             {{ menu_item.parent }}
                           </a>
                         {% endif %}
@@ -65,6 +64,13 @@
                       <td>
                         {% if menu_item.groups %}
                           {{ menu_item.groups|add_group_space }}
+                        {% else %}
+                          None
+                        {% endif %}
+                      </td>
+                      <td>
+                        {% if menu_item.states %}
+                          {{ menu_item.states|add_group_space }}
                         {% else %}
                           None
                         {% endif %}
@@ -102,7 +108,7 @@
           </div>
           <form method="post" id="my_form">
             {% csrf_token %}
-            {% include 'simplewiki/editor/partials/_edit_menu.html' %}
+            {% include 'simplewiki/editor/partials/menus/_edit_menu.html' %}
           </form>
         </div>
         {% elif user_action == 'delete' %}
@@ -129,22 +135,25 @@
           <hr>
           <form method="post" id="my_form">
             {% csrf_token %}
-            {% include 'simplewiki/editor/partials/_create_menu.html' %}
+            {% include 'simplewiki/editor/partials/menus/_create_menu.html' %}
           </form>
         </div>
         {% endif %}
+        {% if False %}
         <div class="panel-footer">
           Check our wiki on GitHub if you need help.
         </div>
+        {% endif %}
     </div>
 {% endblock %}
 
 {% block extra_javascript %}
 {% if user_action == 'edit' %}
 {# groupInput needs to be seperated, otherwise it won't find the input #}
+{% if False %}
 <script>
   const selectElement = document.getElementById("menuParentSelect");
-  const selectedPath = "{{ selectedMenu.menu_path }}";
+  const selectedPath = "{{ selectedMenu.parent.path }}";
 
   for (let i = 0; i < menuParentSelect.options.length; i++) {
           if (menuParentSelect.options[i].value == selectedPath) {
@@ -155,7 +164,7 @@
 
   document.addEventListener('DOMContentLoaded', function() {
       const menuParentSelect = document.getElementById('menuParentSelect');
-      const selectedPath = "{{ selectedMenu.parent }}";
+      const selectedPath = "{{ selectedMenu.parent.path }}";
 
       for (let i = 0; i < menuParentSelect.options.length; i++) {
           if (menuParentSelect.options[i].value == selectedPath) {
@@ -165,8 +174,8 @@
       }
   });
 </script>
+{% endif %}
 <script>
-  document.getElementById("indexInput").value = '{{ selectedMenu.index|escapejs }}';
   document.getElementById("titleInput").value = '{{ selectedMenu.title|escapejs }}';
   document.getElementById("iconInput").value = '{{ selectedMenu.icon|escapejs }}';
 </script>

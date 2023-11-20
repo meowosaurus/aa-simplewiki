@@ -3,7 +3,7 @@ A simple wiki plugin for alliance auth. It supports multiple pages with differen
 
 # Contents
 * [Current Features](#current-features)
-  * [ToDo](#todo)
+  * [TODO](#todo)
   * [Planned](#planned)
 * [Screenshots](#screenshots)
 * [Installation](#installation)
@@ -30,17 +30,16 @@ A simple wiki plugin for alliance auth. It supports multiple pages with differen
 * Editor interface
   * Users with editor permission can create, edit and delete custom menus and sections (editor_access)
   * Users with editor permission see edit and delete buttons above all sections (editor_access)
+  * Change menu position's with a drag and drop system
 
-## ToDo:
+## TODO:
 * Quality-of-life updates
 * Implement better logging
 * Improve code documentation
-* Clean-up code
 * Markdown
   * Buttons
 
 ## Planned
-* Drag and drop system to make indexing menus and sections easier
 * Add translations for 
   * German
   * Spanish
@@ -63,6 +62,8 @@ A simple wiki plugin for alliance auth. It supports multiple pages with differen
 ![Menu Admin](https://github.com/meowosaurus/aa-simplewiki/blob/master/images/menu_admin_panel.png)
 
 ![Menu Edit](https://github.com/meowosaurus/aa-simplewiki/blob/master/images/menu_admin_panel_edit.png)
+
+![Menu Sorting](https://github.com/meowosaurus/aa-simplewiki/blob/master/images/menu_sorting.gif)
 
 ![Section Edit](https://i.imgur.com/3LrysW7.png)
 
@@ -132,10 +133,15 @@ Perm | Admin Site | Auth Site
 basic_access | None | Can view all wiki pages
 editor_access | None | Can create, edit and delete wiki pages and menus
 
+## Commands
+- Migrate all data from 1.0.x to 1.1.x: `python manage.py simplewiki_migrate_v1_1`
+
 ## Dependencies
 - [Alliance Auth](https://gitlab.com/allianceauth/allianceauth)
 - [allianceauth-app-utils](https://gitlab.com/ErikKalkoken/allianceauth-app-utils)
 - [Mistune](https://github.com/lepture/mistune)
+- [jQuery](https://github.com/jquery/jquery)
+- [Nestable](https://github.com/dbushell/Nestable)
 
 ## Support
 * On Discord: meowlicious
