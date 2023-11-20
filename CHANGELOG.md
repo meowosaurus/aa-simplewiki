@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
-## [In Development] - Unreleased
+## Released
 
 ## [1.1.0]
 New features:
@@ -29,8 +29,6 @@ Internal Optimizations:
 - Reworked the menu and section models
 - Changed error code to error strings
 - Add logging for helper functions
-
-## Released
 
 ## [1.0.5]
 New minor features:
