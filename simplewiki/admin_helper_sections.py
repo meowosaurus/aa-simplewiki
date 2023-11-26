@@ -129,10 +129,7 @@ def edit_existing_section(request: WSGIRequest, context: dict, edit: str) -> Htt
 
         # Check if user changed the index. If they did, save the new one.
         try:
-            index = 0
-            if isinstance(request.POST['index'], int):
-                index = request.POST['index']
-            selected_section.index = index
+            selected_section.index = int(request.POST['index'])
         except Exception as e:
             return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_SECTION_EDIT_INDEX', e))
 
