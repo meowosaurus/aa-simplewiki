@@ -167,7 +167,7 @@ def dynamic_menus(request: WSGIRequest, menu_path: str) -> HttpResponse:
     context = gen_context(request)
 
     menu = Menu.objects.get(path=menu_path)
-    sections = Section.objects.filter(menu=menu)
+    sections = Section.objects.filter(menu=menu).order_by('index')
     context.update({'available_sections': sections})
 
     # Split all group names. All group names need to be seperated by a comma

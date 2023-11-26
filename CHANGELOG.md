@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Released
 
+## [1.1.2]
+Fixed bugs:
+- When editing sections, the index will be reset to 0
+- When opening a menu, the sections are not sorted
+
+## [1.1.1]
+- Made jquery locally available
+
 ## [1.1.0]
 New features:
 - Drag and drop system for rearranging menus
