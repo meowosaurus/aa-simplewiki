@@ -136,7 +136,7 @@ def edit_existing_section(request: WSGIRequest, context: dict, edit: str) -> Htt
         # Check if user changed the menu. If they did, save the new one.
         try:
             menu_path = request.POST['menu_path']
-            if menu_path is "":
+            if menu_path == "":
                 selected_section.menu = None
             else:
                 selected_section.menu = Menu.objects.get(path=menu_path)

@@ -5,17 +5,24 @@
 {% load markdown_filters %}
 
 {% block details %}
+
+<!-- Wiki Section View -->
+{% if available_sections_count > 0 %}
+<div class="col-md-9">
+{% else %}
+<div class=""></div>
+{% endif %}
     {% for item in available_sections %}
-    <div class="panel panel-primary">
+    <div id="{{ item.title }}" class="panel panel-primary">
         <div class="panel-heading">
             <div class="panel-title">
                 <i class="{{ item.icon }}"></i>
-                {{ item.title }}
+                <a href="#{{ item.title }}">{{ item.title }}</a>
             </div>
         </div>
         <div class="panel-body">
             <p>
-                {{ item.content|markdown|safe }}
+                {{ item.content|safe }}
             </p>
         </div>
     </div>
@@ -25,7 +32,42 @@
                 No wiki pages found. You can add them under Editor -> <a href="{% url 'simplewiki:editor_menus' %}">Edit Menus</a> and <a href="{% url 'simplewiki:editor_sections' %}">Edit Sections</a>.
             </div>
         {% endif %}
-    {% endfor %}    
+    {% endfor %}
+</div>
+
+{% if available_sections_count > 0 %}
+<!-- Page Contents Side View -->
+<div class="col-md-3">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="panel-title">
+                Page Contents
+            </div>
+        </div>
+        <div class="panel-body">
+            <ul class="nav nav-pills nav-stacked">
+                {% for item in available_sections %}
+                
+                <li role="presentation">
+                    
+                    <a class="h4" href="#{{ item.title }}">
+                        <i class="{{ item.icon }}"></i>
+                        {{ item.title }}
+                    </a>
+                    
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% if False %}
+        <!-- TODO -->
+        <div class="panel-footer">
+            Last edited by Meowlicious on "date"
+        </div>
+        {% endif %}
+    </div>
+</div> 
+{% endif %}
 {% endblock %}
 
 {% block extra_javascript %}
