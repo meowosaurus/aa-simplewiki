@@ -64,6 +64,7 @@
 {% endblock %}
 
 {% block extra_css %}
+<meta name="csrf-token" content="{{ csrf_token }}">
 <style type="text/css">
   .dd { position: relative; display: block; margin: 0; padding: 0; max-width: 100%; list-style: none; line-height: 20px; }
   
@@ -95,6 +96,10 @@
 
 <script>
 
+    function getCSRFToken() {
+        return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    }
+
     var outputJSON;
 
     $(document).ready(function()
@@ -122,12 +127,14 @@
     });
 
     document.getElementById('confirm_save').addEventListener('click', function() {
+        var csrfToken = getCSRFToken();
+
         $.ajax({
             type: 'POST',
             url: '/wiki/editor/sort/post/',
             data: {
                 'data': outputJSON,
-                'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+                'csrfmiddlewaretoken': csrfToken
             },
             success: function(response) {
                 console.log("Success");
