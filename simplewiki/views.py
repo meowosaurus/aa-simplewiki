@@ -22,57 +22,13 @@ from allianceauth.authentication.models import State
 from .models import *
 from .admin_helper_menus import *
 from .admin_helper_sections import *
+from .app_settings import simplewiki_display_page_contents
+from .views_helper import *
 
 from app_utils.logging import LoggerAddTag
 from . import __title__
 
 logger = LoggerAddTag(get_extension_logger(__name__), __title__)
-
-### Helper Functions ###
-
-# Standard context for a normal view, required by base.html
-def gen_context(request: WSGIRequest):
-    """
-    Generates the standard context for the django render function, 
-    context includes all menu and section items, if the user is 
-    an editor and all user groups (managed by aa)
-
-    Args:
-        request (WSGIRequest): The standard django request
-
-    Returns:
-        dict: Returns the standard context used for all views 
-    """
-
-    #menu_items = MenuItem.objects.all().order_by('index')
-    menu_items = Menu.objects.all().order_by('index')
-    section_items = Section.objects.all().order_by('index')
-
-    if request.user.has_perm('simplewiki.editor_access'):
-        is_editor = True
-    else:
-        is_editor = False
-
-    current_path = request.path
-
-    all_groups = Group.objects.all()
-    all_states = State.objects.all()
-    user_groups = list(request.user.groups.values_list('name', flat=True))
-    user_state = request.user.profile.state.name
-
-    context = {'menu_items': menu_items, 
-               'is_editor': is_editor, 
-               'section_items': section_items,
-               'user_groups': user_groups,
-               'user_state': user_state,
-               'current_path': current_path,
-               'all_groups': all_groups,
-               'all_states': all_states,
-               'request': request}
-
-    generate_menu(context, user_groups, user_state)
-
-    return context
 
 @login_required
 @permission_required("simplewiki.basic_access")
@@ -89,7 +45,7 @@ def index(request: WSGIRequest) -> HttpResponse:
         HttpResponse: Returns the template and context to render
     """
 
-    context = gen_context(request)
+    #context = gen_context(request)
 
     # Only get parent menus
     menus = Menu.objects.filter(parent=None).order_by("index")
@@ -137,9 +93,10 @@ def index(request: WSGIRequest) -> HttpResponse:
                 continue
             else:
                 return redirect('simplewiki:dynamic_menu', parent_menu.path)
-
+    
     error_message = "So far you didn't create any menus. Please create one under Editor -> Edit Menus"
     context.update({'error_code': "NO_MENU_AVAILABLE"})
+    context.update({'error_alert': "info"})
     context.update({'error_msg': error_message})
 
     logger_msg = f'Unable to render any menus: No menus created.'
@@ -168,7 +125,18 @@ def dynamic_menus(request: WSGIRequest, menu_path: str) -> HttpResponse:
 
     menu = Menu.objects.get(path=menu_path)
     sections = Section.objects.filter(menu=menu).order_by('index')
+    sections_count = sections.count()
+
     context.update({'available_sections': sections})
+    context.update({'available_sections_count': sections_count})
+
+    try: 
+        latest_section = Section.objects.filter(menu=menu).latest('last_edit_date')
+        context.update({'latest': True})
+        context.update({'latest_section': latest_section})
+    except Exception as e: 
+        context.update({'latest': False})
+        print("Unable to find latest section")
 
     # Split all group names. All group names need to be seperated by a comma
     try:
@@ -384,6 +352,7 @@ def editor_sort(request: WSGIRequest) -> HttpResponse:
     Returns:
         HttpResponse: The HTTP response object.
     """
+
     context = gen_context(request)
 
     return render(request, "simplewiki/editor/editor_sort.html", context)
@@ -402,6 +371,7 @@ def editor_markdown_guide(request: WSGIRequest) -> HttpResponse:
     Returns:
         HttpResponse: The HTTP response containing the rendered markdown guide.
     """
+
     context = gen_context(request)
 
     return render(request, "simplewiki/guides/markdown.html", context)
@@ -418,6 +388,7 @@ def editor_sort_post(request: WSGIRequest):
     based on the information provided in the JSON object.
     If any error occurs during the process, the function returns a JSON response with an error message.
     """
+
     try:
         data = json.loads(request.POST.get('data'))
 
@@ -451,68 +422,4 @@ def editor_sort_post(request: WSGIRequest):
     except Exception as e:
         return JsonResponse({"status": "error", "message": str(e)})
 
-def children_accessable(request, children):
-
-    user_groups = list(request.user.groups.values_list('name', flat=True))
-
-    for child in children:
-        if not child.groups or child.groups in user_groups:
-            if not child.states or child.states == request.user.profile.state.name:
-                return True
-
-    return False
-
-def generate_menu(context, user_groups, user_state):
-    navbar = []
-
-    parent_menus = Menu.objects.filter(parent=None).order_by('index')
-
-    for parent_menu in parent_menus:
-
-        # Extract and format permissions for parent menu
-        group_names, state_names = "", ""
-        if parent_menu.groups or parent_menu.states:
-            group_names = parent_menu.groups.split(',')
-            state_names = parent_menu.states.split(',')
-
-        # If parent menu has groups AND user does not have permission to access the parent menu
-        if parent_menu.groups and not any(group_name in user_groups for group_name in group_names):
-            continue
-
-        # If parent menu has states AND user does not have permission to access the parent menu
-        if parent_menu.states and not any(user_state == state for state in state_names):
-            continue
-
-        parent_item = {'title': parent_menu.title, 'path': parent_menu.path, 'icon': parent_menu.icon}
-
-        child_menus = parent_menu.children.all().order_by('index')
-
-        parent_item['submenus'] = []
-
-        if child_menus.count() > 0:
-
-            for child_menu in child_menus:
-                # Extract and format permission for child menu
-                child_group_names, child_state_names = None, None
-                if child_menu.groups is not None or child_menu.states is not None:
-                    child_group_names = child_menu.groups.split(',')
-                    child_state_names = child_menu.groups.split(',')
-
-                # If child menu has groups AND user does not have permission to access the child menu
-                if (child_menu.groups and not any(child_group_name in user_groups for child_group_name in child_group_names)):
-                    continue
-                
-                # If child menu has states AND user does not have permission to access the child menu
-                if child_menu.states and not user_state in child_menu.states.split(','):
-                    continue
-
-                sub_item = {'title': child_menu.title, 'path': child_menu.path, 'icon': child_menu.icon}
-                parent_item['submenus'].append(sub_item)
-
-        if len(parent_item['submenus']) == 0 and child_menus.count() > 0:
-            continue
-        
-        navbar.append(parent_item)
-
-    context.update({'navbar': navbar})
 

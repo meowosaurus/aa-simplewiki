@@ -80,11 +80,10 @@ class Section(models.Model):
                              blank=False,
                              unique=True)
     menu = models.ForeignKey(
-        Menu,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True
-    )
+                             Menu,
+                             on_delete=models.SET_NULL,
+                             null=True,
+                             blank=True)
     index = models.IntegerField(default=0,
                                 null=False,
                                 blank=True,
@@ -95,6 +94,19 @@ class Section(models.Model):
                             blank=True)
     content = models.TextField(null=False,
                                blank=True)
+    # editor's charcter name
+    last_edit = models.CharField(max_length=255,
+                                 null=False,
+                                 blank=True)
+    # edited on (date only)
+    last_edit_date = models.DateField(auto_now=True, 
+                                      null=False, 
+                                      blank=True)
+    # editor's character id
+    last_edit_id = models.IntegerField(default=0,
+                                       null=False,
+                                       blank=True,
+                                       unique=False)
 
     def __str__(self):
         if self.menu:

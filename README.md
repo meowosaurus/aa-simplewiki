@@ -134,7 +134,8 @@ basic_access | None | Can view all wiki pages
 editor_access | None | Can create, edit and delete wiki pages and menus
 
 ## Commands
-- Migrate all data from 1.0.x to 1.1.x: `python manage.py simplewiki_migrate_v1_1`
+- Migrate all data from 1.0.x to 1.1.1 to use new model system: `python manage.py simplewiki_migrate_v1_1`
+- Migrate section data from 1.1.1 and later to 1.1.3 to add author details: `python manage.py simplewiki_migrate_v1_3`
 
 ## Dependencies
 - [Alliance Auth](https://gitlab.com/allianceauth/allianceauth)

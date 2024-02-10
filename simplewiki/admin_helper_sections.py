@@ -10,8 +10,19 @@ from django.utils.text import slugify
 from django.core.exceptions import ValidationError
 from django.db.models.deletion import ProtectedError
 
+# Alliance Auth imports
+from allianceauth.services.hooks import get_extension_logger
+from allianceauth.authentication.models import UserProfile
+from allianceauth.eveonline.models import EveCharacter
+
 # Custom imports
 from .models import *
+
+# Logging
+from app_utils.logging import LoggerAddTag
+from . import __title__
+
+logger = LoggerAddTag(get_extension_logger(__name__), __title__)
 
 def gen_error_context(context: dict, error_code: str, err_e: Exception):
     """
@@ -49,6 +60,14 @@ def create_new_section(request: WSGIRequest, context: dict) -> HttpResponse:
     # if do create operation
     if request.POST['confirm_create'] == '1':
         new_section = Section()
+
+        # Get user who sent the create request
+        try:
+            user = UserProfile.objects.filter(user=request.user).first()
+            new_section.last_edit = user.main_character.character_name
+            new_section.last_edit_id = user.main_character.character_id
+        except Exception as e:
+            logger.error("Unable to find user who tries to create a new section")
 
         # Check if user changed a value. If they did, save the new one.
         try:
@@ -108,6 +127,14 @@ def edit_existing_section(request: WSGIRequest, context: dict, edit: str) -> Htt
             context.update({'error_django': str(e)})
             return render(request, 'simplewiki/error.html', context)
 
+        # Get user who tries to edit the section
+        try:
+            user = UserProfile.objects.filter(user=request.user).first()
+            selected_section.last_edit = user.main_character.character_name
+            selected_section.last_edit_id = user.main_character.character_id
+        except Exception as e:
+            logger.error("Unable to find user who tries to edit an existing section")
+
         # Check if user changed a value. If they did, save the new one.
         keys = ['title', 'icon', 'content']
         for key in keys:
@@ -136,7 +163,7 @@ def edit_existing_section(request: WSGIRequest, context: dict, edit: str) -> Htt
         # Check if user changed the menu. If they did, save the new one.
         try:
             menu_path = request.POST['menu_path']
-            if menu_path is "":
+            if menu_path == "":
                 selected_section.menu = None
             else:
                 selected_section.menu = Menu.objects.get(path=menu_path)

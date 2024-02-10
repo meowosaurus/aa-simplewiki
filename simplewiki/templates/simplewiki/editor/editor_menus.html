@@ -112,21 +112,7 @@
           </form>
         </div>
         {% elif user_action == 'delete' %}
-        <div class="panel-body">
-          <div class="text-center h4">
-            Are you sure you want to delete the following menu?
-            <br />
-            <br />
-            <i class="{{ selectedMenu.icon }}"></i> {{ selectedMenu.title }}
-          </div>
-          <form method="post">
-            {% csrf_token %}
-            <button type="submit" name="confirm_delete" value="0" class="btn btn-default">Cancel</button>
-            <div class="pull-right">
-              <button type="submit" name="confirm_delete" value="1" class="btn btn-danger">Delete</button>
-            </div>
-          </form>  
-        </div>
+        {% include 'simplewiki/editor/partials/menus/_delete_menu.html' %}
         {% elif user_action == 'create' %}
         <div class="panel-body">
           <div class="text-center h4">
@@ -137,11 +123,6 @@
             {% csrf_token %}
             {% include 'simplewiki/editor/partials/menus/_create_menu.html' %}
           </form>
-        </div>
-        {% endif %}
-        {% if False %}
-        <div class="panel-footer">
-          Check our wiki on GitHub if you need help.
         </div>
         {% endif %}
     </div>

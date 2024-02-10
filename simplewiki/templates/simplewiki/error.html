@@ -4,7 +4,11 @@
 {% load static %}
 
 {% block details %}
+    {% if error_alert %}
+    <div class="alert alert-{{ error_alert }}" role="alert">
+    {% else %}
     <div class="alert alert-danger" role="alert">
+    {% endif %}
         <h4>Error: "{{ error_code }}"</h4>
         <br />
         {% if error_msg %}

@@ -14,7 +14,7 @@ install_requires = [
 
 setup(
     name='aa-simplewiki',
-    version='1.1.2',
+    version='1.1.3',
     packages=find_packages(),
     include_package_data=True,
     exclude_package_data={'': ['images']},

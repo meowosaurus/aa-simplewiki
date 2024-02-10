@@ -5,12 +5,19 @@
 {% load markdown_filters %}
 
 {% block details %}
+
+<!-- Wiki Section View -->
+{% if available_sections_count > 0 and display_page_contents %}
+<div class="col-md-9" style="padding-left: 0px; padding-right: 0px;">
+{% else %}
+<div class=""></div>
+{% endif %}
     {% for item in available_sections %}
-    <div class="panel panel-primary">
+    <div id="{{ item.title }}" class="panel panel-primary">
         <div class="panel-heading">
             <div class="panel-title">
                 <i class="{{ item.icon }}"></i>
-                {{ item.title }}
+                <a href="#{{ item.title }}">{{ item.title }}</a>
             </div>
         </div>
         <div class="panel-body">
@@ -21,11 +28,50 @@
     </div>
     {% empty %}
         {% if is_editor %}
-            <div class="alert alert-warning" role="alert">
-                No wiki pages found. You can add them under Editor -> <a href="{% url 'simplewiki:editor_menus' %}">Edit Menus</a> and <a href="{% url 'simplewiki:editor_sections' %}">Edit Sections</a>.
+            <div class="alert alert-info" role="alert">
+                No wiki pages found. You can add them under Editor -> <a target="_blank" href="{% url 'simplewiki:editor_sections' %}" style="color: white; text-decoration: underline;">Edit Sections</a>.
             </div>
         {% endif %}
-    {% endfor %}    
+    {% endfor %}
+</div>
+
+{% if available_sections_count > 0 and display_page_contents %}
+<!-- Page Contents Side View -->
+<div class="col-md-3" style="padding-right: 0px;">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="panel-title">
+                Page Contents
+            </div>
+        </div>
+        <div class="panel-body">
+            <ul class="nav nav-pills nav-stacked">
+                {% for item in available_sections %}
+                
+                <li role="presentation">
+                    
+                    <a class="h5" href="#{{ item.title }}">
+                        <i class="fas fa-chevron-right" style="padding-right: 1rem;"></i>
+                        <i class="{{ item.icon }}"></i>
+                        {{ item.title }}
+                    </a>
+                    
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% if latest and latest_section.last_edit != "" %}
+        <div class="panel-footer">
+            {% if latest_section.last_edit_id != 0 %}
+            Last edited by <a target="_blank" href="https://evewho.com/character/{{ latest_section.last_edit_id }}">{{ latest_section.last_edit }}</a> on {{ latest_section.last_edit_date }}
+            {% else %}
+            Last edited by {{ latest_section.last_edit }} on {{ latest_section.last_edit_date }}
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div> 
+{% endif %}
 {% endblock %}
 
 {% block extra_javascript %}
