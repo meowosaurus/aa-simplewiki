@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Released
 
+## [1.1.3]
+New features:
+- Added a page contents view to every wiki page
+- Added a "last edited" info below the page contents
+- Added option to display/hide page contents (SIMPLEWIKI_DISPLAY_PAGE_CONTENTS)
+
+Fixed bugs:
+- It's no longer possible to create no-name sections
+
 ## [1.1.2]
 Fixed bugs:
 - When editing sections, the index will be reset to 0

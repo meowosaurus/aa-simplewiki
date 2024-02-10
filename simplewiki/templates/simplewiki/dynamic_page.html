@@ -7,7 +7,7 @@
 {% block details %}
 
 <!-- Wiki Section View -->
-{% if available_sections_count > 0 %}
+{% if available_sections_count > 0 and display_page_contents %}
 <div class="col-md-9" style="padding-left: 0px; padding-right: 0px;">
 {% else %}
 <div class=""></div>
@@ -35,7 +35,7 @@
     {% endfor %}
 </div>
 
-{% if available_sections_count > 0 %}
+{% if available_sections_count > 0 and display_page_contents %}
 <!-- Page Contents Side View -->
 <div class="col-md-3" style="padding-right: 0px;">
     <div class="panel panel-primary">

@@ -5,5 +5,4 @@ from django.conf import settings
 
 # put your app settings here
 
-
-simplewiki_SETTING_ONE = getattr(settings, "simplewiki_SETTING_ONE", None)
+simplewiki_display_page_contents = getattr(settings, "SIMPLEWIKI_DISPLAY_PAGE_CONTENTS", True)
