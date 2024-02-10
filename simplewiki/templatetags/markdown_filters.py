@@ -1,4 +1,5 @@
 import mistune
+import re
 
 from django import template
 
@@ -22,6 +23,24 @@ def markdown_to_html(text):
 
     return html
 
+def mark_html(text):
+    print(text)
+
+    text = text.replace("\r\n", "<br>")
+
+    text = re.sub(r"(?<!#)# (.*?)(?=$|\s)", r"<h1>\1</h1>", text)
+
+    text = re.sub(r"(?<!#)## (.*?)(?=$|\s)", r"<h2>\1</h2>", text)
+
+    text = re.sub(r"(?<!#)### (.*?)(?=$|\s)", r"<h3>\1</h3>", text)
+
+    text = re.sub(r"(?<!#)#### (.*?)(?=$|\s)", r"<h4>\1</h4>", text)
+
+    print(text)
+
+    return text
+
 register = template.Library()
 register.filter('markdown', markdown_to_html)
+#register.filter('markdown', mark_html)
 
