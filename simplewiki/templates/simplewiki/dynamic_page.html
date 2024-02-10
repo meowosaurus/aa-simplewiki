@@ -29,7 +29,7 @@
     {% empty %}
         {% if is_editor %}
             <div class="alert alert-info" role="alert">
-                No wiki pages found. You can add them under Editor -> <a href="{% url 'simplewiki:editor_sections' %}">Edit Sections</a>.
+                No wiki pages found. You can add them under Editor -> <a target="_blank" href="{% url 'simplewiki:editor_sections' %}" style="color: white; text-decoration: underline;">Edit Sections</a>.
             </div>
         {% endif %}
     {% endfor %}
