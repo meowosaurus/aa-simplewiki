@@ -140,6 +140,7 @@ def index(request: WSGIRequest) -> HttpResponse:
 
     error_message = "So far you didn't create any menus. Please create one under Editor -> Edit Menus"
     context.update({'error_code': "NO_MENU_AVAILABLE"})
+    context.update({'error_alert': "info"})
     context.update({'error_msg': error_message})
 
     logger_msg = f'Unable to render any menus: No menus created.'

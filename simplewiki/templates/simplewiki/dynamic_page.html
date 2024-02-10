@@ -28,8 +28,8 @@
     </div>
     {% empty %}
         {% if is_editor %}
-            <div class="alert alert-warning" role="alert">
-                No wiki pages found. You can add them under Editor -> <a href="{% url 'simplewiki:editor_menus' %}">Edit Menus</a> and <a href="{% url 'simplewiki:editor_sections' %}">Edit Sections</a>.
+            <div class="alert alert-info" role="alert">
+                No wiki pages found. You can add them under Editor -> <a href="{% url 'simplewiki:editor_sections' %}">Edit Sections</a>.
             </div>
         {% endif %}
     {% endfor %}
@@ -63,7 +63,7 @@
         {% if latest and latest_section.last_edit != "" %}
         <div class="panel-footer">
             {% if latest_section.last_edit_id != 0 %}
-            Last edited by <a target="_blank" href="https://zkillboard.com/character/{{ latest_section.last_edit_id }}/">{{ latest_section.last_edit }}</a> on {{ latest_section.last_edit_date }}
+            Last edited by <a target="_blank" href="https://evewho.com/character/{{ latest_section.last_edit_id }}">{{ latest_section.last_edit }}</a> on {{ latest_section.last_edit_date }}
             {% else %}
             Last edited by {{ latest_section.last_edit }} on {{ latest_section.last_edit_date }}
             {% endif %}

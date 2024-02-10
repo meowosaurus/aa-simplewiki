@@ -1,0 +1,15 @@
+<div class="panel-body">
+    <div class="text-center h4">
+      Are you sure you want to delete the following menu?
+      <br />
+      <br />
+      <i class="{{ selectedMenu.icon }}"></i> {{ selectedMenu.title }}
+    </div>
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" name="confirm_delete" value="0" class="btn btn-default">Cancel</button>
+      <div class="pull-right">
+        <button type="submit" name="confirm_delete" value="1" class="btn btn-danger">Delete</button>
+      </div>
+    </form>  
+</div>
