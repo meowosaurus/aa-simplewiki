@@ -30,55 +30,6 @@ from . import __title__
 
 logger = LoggerAddTag(get_extension_logger(__name__), __title__)
 
-### Helper Functions ###
-
-# Standard context for a normal view, required by base.html
-def gen_context(request: WSGIRequest):
-    """
-    Generates the standard context for the django render function, 
-    context includes all menu and section items, if the user is 
-    an editor and all user groups (managed by aa)
-
-    Args:
-        request (WSGIRequest): The standard django request
-
-    Returns:
-        dict: Returns the standard context used for all views 
-    """
-
-    menu_items = Menu.objects.all().order_by('index')
-    section_items = Section.objects.all().order_by('index')
-
-    if request.user.has_perm('simplewiki.editor_access'):
-        is_editor = True
-    else:
-        is_editor = False
-
-    current_path = request.path
-
-    all_groups = Group.objects.all()
-    all_states = State.objects.all()
-    user_groups = list(request.user.groups.values_list('name', flat=True))
-    user_state = request.user.profile.state.name
-
-    context = {'menu_items': menu_items, 
-               'is_editor': is_editor, 
-               'section_items': section_items,
-               'user_groups': user_groups,
-               'user_state': user_state,
-               'current_path': current_path,
-               'all_groups': all_groups,
-               'all_states': all_states,
-               'request': request,
-               # OPTIONS
-               'display_page_contents': simplewiki_display_page_contents}
-
-    print(simplewiki_display_page_contents)
-
-    generate_menu(context, user_groups, user_state)
-
-    return context
-
 @login_required
 @permission_required("simplewiki.basic_access")
 def index(request: WSGIRequest) -> HttpResponse:
@@ -437,7 +388,7 @@ def editor_sort_post(request: WSGIRequest):
     based on the information provided in the JSON object.
     If any error occurs during the process, the function returns a JSON response with an error message.
     """
-    
+
     try:
         data = json.loads(request.POST.get('data'))
 
