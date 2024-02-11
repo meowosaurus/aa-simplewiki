@@ -16,6 +16,7 @@ New features:
 
 Fixed bugs:
 - It's no longer possible to create no-name sections
+- When creating a section, the index no longer gets overwritten by "0"
 
 ## [1.1.2]
 Fixed bugs:
