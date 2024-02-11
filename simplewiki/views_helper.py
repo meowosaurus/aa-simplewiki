@@ -71,8 +71,6 @@ def gen_context(request: WSGIRequest):
                # OPTIONS
                'display_page_contents': simplewiki_display_page_contents}
 
-    print(simplewiki_display_page_contents)
-
     generate_menu(context, user_groups, user_state)
 
     return context

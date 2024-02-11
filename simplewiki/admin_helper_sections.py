@@ -74,10 +74,6 @@ def create_new_section(request: WSGIRequest, context: dict) -> HttpResponse:
             new_section.title = request.POST['title']
             menu_path = request.POST['menu_path']
             new_section.menu = Menu.objects.get(path=menu_path)
-            index = 0
-            if isinstance(request.POST['index'], int):
-                index = request.POST['index']
-            new_section.index = index
             new_section.icon = format_icon(request.POST['icon'])
             new_section.content = request.POST['content']
         except (KeyError, ValueError, TypeError) as e:
@@ -86,6 +82,12 @@ def create_new_section(request: WSGIRequest, context: dict) -> HttpResponse:
             return render(request, 'simplewiki/error.html', context)
         except Exception as e:
             return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_SECTION_CREATE_UNKNOWN', e))
+
+        # Check if user changed the index. If they did, save the new one.
+        try:
+            new_section.index = int(request.POST['index'])
+        except Exception as e:
+            return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_SECTION_CREATE_INDEX', e))
 
         # Save the object
         try:
