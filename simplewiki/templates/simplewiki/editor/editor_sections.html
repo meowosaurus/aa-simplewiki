@@ -42,6 +42,8 @@
 
 {% block extra_javascript %}
 {% if user_action == 'edit' %}
+<script src="{% static 'simplewiki/sw_toolbox.js' %}"></script>
+
   <script>
     document.getElementById("indexInput").value = '{{ selectedSection.index|escapejs }}';
     document.getElementById("iconInput").value = '{{ selectedSection.icon|escapejs }}';

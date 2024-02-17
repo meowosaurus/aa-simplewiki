@@ -3,9 +3,11 @@
     <br />
     <br />
     <i class="{{ selectedSection.icon }}"></i> {{ selectedSection.title }}
-  </div>
-  <hr>
-  <form method="post">
+</div>
+  
+<hr>
+
+<form method="post">
     {% csrf_token %}
     <div class="form-group">
       <label for="exampleInputEmail1">Title:</label>
@@ -32,11 +34,127 @@
       <input type="text" class="form-control" name="icon" id="iconInput" placeholder="{{ selectedSection.icon }}">
       <p class="help-block">Optional: Go to <a href="https://fontawesome.com/v5/search?o=r&m=free" target="_blank">https://fontawesome.com/v5/search?o=r&m=free</a> to find matching icons. We only support free icons. Format example: fas fa-hand-spock</p>
     </div>
-    <div class="form-group">
-      <label for="exampleInputPassword1">Content:</label>
-      <textarea class="form-control" name="content" id="contentInput" rows="10">{{ selectedSection.content|safe }}</textarea>
-      <p class="help-block">Optional: This will be displayed as your main content of the section. You can use markdown. Check our <a href="{% url 'simplewiki:editor_markdown_guide' %}" target="_blank">guide</a> for references.</p>
+</form>
+
+<div class="btn-toolbar" role="toolbar">
+    <!-- Headings -->
+    <div class="btn-group" role="group">
+        <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-heading"></i> <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li>
+                    <a type="button" id="makeTextHeader1">
+                        test
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
+    <!-- Alignments -->
+    <div class="btn-group" role="group">
+        <button class="btn btn-default" id="makeTextAlignLeft">
+            <i class="fas fa-align-left"></i>
+        </button>
+        <button class="btn btn-default" id="makeTextAlignCenter">
+            <i class="fas fa-align-center"></i>
+        </button>
+        <button class="btn btn-default" id="makeTextAlignRight">
+            <i class="fas fa-align-right"></i>
+        </button>
+        <button class="btn btn-default" id="makeTextAlignJustify">
+            <i class="fas fa-align-justify"></i>
+        </button>
+    </div>
+    <!-- Text Edits -->
+    <div class="btn-group" role="group">
+        <button class="btn btn-default" id="makeTextBold">
+            <i class="fas fa-bold"></i>
+        </button>
+        <button class="btn btn-default" id="makeTextItalic">
+            <i class="fas fa-italic"></i>
+        </button>
+        <button class="btn btn-default" id="makeTextUnderline">
+            <i class="fas fa-underline"></i>
+        </button>
+        <button class="btn btn-default" id="makeTextStrikethrough">
+            <i class="fas fa-strikethrough"></i>
+        </button>
+    </div>
+    <!-- Numbered and unordered list -->
+    <div class="btn-group" role="group">
+        <button class="btn btn-default" id="">
+            <i class="fas fa-list-ul"></i>
+        </button>
+        <button class="btn btn-default" id="">
+            <i class="fas fa-list-ol"></i>
+        </button>
+    </div>
+    <!-- Code & Spoiler -->
+    <div class="btn-group" role="group">
+        <button class="btn btn-default" id="makeTextQuote">
+            <i class="fas fa-quote-right"></i>
+        </button>
+        <button class="btn btn-default" id="makeCodeBox">
+            <i class="fas fa-code"></i>
+        </button>
+        <button class="btn btn-default" id="">
+            <i class="fas fa-eye-slash"></i>
+        </button>
+        <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-info-circle"></i> <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="#">Alert Success</a></li>
+                <li><a href="#">Alert Info</a></li>
+                <li><a href="#">Alert Warning</a></li>
+                <li><a href="#">Alert Danger</a></li>
+            </ul>
+        </div>
+    </div>
+    <!-- Table, Images, Videos and Google Drive -->
+    <div class="btn-group" role="group">
+        <button class="btn btn-default" id="">
+            <i class="fas fa-minus"></i>
+        </button>
+        <button class="btn btn-default" id="">
+            <i class="fas fa-link"></i>
+        </button>
+    </div> 
+    <div class="btn-group" role="group">
+        <button class="btn btn-default" id="">
+            <i class="fas fa-table"></i>
+        </button>
+        <button class="btn btn-default" id="">
+            <i class="fas fa-image"></i>
+        </button>
+        <button class="btn btn-default" id="">
+            <i class="fas fa-video"></i>
+        </button>
+        <button class="btn btn-default" id="">
+            <i class="fas fa-cloud"></i>
+        </button>
+        <button class="btn btn-default" id="">
+            <i class="fab fa-html5"></i>
+        </button>
+    </div>
+    <div class="btn-group" role="group">
+        <button class="btn btn-default" id="">
+            <i class="fas fa-remove-format"></i>
+        </button>
+    </div>
+</div>
+
+<div id="editable" contenteditable="true" class="form-control" spellcheck="false" style="min-height: 100px;">
+    awdwadawdwa
+</div>
+
+<br/>
+
+<form method="post">
+    {% csrf_token %}
     <button type="submit" name="confirm_edit" value="0" class="btn btn-default">
         <i class="fas fa-times-circle"></i>
         Cancel
@@ -46,5 +164,4 @@
         <i class="fas fa-save"></i>
         Save
     </button>
-    </div>
 </form>
