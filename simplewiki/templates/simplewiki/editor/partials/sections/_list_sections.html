@@ -3,7 +3,7 @@
       <tr>
         <th width="25%">Index</th>
         <th width="25%">Section Title</th>
-        <th width="25%">Menu</th>
+        <th width="25%">Parent Menu</th>
         <th width="25%">Action</th>
       </tr>
     </thead>
@@ -26,7 +26,7 @@
             </td>
             <td class="text-center">
               <form method="GET" action="{% url 'simplewiki:editor_sections' %}">
-                <div class="btn-group-vertical btn-block">
+                <div class="btn-group float-start" role="group" aria-label="Basic example">
                   <button type="submit" name="edit" value="{{ section_item.title }}" class="btn btn-primary btn-sm btn-block">
                     <i class="fas fa-edit"></i>
                     Edit Section
@@ -36,7 +36,6 @@
                     Delete Section
                   </button>
                 </div>
-                
               </form>
             </td>
         </tr>

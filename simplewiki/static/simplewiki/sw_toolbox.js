@@ -182,6 +182,14 @@ function removeTags() {
     }
 }
 
+function test() {
+    var selection = window.getSelection();
+    var range = selection.getRangeAt(0);
+    var strong = document.createElement('strong');
+    range.surroundContents(strong);
+    var div = document.createElement('div');
+    range.surroundContents(div);
+}
 
 // HEADERS
 document.getElementById('makeTextHeading1').addEventListener('click', function() {
@@ -206,28 +214,28 @@ document.getElementById('makeTextHeading4').addEventListener('click', function()
 
 // ALIGN
 document.getElementById('makeTextAlignLeft').addEventListener('click', function() {
-    replaceSelectedTextHtmlSuf(getSelectedText(), 'p class="text-left"', 'p');
+    replaceSelectedTextHtmlSuf(getSelectedText(), 'p class="text-left" style="margin:0px;"', 'p');
     updateHTMLEditor();
 })
 
 document.getElementById('makeTextAlignCenter').addEventListener('click', function() {
-    replaceSelectedTextHtmlSuf(getSelectedText(), 'p class="text-center"', 'p');
+    replaceSelectedTextHtmlSuf(getSelectedText(), 'p class="text-center" style="margin:0px;"', 'p');
     updateHTMLEditor();
 })
 
 document.getElementById('makeTextAlignRight').addEventListener('click', function() {
-    replaceSelectedTextHtmlSuf(getSelectedText(), 'p class="text-right"', 'p');
+    replaceSelectedTextHtmlSuf(getSelectedText(), 'p class="text-right" style="margin:0px;"', 'p');
     updateHTMLEditor();
 })
 
 document.getElementById('makeTextAlignJustify').addEventListener('click', function() {
-    replaceSelectedTextHtmlSuf(getSelectedText(), 'p class="text-justify"', 'p');
+    replaceSelectedTextHtmlSuf(getSelectedText(), 'p class="text-justify" style="margin:0px;"', 'p');
     updateHTMLEditor();
 })
 
 // TEXT
 document.getElementById('makeTextBold').addEventListener('click', function() {
-    replaceSelectedTextHtml(getSelectedText(), 'b');
+    test();
     updateHTMLEditor();
 })
 

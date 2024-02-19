@@ -6,41 +6,40 @@
 {% load custom_filters %}
 
 {% block details %}
-<form method="GET" action="{% url 'simplewiki:search' %}">
-    <div class="input-group">
-      <input type="text" class="form-control" type="search" name="query" placeholder="Search.." id="searchInput" style="width: 100%;">
-      <span class="input-group-btn">
-        <button class="btn btn-success" type="submit">
-          <i class="fas fa-search"></i>
-          Go!
-          </button>
-      </span>
-    </div>
-  </form>
-    <br />
-    {% for item in available_results %}
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <div class="panel-title">
-                <i class="{{ item.icon }}"></i>
-                <a href="{% url 'simplewiki:dynamic_menu' menu_path=item.menu.path %}">
-                    {{ item.title }}
-                </a>
+<div class="container-fluid" style="margin-top: 1rem;">
+    <form method="GET" action="{% url 'simplewiki:search' %}" class="d-flex">
+        <div class="input-group">
+            <input type="text" class="form-control form-control-lg me-2" type="search" name="query" placeholder="Search.." id="searchInput">
+            <button class="btn btn-success" type="submit">
+                <i class="fas fa-search"></i>
+                Go!
+            </button>
+        </div>
+      </form>
+        <br />
+        {% for item in available_results %}
+        <div class="card card-primary" style="margin-bottom: 1rem;">
+            <div class="card-header">
+                    <i class="{{ item.icon }}"></i>
+                    <a href="{% url 'simplewiki:dynamic_menu' menu_path=item.menu.path %}" style="text-decoration: none; color: white;">
+                        {{ item.title }}
+                    </a>
+            </div>
+            <div class="card-body">
+                <p>
+                    {{ item.content|markdown|safe }}
+                </p>
             </div>
         </div>
-        <div class="panel-body">
-            <p>
-                {{ item.content|markdown|safe }}
-            </p>
-        </div>
-    </div>
-    {% empty %}
-        {% if oldQuery %}
-            <div class="alert alert-warning" role="alert">
-                Nothing found for "<b>{{ oldQuery }}</b>"
-            </div>
-        {% endif %}
-    {% endfor %}
+        {% empty %}
+            {% if oldQuery %}
+                <div class="alert alert-warning" role="alert">
+                    Nothing found for "<b>{{ oldQuery }}</b>"
+                </div>
+            {% endif %}
+        {% endfor %}
+</div>
+
 {% endblock %}
 
 {% block extra_javascript %}

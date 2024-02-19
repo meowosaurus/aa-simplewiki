@@ -8,13 +8,13 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 install_requires = [
     'mistune>=3.0.1',
-    'allianceauth',
+    'allianceauth>=4.0.0b1',
     'allianceauth-app-utils',
 ]
 
 setup(
     name='aa-simplewiki',
-    version='1.1.3',
+    version='1.2.0',
     packages=find_packages(),
     include_package_data=True,
     exclude_package_data={'': ['images']},

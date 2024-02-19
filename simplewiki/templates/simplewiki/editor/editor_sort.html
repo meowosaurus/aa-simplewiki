@@ -12,18 +12,18 @@
     Unable to save menu!
 </div>  
 
-<div class="panel panel-primary">
-    <div class="panel-heading">
-      <div class="panel-title">
+<div class="card card-primary">
+    <div class="card-header">
+      <div class="card-title">
         <div class="text-center">
           {% translate "Menu Layout Administration" %}  
         </div>
       </div>
     </div>
 
-    <div class="panel-body">
+    <div class="card-body">
         <div class="dd" id="editmenus" style="padding-bottom: 1rem;">
-        <ol class="dd-list">
+        <ol class="dd-list list-group">
             {% for menu_item in menu_items %}
                 {% if not menu_item.parent %}
                 <li class="dd-item list-group-item" data-id="{{ menu_item.title }}">
@@ -54,15 +54,17 @@
 
 </div>
 
-<button type="submit" name="confirm_create" value="0" class="btn btn-default">
+<div style="margin-top: 1rem;">
+<button type="submit" name="confirm_create" value="0" class="btn btn-danger">
     <i class="fas fa-times-circle"></i>
     Cancel
 </button>
-<div class="pull-right">
+<div class="float-end">
   <button type="submit" name="confirm_save" id="confirm_save" value="1" class="btn btn-success">
     <i class="fas fa-save"></i>
     Save
 </button>
+</div>
 </div>
 {% endblock %}
 
