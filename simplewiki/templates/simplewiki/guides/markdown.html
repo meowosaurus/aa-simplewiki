@@ -11,67 +11,86 @@
 
 <div>
 
-    <!-- Nav tabs -->
-    <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a href="#heading" aria-controls="heading" role="tab" data-toggle="tab">
-            Headings
-        </a></li>
-        <li role="presentation"><a href="#text" aria-controls="text" role="tab" data-toggle="tab">
-            Texts
-        </a></li>
-        <li role="presentation"><a href="#list" aria-controls="list" role="tab" data-toggle="tab">
-            Lists
-        </a></li>
-        <li role="presentation"><a href="#block" aria-controls="block" role="tab" data-toggle="tab">
-            Blocks
-        </a></li>
-        <li role="presentation"><a href="#image" aria-controls="image" role="tab" data-toggle="tab">
-            Images
-        </a></li>
-        <li role="presentation"><a href="#video" aria-controls="video" role="tab" data-toggle="tab">
-            Videos
-        </a></li>
-        <li role="presentation"><a href="#table" aria-controls="table" role="tab" data-toggle="tab">
-            Tables
-        </a></li>
-        <li role="presentation"><a href="#alert" aria-controls="alert" role="tab" data-toggle="tab">
-            Alerts
-        </a></li>
-        <li role="presentation"><a href="#gdrive" aria-controls="gdrive" role="tab" data-toggle="tab">
-            Google Drive
-        </a></li>
+    <!-- TABS -->
+    <ul class="nav nav-tabs nav-fill" id="pills-tab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#heading" type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+                Headings
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#text" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">
+                Texts
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#block" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">
+                Blocks
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#list" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">
+                Lists
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#image" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">
+                Images
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#video" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">
+                Videos
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#table" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">
+                Table
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#alert" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">
+                Alerts
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#gdrive" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">
+                Google Cloud
+            </button>
+        </li>
     </ul>
-  
-    <!-- Tab panes -->
-    <div class="tab-content">
-        <div role="tabpanel" class="tab-pane active" id="heading">
+    
+    <!-- CONTENT -->
+    <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="heading" role="tabpanel" aria-labelledby="pills-home-tab">
             {% include 'simplewiki/guides/partials/_markdown_heading.html' %}
         </div>
-        <div role="tabpanel" class="tab-pane" id="text">
+        <div class="tab-pane fade" id="text" role="tabpanel" aria-labelledby="pills-profile-tab">
             {% include 'simplewiki/guides/partials/_markdown_text.html' %}
         </div>
-        <div role="tabpanel" class="tab-pane" id="list">
-            {% include 'simplewiki/guides/partials/_markdown_list.html' %}
-        </div>
-        <div role="tabpanel" class="tab-pane" id="block">
+        <div class="tab-pane fade" id="block" role="tabpanel" aria-labelledby="pills-contact-tab">
             {% include 'simplewiki/guides/partials/_markdown_block.html' %}
         </div>
-        <div role="tabpanel" class="tab-pane" id="image">
+        <div class="tab-pane fade" id="list" role="tabpanel" aria-labelledby="pills-contact-tab">
+            {% include 'simplewiki/guides/partials/_markdown_list.html' %}
+        </div>
+        <div class="tab-pane fade" id="image" role="tabpanel" aria-labelledby="pills-contact-tab">
             {% include 'simplewiki/guides/partials/_markdown_image.html' %}
         </div>
-        <div role="tabpanel" class="tab-pane" id="video">
+        <div class="tab-pane fade" id="video" role="tabpanel" aria-labelledby="pills-contact-tab">
             {% include 'simplewiki/guides/partials/_markdown_video.html' %}
         </div>
-        <div role="tabpanel" class="tab-pane" id="table">
+        <div class="tab-pane fade" id="table" role="tabpanel" aria-labelledby="pills-contact-tab">
             {% include 'simplewiki/guides/partials/_markdown_table.html' %}
         </div>
-        <div role="tabpanel" class="tab-pane" id="alert">
+        <div class="tab-pane fade" id="alert" role="tabpanel" aria-labelledby="pills-contact-tab">
             {% include 'simplewiki/guides/partials/_markdown_alert.html' %}
         </div>
-        <div role="tabpanel" class="tab-pane" id="gdrive">
+        <div class="tab-pane fade" id="gdrive" role="tabpanel" aria-labelledby="pills-contact-tab">
             {% include 'simplewiki/guides/partials/_markdown_gdrive.html' %}
         </div>
     </div>
+      
   
 </div>
 {% endblock %}
