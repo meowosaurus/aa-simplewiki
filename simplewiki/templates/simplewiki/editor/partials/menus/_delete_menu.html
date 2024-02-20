@@ -5,17 +5,19 @@
       <br />
       <i class="{{ selectedMenu.icon }}"></i> {{ selectedMenu.title }}
     </div>
+
+
     <form method="post">
       {% csrf_token %}
-      <button type="submit" name="confirm_delete" value="0" class="btn btn-default">
+      <button type="submit" name="confirm_delete" value="0" class="btn btn-success">
         <i class="fas fa-times-circle"></i>
         Cancel
     </button>
-      <div class="pull-right">
+      <div class="float-end">
         <button type="submit" name="confirm_delete" value="1" class="btn btn-danger">
             <i class="fas fa-trash-alt"></i>
             Delete
         </button>
       </div>
-    </form>  
-</div>
+    </form>
+  </div>

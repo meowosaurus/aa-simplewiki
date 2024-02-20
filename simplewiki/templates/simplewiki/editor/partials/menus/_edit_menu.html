@@ -1,3 +1,16 @@
+<div class="card-body">
+  <div class="text-center h4">
+    Edit menu 
+    <br />
+    <br />
+    <i class="{{ selectedMenu.icon }}"></i> {{ selectedMenu.title }}
+  </div>
+  <hr>
+  <div class="text-center">
+    Leave text-fields blank if you don't want any changes.
+  </div>
+  <form method="post" id="my_form">
+    {% csrf_token %}  
   <div class="form-group">
     <label for="exampleInputPassword1">Title:</label>
     <input type="text" class="form-control" name="title" id="titleInput" placeholder="{{ selectedMenu.title }}">
@@ -42,13 +55,15 @@
     </select>
     <p class="help-block">Optional: Select the groups who are able to access this menu. You can select multiple.</p>
   </div>
-  <button type="submit" name="confirm_edit" value="0" class="btn btn-default">
+  <button type="submit" name="confirm_edit" value="0" class="btn btn-danger">
     <i class="fas fa-times-circle"></i>
     Cancel
   </button>
-  <div class="pull-right">
+  <div class="float-end">
     <button type="submit" name="confirm_edit" value="1" class="btn btn-success">
       <i class="fas fa-save"></i>
       Save
     </button>
+</div>
+</form>
 </div>

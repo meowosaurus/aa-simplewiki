@@ -1,3 +1,10 @@
+<div class="card-body">
+  <div class="text-center h4">
+    Create a new menu <i class="fas fa-thumbs-up"></i>
+  </div>
+  <hr>
+  <form method="post" id="my_form">
+    {% csrf_token %}  
   <div class="form-group">
     <label for="exampleInputPassword1">Title:</label>
     <input type="text" class="form-control" name="title" placeholder="For example: Moon Mining Policies" required>
@@ -42,13 +49,15 @@
     </select>
     <p class="help-block">Optional: Select the states who are able to access this menu. You can select multiple.</p>
   </div>
-  <button type="submit" name="confirm_create" value="0" class="btn btn-default">
+  <button type="submit" name="confirm_create" value="0" class="btn btn-danger">
     <i class="fas fa-times-circle"></i>
     Cancel
   </button>
-  <div class="pull-right">
+  <div class="float-end">
     <button type="submit" name="confirm_create" value="1" class="btn btn-success">
       <i class="fas fa-plus-square"></i>
       Create
     </button>
   </div>
+</form>
+</div>

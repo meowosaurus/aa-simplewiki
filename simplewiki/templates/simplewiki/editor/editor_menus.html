@@ -26,114 +26,13 @@
         </div>
 
         {% if user_action == 'none' %}
-        <div class="card-body">
-            <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th width="17%">Menu Title</th>
-                    <th width="17%">URL</th>
-                    <th width="17%">Parent Menu</th>
-                    <th width="17%">Groups</th>
-                    <th width="16%">States</th>
-                    <th width="16%">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for menu_item in menu_items %}
-                    <tr>
-                      <td>
-                        <i class="{{ menu_item.icon }}"></i>
-                        {{ menu_item.title }}
-                      </td>
-                      <td>
-                        <a href="{% url 'simplewiki:dynamic_menu' menu_path=menu_item.path %}">
-                          {% url 'simplewiki:dynamic_menu' menu_path=menu_item.path %}
-                        </a>
-                      </td>
-                      <td>
-                        {% if not menu_item.parent %}
-                          None
-                        {% else %}
-                          <a href="{% url 'simplewiki:dynamic_menu' menu_path=menu_item.parent.path %}">
-                            {{ menu_item.parent }}
-                          </a>
-                        {% endif %}
-                      </td>
-                      <td>
-                        {% if menu_item.groups %}
-                          {{ menu_item.groups|add_group_space }}
-                        {% else %}
-                          None
-                        {% endif %}
-                      </td>
-                      <td>
-                        {% if menu_item.states %}
-                          {{ menu_item.states|add_group_space }}
-                        {% else %}
-                          None
-                        {% endif %}
-                      </td>
-                      <td>
-                        <form method="GET" action="{% url 'simplewiki:editor_menus' %}">
-                          <div class="btn-group float-start" role="group" aria-label="Basic example">
-                            <button type="submit" name="edit" value="{{ menu_item.path }}" class="btn btn-primary btn-sm btn-block">
-                              <i class="fas fa-edit"></i>
-                              Edit Menu
-                            </button>
-                            <button type="submit" name="delete" value="{{ menu_item.path }}" class="btn btn-danger btn-sm btn-block">
-                              <i class="fas fa-trash-alt"></i>
-                              Delete Menu
-                            </button>
-                          </div>
-                          <!--
-                          <div class="btn-group-vertical btn-block">
-                            <button type="submit" name="edit" value="{{ menu_item.path }}" class="btn btn-primary btn-sm btn-block">
-                              <i class="fas fa-edit"></i>
-                              Edit Menu
-                            </button>
-                            <button type="submit" name="delete" value="{{ menu_item.path }}" class="btn btn-danger btn-sm btn-block">
-                              <i class="fas fa-trash-alt"></i>
-                              Delete Menu
-                            </button>
-                          </div>
-                        -->
-                      </form>
-                      </td>
-                    </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-        </div>
+          {% include 'simplewiki/editor/partials/menus/_list_menus.html' %}
         {% elif user_action == 'edit' %}
-        <div class="card-body">
-          <div class="text-center h4">
-            Edit menu 
-            <br />
-            <br />
-            <i class="{{ selectedMenu.icon }}"></i> {{ selectedMenu.title }}
-          </div>
-          <hr>
-          <div class="text-center">
-            Leave text-fields blank if you don't want any changes.
-          </div>
-          <form method="post" id="my_form">
-            {% csrf_token %}
-            {% include 'simplewiki/editor/partials/menus/_edit_menu.html' %}
-          </form>
-        </div>
+          {% include 'simplewiki/editor/partials/menus/_edit_menu.html' %}
         {% elif user_action == 'delete' %}
-        {% include 'simplewiki/editor/partials/menus/_delete_menu.html' %}
+          {% include 'simplewiki/editor/partials/menus/_delete_menu.html' %}
         {% elif user_action == 'create' %}
-        <div class="card-body">
-          <div class="text-center h4">
-            Create a new menu <i class="fas fa-thumbs-up"></i>
-          </div>
-          <hr>
-          <form method="post" id="my_form">
-            {% csrf_token %}
-            {% include 'simplewiki/editor/partials/menus/_create_menu.html' %}
-          </form>
-        </div>
+          {% include 'simplewiki/editor/partials/menus/_create_menu.html' %}
         {% endif %}
     </div>
 {% endblock %}
