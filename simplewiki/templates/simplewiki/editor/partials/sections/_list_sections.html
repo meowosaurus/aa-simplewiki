@@ -17,7 +17,8 @@
             </td>
             <td>
               {% if section_item.menu %}
-              <a href="{% url 'simplewiki:dynamic_menu' menu_path=section_item.menu.path %}">
+              <a href="{% url 'simplewiki:dynamic_menu' menu_path=section_item.menu.path %}" style="text-decoration: none;">
+                <i class="{{ section_item.menu.icon }}"></i>
                 {{ section_item.menu.title }}
               </a>
               {% else %}
@@ -26,7 +27,7 @@
             </td>
             <td class="text-center">
               <form method="GET" action="{% url 'simplewiki:editor_sections' %}">
-                <div class="btn-group-vertical btn-block">
+                <div class="d-grid gap-2">
                   <button type="submit" name="edit" value="{{ section_item.title }}" class="btn btn-primary btn-sm btn-block">
                     <i class="fas fa-edit"></i>
                     Edit Section

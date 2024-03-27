@@ -7,28 +7,26 @@
 
 {% block details %}
 <form method="GET" action="{% url 'simplewiki:search' %}">
-    <div class="input-group">
-      <input type="text" class="form-control" type="search" name="query" placeholder="Search.." id="searchInput" style="width: 100%;">
-      <span class="input-group-btn">
+    <div class="input-group mb-3">
+      <input type="text" class="form-control" type="search" name="query" placeholder="Search.." id="searchInput">
         <button class="btn btn-success" type="submit">
-          <i class="fas fa-search"></i>
-          Go!
-          </button>
-      </span>
+            <i class="fas fa-search"></i>
+            Go!
+        </button>
     </div>
   </form>
     <br />
     {% for item in available_results %}
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <div class="panel-title">
+    <div class="card card-primary" style="margin-bottom: 1rem;">
+        <div class="card-header">
+            <div class="card-title">
                 <i class="{{ item.icon }}"></i>
-                <a href="{% url 'simplewiki:dynamic_menu' menu_path=item.menu.path %}">
+                <a href="{% url 'simplewiki:dynamic_menu' menu_path=item.menu.path %}" style="text-decoration: none;">
                     {{ item.title }}
                 </a>
             </div>
         </div>
-        <div class="panel-body">
+        <div class="card-body">
             <p>
                 {{ item.content|markdown|safe }}
             </p>

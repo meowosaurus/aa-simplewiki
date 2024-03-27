@@ -53,19 +53,14 @@ A simple wiki plugin for alliance auth. It supports multiple pages with differen
 * [Meowosaurus](https://github.com/meowosaurus)
 
 ## Screenshots
-![Showcase](https://i.postimg.cc/BQc3hPYb/vmplayer-Kvz8-DNZa-M0.gif)
-
-### Search
-![Search](https://i.imgur.com/wW69LFN.png)
+![Showcase](https://github.com/meowosaurus/aa-simplewiki/blob/master/images/main.png)
 
 ### Admin Panel
-![Menu Admin](https://github.com/meowosaurus/aa-simplewiki/blob/master/images/menu_admin_panel.png)
+![Menu Admin](https://github.com/meowosaurus/aa-simplewiki/blob/master/images/menu_admin.png)
 
-![Menu Edit](https://github.com/meowosaurus/aa-simplewiki/blob/master/images/menu_admin_panel_edit.png)
+![Menu Edit](https://github.com/meowosaurus/aa-simplewiki/blob/master/images/section_admin.png)
 
-![Menu Sorting](https://github.com/meowosaurus/aa-simplewiki/blob/master/images/menu_sorting.gif)
-
-![Section Edit](https://i.imgur.com/3LrysW7.png)
+![Menu Sorting](https://github.com/meowosaurus/aa-simplewiki/blob/master/images/layout_admin.gif)
 
 ## Installation
 

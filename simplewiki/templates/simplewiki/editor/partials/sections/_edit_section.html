@@ -37,14 +37,30 @@
       <textarea class="form-control" name="content" id="contentInput" rows="10">{{ selectedSection.content|safe }}</textarea>
       <p class="help-block">Optional: This will be displayed as your main content of the section. You can use markdown. Check our <a href="{% url 'simplewiki:editor_markdown_guide' %}" target="_blank">guide</a> for references.</p>
     </div>
+    <div class="row">
+      <div class="col d-grid">
+        <button type="submit" name="confirm_edit" value="0" class="btn btn-primary">
+          <i class="fas fa-times-circle"></i>
+          Cancel
+        </button>
+      </div>
+      <div class="col d-grid">
+        <button type="submit" name="confirm_edit" value="1" class="btn btn-success">
+          <i class="fas fa-times-circle"></i>
+          Submit
+        </button>
+      </div>
+    </div>
+    <!--
+    <div class="d-md-block">
     <button type="submit" name="confirm_edit" value="0" class="btn btn-default">
         <i class="fas fa-times-circle"></i>
         Cancel
     </button>
-    <div class="pull-right">
-      <button type="submit" name="confirm_edit" value="1" class="btn btn-success">
+    <button type="submit" name="confirm_edit" value="1" class="btn btn-success">
         <i class="fas fa-save"></i>
         Save
     </button>
     </div>
+  -->
 </form>

@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Released
 
+## [2.0.0]
+New features:
+- Support for Alliance Auth 4.0
+
+Important:
+- This update is no longer compatible with Alliance Auth 3.x
+
 ## [1.1.3]
 New features:
 - Added a page contents view to every wiki page

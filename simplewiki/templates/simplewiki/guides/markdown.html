@@ -12,63 +12,81 @@
 <div>
 
     <!-- Nav tabs -->
-    <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a href="#heading" aria-controls="heading" role="tab" data-toggle="tab">
-            Headings
-        </a></li>
-        <li role="presentation"><a href="#text" aria-controls="text" role="tab" data-toggle="tab">
-            Texts
-        </a></li>
-        <li role="presentation"><a href="#list" aria-controls="list" role="tab" data-toggle="tab">
-            Lists
-        </a></li>
-        <li role="presentation"><a href="#block" aria-controls="block" role="tab" data-toggle="tab">
-            Blocks
-        </a></li>
-        <li role="presentation"><a href="#image" aria-controls="image" role="tab" data-toggle="tab">
-            Images
-        </a></li>
-        <li role="presentation"><a href="#video" aria-controls="video" role="tab" data-toggle="tab">
-            Videos
-        </a></li>
-        <li role="presentation"><a href="#table" aria-controls="table" role="tab" data-toggle="tab">
-            Tables
-        </a></li>
-        <li role="presentation"><a href="#alert" aria-controls="alert" role="tab" data-toggle="tab">
-            Alerts
-        </a></li>
-        <li role="presentation"><a href="#gdrive" aria-controls="gdrive" role="tab" data-toggle="tab">
-            Google Drive
-        </a></li>
+    <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#headings" type="button" role="tab" aria-controls="home" aria-selected="true">
+                Headings
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="home-tab" data-bs-toggle="tab" data-bs-target="#texts" type="button" role="tab" aria-controls="home" aria-selected="true">
+                Texts
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="home-tab" data-bs-toggle="tab" data-bs-target="#lists" type="button" role="tab" aria-controls="home" aria-selected="true">
+                Lists
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="home-tab" data-bs-toggle="tab" data-bs-target="#blocks" type="button" role="tab" aria-controls="home" aria-selected="true">
+                Blocks
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="home-tab" data-bs-toggle="tab" data-bs-target="#images" type="button" role="tab" aria-controls="home" aria-selected="true">
+                Images
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="home-tab" data-bs-toggle="tab" data-bs-target="#videos" type="button" role="tab" aria-controls="home" aria-selected="true">
+                Videos
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="home-tab" data-bs-toggle="tab" data-bs-target="#tables" type="button" role="tab" aria-controls="home" aria-selected="true">
+                Tables
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="home-tab" data-bs-toggle="tab" data-bs-target="#alerts" type="button" role="tab" aria-controls="home" aria-selected="true">
+                Alerts
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="home-tab" data-bs-toggle="tab" data-bs-target="#gdrive" type="button" role="tab" aria-controls="home" aria-selected="true">
+                Google Drive
+            </button>
+        </li>
     </ul>
-  
+    
     <!-- Tab panes -->
-    <div class="tab-content">
-        <div role="tabpanel" class="tab-pane active" id="heading">
-            {% include 'simplewiki/guides/partials/_markdown_heading.html' %}
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="headings" role="tabpanel">
+            {% include 'simplewiki/guides/partials/_markdown_headings.html' %}
         </div>
-        <div role="tabpanel" class="tab-pane" id="text">
-            {% include 'simplewiki/guides/partials/_markdown_text.html' %}
+        <div class="tab-pane fade show" id="texts" role="tabpanel">
+            {% include 'simplewiki/guides/partials/_markdown_texts.html' %}
         </div>
-        <div role="tabpanel" class="tab-pane" id="list">
-            {% include 'simplewiki/guides/partials/_markdown_list.html' %}
+        <div class="tab-pane fade show" id="lists" role="tabpanel">
+            {% include 'simplewiki/guides/partials/_markdown_lists.html' %}
         </div>
-        <div role="tabpanel" class="tab-pane" id="block">
-            {% include 'simplewiki/guides/partials/_markdown_block.html' %}
+        <div class="tab-pane fade show" id="blocks" role="tabpanel">
+            {% include 'simplewiki/guides/partials/_markdown_blocks.html' %}
         </div>
-        <div role="tabpanel" class="tab-pane" id="image">
-            {% include 'simplewiki/guides/partials/_markdown_image.html' %}
+        <div class="tab-pane fade show" id="images" role="tabpanel">
+            {% include 'simplewiki/guides/partials/_markdown_images.html' %}
         </div>
-        <div role="tabpanel" class="tab-pane" id="video">
-            {% include 'simplewiki/guides/partials/_markdown_video.html' %}
+        <div class="tab-pane fade show" id="videos" role="tabpanel">
+            {% include 'simplewiki/guides/partials/_markdown_videos.html' %}
         </div>
-        <div role="tabpanel" class="tab-pane" id="table">
-            {% include 'simplewiki/guides/partials/_markdown_table.html' %}
+        <div class="tab-pane fade show" id="tables" role="tabpanel">
+            {% include 'simplewiki/guides/partials/_markdown_tables.html' %}
         </div>
-        <div role="tabpanel" class="tab-pane" id="alert">
-            {% include 'simplewiki/guides/partials/_markdown_alert.html' %}
+        <div class="tab-pane fade show" id="alerts" role="tabpanel">
+            {% include 'simplewiki/guides/partials/_markdown_alerts.html' %}
         </div>
-        <div role="tabpanel" class="tab-pane" id="gdrive">
+        <div class="tab-pane fade show" id="gdrive" role="tabpanel">
             {% include 'simplewiki/guides/partials/_markdown_gdrive.html' %}
         </div>
     </div>
