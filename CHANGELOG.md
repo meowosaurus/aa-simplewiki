@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Released
 
+## [2.0.3]
+Fixed bugs:
+- Fixed an internal error bug
+
 ## [2.0.2]
 Fixed bugs:
 - Fixed a bug that threw a no context error
