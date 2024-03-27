@@ -1,4 +1,4 @@
-{% extends 'allianceauth/base.html' %}
+{% extends 'allianceauth/base-bs5.html' %}
 
 {% load i18n %}
 {% load static %}
@@ -7,124 +7,96 @@
 
 {% block page_title %}Wiki{% endblock %}
 
-{% block content %}
-<div class="" style="padding-top: 2rem;">
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-            </div>
-    
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                    {% for item in navbar %}
-                        {% if item.submenus %}
-                        {% with submenu_paths=item.path|get_submenu_paths %}
-                        <li class="dropdown {% if current_path|any_paths_current:submenu_paths %}active{% endif %}">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                {% if item.icon|length > 0 %}
-                                    <i class="{{ item.icon }}" style="display: inline-block;"></i>
-                                {% endif %}
-                                {{ item.title }}
-                                <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                {% for submenu in item.submenus %}
-                                <li class="{% if submenu.path in current_path %}active{% endif %}">
-                                    <a href="{% url 'simplewiki:dynamic_menu' menu_path=submenu.path %}">
-                                        {% if item.icon|length > 0 %}
-                                            <i class="{{ submenu.icon }}" style="display: inline-block;"></i>
-                                        {% endif %}
-                                        {{ submenu.title }}
-                                    </a>
-                                </li>
-                                {% endfor %}
-                            </ul>
-                        </li>
-                        {% endwith %}
-                        {% else %}
-                        <li class="nav-item {% if item.path in current_path %}active{% endif %}">
-                            <a class="nav-link" href="{% url 'simplewiki:dynamic_menu' menu_path=item.path %}">
-                                {% if item.icon|length > 0 %}
-                                    <i class="{{ item.icon }}" style="display: inline-block;"></i>
-                                {% endif %}
-                                {{ item.title }}
-                            </a>
-                        </li>
+{% block header_nav_collapse_right %}
+<li class="nav-item">
+    <a class="{% if current_path == '/wiki/search/' %}active{% endif %} nav-link" href="{% url 'simplewiki:search' %}">
+        <i class="fas fa-search"></i>
+        Search
+    </a>
+</li>
+{% if is_editor is True %}
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle {% if '/wiki/editor/' in current_path or '/wiki/guides/' in current_path %}active{% endif %}" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fas fa-user-cog"></i>
+        Editor
+        <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <li>
+            <a class="dropdown-item {% navactive request 'simplewiki:editor_menus' %}" href="{% url 'simplewiki:editor_menus' %}">
+                Edit Menus
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item {% navactive request 'simplewiki:editor_sections' %}" href="{% url 'simplewiki:editor_sections' %}">
+                Edit Sections
+            </a>
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li>
+            <a class="dropdown-item {% navactive request 'simplewiki:editor_sort' %}" href="{% url 'simplewiki:editor_sort' %}">
+                Edit Menu Layout
+            </a>
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li>
+            <a class="dropdown-item" target="_blank" href="https://github.com/meowosaurus/aa-simplewiki/wiki">
+                Documentation
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item {% navactive request 'simplewiki:editor_markdown_guide' %}" target="_blank" href="{% url 'simplewiki:editor_markdown_guide' %}">
+                Markdown Guide
+            </a>
+        </li>
+    </ul>
+</li>
+{% endif %}
+{% endblock header_nav_collapse_right %}
+
+{% block header_nav_collapse_left %}
+{% for item in navbar %}
+    {% if item.submenus %}
+        {% with submenu_paths=item.path|get_submenu_paths %}
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle {% if current_path|any_paths_current:submenu_paths %}active{% endif %}" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {% if item.icon|length > 0 %}
+                    <i class="{{ item.icon }}" style="display: inline-block;"></i>
+                {% endif %}
+                {{ item.title }}
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                {% for submenu in item.submenus %}
+                <li>
+                    <a class="{% if submenu.path in current_path %}active{% endif %} dropdown-item" href="{% url 'simplewiki:dynamic_menu' menu_path=submenu.path %}">
+                        {% if item.icon|length > 0 %}
+                        <i class="{{ submenu.icon }}" style="display: inline-block;"></i>
                         {% endif %}
-                    {% endfor %}
-                </ul>
+                        {{ submenu.title }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% endwith %}
+    {% else %}
+    <li class="nav-item">
+        <a class="nav-link {% if item.path in current_path %}active{% endif %}" aria-current="page" href="{% url 'simplewiki:dynamic_menu' menu_path=item.path %}">
+            {% if item.icon|length > 0 %}
+                <i class="{{ item.icon }}" style="display: inline-block;"></i>
+            {% endif %}
+            {{ item.title }}
+        </a>
+    </li>
+    {% endif %}
+{% endfor %}
+{% endblock header_nav_collapse_left %}
 
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="{% if current_path == '/wiki/search/' %}active{% endif %}">
-                        <a href="{% url 'simplewiki:search' %}">
-                            <i class="fas fa-search"></i>
-                            Search
-                        </a>
-                    </li>
-                    {% if is_editor is True %}
-                        <li class="dropdown {% if '/wiki/editor/' in current_path or '/wiki/guides/' in current_path %}active{% endif %}">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-user-cog"></i>
-                                Editor 
-                                <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li class="{% navactive request 'simplewiki:editor_menus' %}">
-                                    <a href="{% url 'simplewiki:editor_menus' %}">
-                                        <i class="fas fa-folder-open"></i>
-                                        Edit Menus
-                                    </a>
-                                </li>
-                                <li class="{% navactive request 'simplewiki:editor_sections' %}">
-                                    <a href="{% url 'simplewiki:editor_sections' %}">
-                                        <i class="fas fa-pen"></i>
-                                        Edit Sections
-                                    </a>
-                                </li>
-                                <li role="separator" class="divider"></li>
-                                <li class="{% navactive request 'simplewiki:editor_sort' %}">
-                                    <a href="{% url 'simplewiki:editor_sort' %}">
-                                        <i class="fas fa-stream"></i>
-                                        Edit Menu Layout
-                                    </a>
-                                </li>
-                                {% if False %}
-                                <li class="{% navactive request 'simplewiki:editor_sort' %}">
-                                    <a href="{% url 'simplewiki:editor_sort' %}">
-                                        <i class="fas fa-list-ol"></i>
-                                        Edit Section Layout
-                                    </a>
-                                </li>
-                                {% endif %}
-                                <li role="separator" class="divider"></li>
-                                <li>
-                                    <a target="_blank" href="https://github.com/meowosaurus/aa-simplewiki/wiki">
-                                        <i class="fas fa-question-circle"></i>
-                                        Documentation
-                                    </a>
-                                </li>
-                                <li class="{% navactive request 'simplewiki:editor_markdown_guide' %}">
-                                    <a target="_blank" href="{% url 'simplewiki:editor_markdown_guide' %}">
-                                        <i class="fas fa-book-reader"></i>
-                                        Markdown Guide
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                    {% endif %}
-                  </ul>
-            </div>
-        </div>
-    </nav>
+{% block content %}
 
-    {% block details %}{% endblock %}
-</div>
+{% block details %}{% endblock %}
+
 {% endblock %}
 
 {% block extra_css %}
@@ -134,4 +106,3 @@
     }
 </style>
 {% endblock %}
-

@@ -17,16 +17,16 @@
   </div>    
 {% endif %}
 
-    <div class="panel panel-primary">
-      <div class="panel-heading">
-        <div class="panel-title">
+    <div class="card card-primary">
+      <div class="card-header">
+        <div class="card-title">
           <div class="text-center">
             {% translate "Section Administration" %}  
           </div>
         </div>
       </div>
 
-      <div class="panel-body">
+      <div class="card-body">
       {% if user_action == 'none' %}
       {% include 'simplewiki/editor/partials/sections/_list_sections.html' %}
       {% elif user_action == 'create' %}
