@@ -45,7 +45,7 @@ def index(request: WSGIRequest) -> HttpResponse:
         HttpResponse: Returns the template and context to render
     """
 
-    #context = gen_context(request)
+    context = gen_context(request)
 
     # Only get parent menus
     menus = Menu.objects.filter(parent=None).order_by("index")
