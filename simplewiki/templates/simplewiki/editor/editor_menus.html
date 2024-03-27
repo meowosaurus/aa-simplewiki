@@ -6,25 +6,21 @@
 
 {% block details %}
 {% if user_action == 'none' %}
-    <div class="container-fluid">
-      <span class="" style="margin-bottom: 1rem;">
+    <div class="container-fluid" style="margin-bottom: 1rem;">
         <form method="GET" action="{% url 'simplewiki:editor_menus' %}">
           <button type="submit" name="create" value="1" class="btn btn-success btn-sm">
             <i class="fas fa-plus-square"></i>
             Create new menu
           </button>
         </form>
-      </span>
     </div>
               
     {% endif %}
     <div class="card card-primary">
         <div class="card-header">
-            <div class="card-title">
               <div class="text-center">
-                {% translate "Menu Administration" %}
+                Menu Administration
               </div>
-            </div>
         </div>
 
         {% if user_action == 'none' %}
@@ -48,7 +44,7 @@
                         {{ menu_item.title }}
                       </td>
                       <td>
-                        <a href="{% url 'simplewiki:dynamic_menu' menu_path=menu_item.path %}">
+                        <a href="{% url 'simplewiki:dynamic_menu' menu_path=menu_item.path %}" style="text-decoration: none;">
                           {% url 'simplewiki:dynamic_menu' menu_path=menu_item.path %}
                         </a>
                       </td>
@@ -56,7 +52,8 @@
                         {% if not menu_item.parent %}
                           None
                         {% else %}
-                          <a href="{% url 'simplewiki:dynamic_menu' menu_path=menu_item.parent.path %}">
+                          <a href="{% url 'simplewiki:dynamic_menu' menu_path=menu_item.parent.path %}" style="text-decoration: none;">
+                            <i class="{{ menu_item.parent.icon }}"></i>
                             {{ menu_item.parent }}
                           </a>
                         {% endif %}
@@ -77,7 +74,7 @@
                       </td>
                       <td>
                         <form method="GET" action="{% url 'simplewiki:editor_menus' %}">
-                          <div class="btn-group-vertical btn-block">
+                          <div class="d-grid gap-2">
                             <button type="submit" name="edit" value="{{ menu_item.path }}" class="btn btn-primary btn-sm btn-block">
                               <i class="fas fa-edit"></i>
                               Edit Menu
