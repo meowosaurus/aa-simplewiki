@@ -58,6 +58,12 @@ def gen_context(request: WSGIRequest):
     all_states = State.objects.all()
     user_groups = list(request.user.groups.values_list('name', flat=True))
     user_state = request.user.profile.state.name
+    if "DarklyThemeHook" in request.user.profile.theme:
+        dark_theme = True
+    else:
+        dark_theme = False
+    
+    print(dark_theme)
 
     context = {'menu_items': menu_items, 
                'is_editor': is_editor, 
@@ -68,6 +74,7 @@ def gen_context(request: WSGIRequest):
                'all_groups': all_groups,
                'all_states': all_states,
                'request': request,
+               'dark_theme': dark_theme,
                # OPTIONS
                'display_page_contents': simplewiki_display_page_contents}
 

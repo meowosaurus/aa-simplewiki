@@ -19,7 +19,7 @@
         <div class="card-header">
             <div class="card-title">
                 <i class="{{ item.icon }}"></i>
-                <a href="#{{ item.title }}">{{ item.title }}</a>
+                <a href="#{{ item.title }}" style="text-decoration: none;">{{ item.title }}</a>
             </div>
         </div>
         <div class="card-body">
@@ -31,7 +31,7 @@
     {% empty %}
         {% if is_editor %}
             <div class="alert alert-info" role="alert">
-                No wiki pages found. You can add them under Editor -> <a target="_blank" href="{% url 'simplewiki:editor_sections' %}" style="color: white; text-decoration: underline;">Edit Sections</a>.
+                No wiki pages found. You can add them under Editor -> <a target="_blank" href="{% url 'simplewiki:editor_sections' %}" style="text-decoration: underline;">Edit Sections</a>.
             </div>
         {% endif %}
     {% endfor %}
@@ -63,7 +63,7 @@
         {% if latest and latest_section.last_edit != "" %}
         <div class="card-footer">
             {% if latest_section.last_edit_id != 0 %}
-            Last edited by <a target="_blank" href="https://evewho.com/character/{{ latest_section.last_edit_id }}">{{ latest_section.last_edit }}</a> on {{ latest_section.last_edit_date }}
+            Last edited by <a target="_blank" href="https://evewho.com/character/{{ latest_section.last_edit_id }}" style="text-decoration: none;">{{ latest_section.last_edit }}</a> on {{ latest_section.last_edit_date }}
             {% else %}
             Last edited by {{ latest_section.last_edit }} on {{ latest_section.last_edit_date }}
             {% endif %}
