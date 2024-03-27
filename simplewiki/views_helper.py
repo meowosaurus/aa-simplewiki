@@ -62,8 +62,6 @@ def gen_context(request: WSGIRequest):
         dark_theme = True
     else:
         dark_theme = False
-    
-    print(dark_theme)
 
     context = {'menu_items': menu_items, 
                'is_editor': is_editor, 

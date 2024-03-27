@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Released
 
+## [2.0.1]
+Fixed bugs:
+- Removed a debugging logger
+
 ## [2.0.0]
 New features:
 - Support for Alliance Auth 4.0
