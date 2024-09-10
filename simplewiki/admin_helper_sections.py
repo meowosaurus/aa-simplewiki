@@ -85,7 +85,11 @@ def create_new_section(request: WSGIRequest, context: dict) -> HttpResponse:
 
         # Check if user changed the index. If they did, save the new one.
         try:
-            new_section.index = int(request.POST['index'])
+            index = request.POST['index']
+            if re.match(r'^-?\d+$', index):
+                new_section.index = int(request.POST['index'])
+            else:
+                new_section.index = 0
         except Exception as e:
             return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_SECTION_CREATE_INDEX', e))
 
@@ -158,7 +162,11 @@ def edit_existing_section(request: WSGIRequest, context: dict, edit: str) -> Htt
 
         # Check if user changed the index. If they did, save the new one.
         try:
-            selected_section.index = int(request.POST['index'])
+            index = request.POST['index']
+            if re.match(r'^-?\d+$', index):
+                selected_section.index = int(request.POST['index'])
+            else:
+                selected_section.index = 0
         except Exception as e:
             return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_SECTION_EDIT_INDEX', e))
 
