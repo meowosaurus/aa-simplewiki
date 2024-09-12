@@ -5,16 +5,20 @@
 
 {% block details %}
 {% if user_action == 'none' %}
-  <div class="container-fluid" style="margin-bottom: 1rem;">
-    <div class="row">
-      <form method="GET" action="{% url 'simplewiki:editor_sections' %}">
-        <button type="submit" name="create" value="1" class="btn btn-success btn-sm">
-          <i class="fas fa-plus-square"></i>
-          Create new section
-        </button>
-      </form>
-    </div>
-  </div>    
+<div class="d-flex justify-content-between" style="margin-bottom: 1rem; margin-left: 0.1rem; margin-right: 0.1rem;">
+  <form method="GET" action="{% url 'simplewiki:editor_sections' %}">
+    <button type="submit" name="create" value="1" class="btn btn-success btn-sm">
+      <i class="fas fa-plus-square"></i>
+      Create new section
+    </button>
+  </form>
+  <form method="GET" action="{% url 'simplewiki:editor_sections' %}">
+    <button type="submit" name="create" value="1" class="btn btn-success btn-sm">
+      <i class="fas fa-plus-square"></i>
+      Create new section
+    </button>
+  </form>
+</div>
 {% endif %}
 
     <div class="card card-primary">
