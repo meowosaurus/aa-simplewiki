@@ -25,16 +25,16 @@
             {% for menu_item in menu_items %}
                 {% if not menu_item.parent %}
                 <li class="dd-item list-group-item" data-id="{{ menu_item.title }}">
-                    <div class="dd-handle">
+                    <div class="dd-handle" style="margin-bottom: 1rem; user-select: none;">
                         <i class="{{ menu_item.icon }}"></i>
                         {{ menu_item.title }}
                     </div>
                     {% if menu_item.children %}
-                    <ol class="dd-list">
+                    <ol class="dd-list" style="margin-bottom: 1rem;">
                         {% with submenu_paths=menu_item.path|get_submenu_paths %}
                             {% for sub_menu_item in menu_item|children_order_by %}
                             <li class="dd-item list-group-item" data-id="{{ sub_menu_item.title }}">
-                                <div class="dd-handle">
+                                <div class="dd-handle" style="margin-bottom: 1rem;">
                                     <i class="{{ sub_menu_item.icon }}"></i>
                                     {{ sub_menu_item.title }}
                                 </div>
@@ -80,7 +80,7 @@
   .dd-list .dd-handle { margin-bottom: 0px; }
 
   .dd-placeholder,
-  .dd-empty { margin: 5px 0; padding: 0; min-height: 30px; background: #f2fbff; border: 1px dashed #b6bcbf; box-sizing: border-box; -moz-box-sizing: border-box; }
+  .dd-empty { margin: 5px 0; padding: 0; min-height: 50px; background: #f2fbff; border: 1px dashed #b6bcbf; box-sizing: border-box; -moz-box-sizing: border-box; }
   .dd-empty { border: 1px dashed #bbb; min-height: 100px; background-color: #e5e5e5;
       background-size: 60px 60px;
       background-position: 0 0, 30px 30px;
