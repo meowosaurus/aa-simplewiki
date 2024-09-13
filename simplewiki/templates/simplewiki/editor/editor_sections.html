@@ -128,13 +128,14 @@
         This is a Bootstrap alert—check it out!
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
-      <br />`;
+      <p></p>`;
       document.execCommand('insertHTML', false, alertHTML);
   }
 
   function insertHorizontalLine() {
     const horizontalLineHTML = `
-      <hr>`;
+      <hr>
+      <p></p>`;
     document.execCommand('insertHTML', false, horizontalLineHTML);
   }
 
@@ -143,7 +144,7 @@
       <blockquote class="blockquote">
         <p>A well-known quote, contained in a blockquote element.</p>
       </blockquote>
-      <br />`;
+      <p></p>`;
     document.execCommand('insertHTML', false, alertHTML);
   }
 
@@ -167,7 +168,7 @@
           </div>
         </div>
       </div>
-      <br />`;
+      <p></p>`;
 
     document.execCommand('insertHTML', false, alertHTML);
 
@@ -184,7 +185,7 @@
 
     const imageHTML = `
       <img src="${imageUrl}" width="${imageWidth}" height="${imageHeight}">
-      <br/>`;
+      <p></p>`;
 
     document.execCommand('insertHTML', false, imageHTML);
 
@@ -202,7 +203,7 @@
     if (video_id) {
       const videoHTML = `
       <iframe width="${video_width}" height="${video_height}" src="https://www.youtube.com/embed/${video_id}" frameborder="0" allowfullscreen></iframe>
-      <br/>`;
+      <p></p>`;
       document.execCommand('insertHTML', false, videoHTML);
     }
 
@@ -220,7 +221,7 @@
     if (gdriveListID) {
       const gdriveListHTML = `
       <iframe src="https://drive.google.com/embeddedfolderview?id=${gdriveListID}#list" width="${gdriveListWidth}" height="${gdriveListHeight}" style="border:0px;"></iframe>
-      <br/>`;
+      <p></p>`;
       document.execCommand('insertHTML', false, gdriveListHTML);
     }
 
@@ -238,7 +239,7 @@
     if (gdriveGridID) {
       const gdriveGridHTML = `
       <iframe src="https://drive.google.com/embeddedfolderview?id=${gdriveGridID}#grid" width="${gdriveGridWidth}" height="${gdriveGridHeight}" style="border:0px;"></iframe>
-      <br/>`;
+      <p></p>`;
       document.execCommand('insertHTML', false, gdriveGridHTML);
     }
 
@@ -264,7 +265,7 @@
             tableHTML += `</tr>`;
         }
 
-        tableHTML += `</tbody></table><br/>`;
+        tableHTML += `</tbody></table><p></p>`;
 
         // Use Range API to insert HTML
         const selection = window.getSelection();
