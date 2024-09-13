@@ -44,11 +44,11 @@
     <div class="form-group">
       <label>Content:</label>
       {% include 'simplewiki/editor/partials/wysiwyg/_toolbar.html' %}
-    <div class="form-control" id="editor" spellcheck="false" contenteditable="true" 
-      style="height:300px; max-height: none; margin-bottom: 1rem; overflow: auto; resize: vertical;">
-      {{ selectedSection.content|safe }}
-    </div>
-    <p class="help-block">Optional: This will be displayed as your main content of the section.</p>
+      <div class="form-control" id="editor" spellcheck="false" contenteditable="true" 
+        style="height:300px; max-height: none; margin-bottom: 1rem; overflow: auto; resize: vertical;">
+        {{ selectedSection.content|safe }}
+      </div>
+      <p class="help-block">Optional: This will be displayed as your main content of the section.</p>
     </div>
 
 

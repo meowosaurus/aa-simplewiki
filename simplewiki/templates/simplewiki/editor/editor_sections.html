@@ -65,6 +65,25 @@
 </script>
 {% endif %}
 <script>
+  let savedSelection;
+
+  function saveSelection() {
+    if (window.getSelection) {
+      const selection = window.getSelection();
+      if (selection.rangeCount > 0) {
+        savedSelection = selection.getRangeAt(0);
+      }
+    }
+  }
+
+  function restoreSelection() {
+    if (savedSelection) {
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(savedSelection);
+    }
+  }
+
   function format(command) {
     if (command === 'createLink') {
       const url = prompt("Enter the link URL:");
@@ -72,6 +91,23 @@
     } else {
       document.execCommand(command, false, null);
     }
+  }
+
+  function insertLink() {
+    restoreSelection();
+
+    console.log("Hello");
+
+    const url = document.getElementById('link-url').value;   
+    
+    document.execCommand('createLink', false, url);
+
+    const modal = bootstrap.Modal.getInstance(document.getElementById('insertLinkModal'));
+    modal.hide();
+  }
+
+  function removeLink() {
+    document.execCommand('unlink', false, null);
   }
 
   function alignText(command) {
@@ -112,7 +148,10 @@
   }
 
   function insertAccordion() {
-    const title = prompt("Enter the title for your spoiler");
+    restoreSelection();
+
+    const title = document.getElementById('accordion-title').value;
+
     const alertHTML = `
       <div class="accordion accordion-flush">
         <div class="accordion-item">
@@ -129,45 +168,123 @@
         </div>
       </div>
       <br />`;
+
     document.execCommand('insertHTML', false, alertHTML);
+
+    const modal = bootstrap.Modal.getInstance(document.getElementById('insertAccordionModal'));
+    modal.hide();
   }
 
   function insertImage() {
-    const image_url = prompt("Enter the image URL");
+    restoreSelection();
+
+    const imageUrl = document.getElementById('image-url').value;
+    const imageWidth = document.getElementById('image-width').value;
+    const imageHeight = document.getElementById('image-height').value;
+
     const imageHTML = `
-    <img src="${image_url}">
-    <br/>`;
+      <img src="${imageUrl}" width="${imageWidth}" height="${imageHeight}">
+      <br/>`;
+
     document.execCommand('insertHTML', false, imageHTML);
+
+    const modal = bootstrap.Modal.getInstance(document.getElementById('insertImageModal'));
+    modal.hide();
   }
 
   function insertVideo() {
-    const video_id = prompt("Enter the video ID for your YouTube video");
+    restoreSelection();
+
+    const video_id = document.getElementById('video-id').value;
+    const video_width = document.getElementById('video-width').value;
+    const video_height = document.getElementById('video-height').value;
+
     if (video_id) {
       const videoHTML = `
-      <iframe width="400" height="400" src="https://www.youtube.com/embed/${video_id}" frameborder="0" allowfullscreen></iframe>
+      <iframe width="${video_width}" height="${video_height}" src="https://www.youtube.com/embed/${video_id}" frameborder="0" allowfullscreen></iframe>
       <br/>`;
       document.execCommand('insertHTML', false, videoHTML);
     }
+
+    const modal = bootstrap.Modal.getInstance(document.getElementById('insertVideoModal'));
+    modal.hide();
   }
 
   function insertGDriveList() {
-    const folder_id = prompt("Enter the google drive folder ID");
-    if (folder_id) {
-      const videoHTML = `
-      <iframe src="https://drive.google.com/embeddedfolderview?id=${folder_id}#list" width="400px" height="400px" style="border:0px;"></iframe>
+    restoreSelection();
+    
+    const gdriveListID = document.getElementById('gdrive-list-url').value;
+    const gdriveListWidth = document.getElementById('gdrive-list-width').value;
+    const gdriveListHeight = document.getElementById('gdrive-list-height').value;
+
+    if (gdriveListID) {
+      const gdriveListHTML = `
+      <iframe src="https://drive.google.com/embeddedfolderview?id=${gdriveListID}#list" width="${gdriveListWidth}" height="${gdriveListHeight}" style="border:0px;"></iframe>
       <br/>`;
-      document.execCommand('insertHTML', false, videoHTML);
+      document.execCommand('insertHTML', false, gdriveListHTML);
     }
+
+    const modal = bootstrap.Modal.getInstance(document.getElementById('insertGDriveListModal'));
+    modal.hide();
   }
 
   function insertGDriveGrid() {
-    const folder_id = prompt("Enter the google drive folder ID");
-    if (folder_id) {
-      const videoHTML = `
-      <iframe src="https://drive.google.com/embeddedfolderview?id=${folder_id}#grid" width="400px" height="400px" style="border:0px;"></iframe>
+    restoreSelection();
+    
+    const gdriveGridID = document.getElementById('gdrive-grid-url').value;
+    const gdriveGridWidth = document.getElementById('gdrive-grid-width').value;
+    const gdriveGridHeight = document.getElementById('gdrive-grid-height').value;
+
+    if (gdriveGridID) {
+      const gdriveGridHTML = `
+      <iframe src="https://drive.google.com/embeddedfolderview?id=${gdriveGridID}#grid" width="${gdriveGridWidth}" height="${gdriveGridHeight}" style="border:0px;"></iframe>
       <br/>`;
-      document.execCommand('insertHTML', false, videoHTML);
+      document.execCommand('insertHTML', false, gdriveGridHTML);
     }
+
+    const modal = bootstrap.Modal.getInstance(document.getElementById('insertGDriveGridModal'));
+    modal.hide();
+  }
+
+  function insertTable() {
+    restoreSelection();
+    
+    const tableColumns = document.getElementById('table-columns').value;
+    const tableRows = document.getElementById('table-rows').value;
+
+    if (tableColumns && tableRows) {
+        let tableHTML = `<table class="table bg-dark"><tbody>`;
+
+        // Loop to create the rows and columns dynamically based on user input
+        for (let i = 0; i < tableRows; i++) {
+            tableHTML += `<tr>`;
+            for (let j = 0; j < tableColumns; j++) {
+                tableHTML += `<td contenteditable="true">Edit me</td>`;
+            }
+            tableHTML += `</tr>`;
+        }
+
+        tableHTML += `</tbody></table><br/>`;
+
+        // Use Range API to insert HTML
+        const selection = window.getSelection();
+        if (selection.rangeCount > 0) {
+            const range = selection.getRangeAt(0);
+            const div = document.createElement("div");
+            div.innerHTML = tableHTML;
+            const frag = document.createDocumentFragment();
+            let child;
+            while ((child = div.firstChild)) {
+                frag.appendChild(child);
+            }
+            range.deleteContents();
+            range.insertNode(frag);
+        }
+    }
+
+    // Close the modal after inserting the table
+    const modal = bootstrap.Modal.getInstance(document.getElementById('insertTableModal'));
+    modal.hide();
   }
 
   function setHeader(header) {
