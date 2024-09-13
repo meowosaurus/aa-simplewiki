@@ -1,46 +1,53 @@
 <table class="table table-striped">
-    <thead>
+  <thead>
+    <tr>
+      <th width="25%">Index</th>
+      <th width="25%">Section Title</th>
+      <th width="25%">Menu</th>
+      <th width="25%">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for section_item in section_items %}
       <tr>
-        <th width="25%">Index</th>
-        <th width="25%">Section Title</th>
-        <th width="25%">Menu</th>
-        <th width="25%">Action</th>
+        <!-- Index Column -->
+        <td>{{ section_item.index }}</td>
+
+        <!-- Section Title Column -->
+        <td>
+          <i class="{{ section_item.icon }}"></i>
+          {{ section_item.title }}
+        </td>
+
+        <!-- Menu Column -->
+        <td>
+          {% if section_item.menu %}
+            <a href="{% url 'simplewiki:dynamic_menu' menu_path=section_item.menu.path %}" style="text-decoration: none;">
+              <i class="{{ section_item.menu.icon }}"></i>
+              {{ section_item.menu.title }}
+            </a>
+          {% else %}
+            None
+          {% endif %}
+        </td>
+
+        <!-- Action Column -->
+        <td class="text-center">
+          <form method="GET" action="{% url 'simplewiki:editor_sections' %}">
+            <div class="d-grid gap-2">
+              <!-- Edit Button -->
+              <button type="submit" name="edit" value="{{ section_item.title }}" class="btn btn-primary btn-sm btn-block">
+                <i class="fas fa-edit"></i> Edit Section
+              </button>
+
+              <!-- Delete Button -->
+              <button type="submit" name="delete" value="{{ section_item.title }}" class="btn btn-danger btn-sm btn-block">
+                <i class="fas fa-trash-alt"></i> Delete Section
+              </button>
+            </div>
+          </form>
+        </td>
       </tr>
-    </thead>
-    <tbody>
-        {% for section_item in section_items %}
-        <tr>
-            <td>{{ section_item.index }}</td>
-            <td>
-                <i class="{{ section_item.icon }}"></i>
-                {{ section_item.title }}
-            </td>
-            <td>
-              {% if section_item.menu %}
-              <a href="{% url 'simplewiki:dynamic_menu' menu_path=section_item.menu.path %}" style="text-decoration: none;">
-                <i class="{{ section_item.menu.icon }}"></i>
-                {{ section_item.menu.title }}
-              </a>
-              {% else %}
-              None
-              {% endif %}
-            </td>
-            <td class="text-center">
-              <form method="GET" action="{% url 'simplewiki:editor_sections' %}">
-                <div class="d-grid gap-2">
-                  <button type="submit" name="edit" value="{{ section_item.title }}" class="btn btn-primary btn-sm btn-block">
-                    <i class="fas fa-edit"></i>
-                    Edit Section
-                  </button>
-                  <button type="submit" name="delete" value="{{ section_item.title }}" class="btn btn-danger btn-sm btn-block">
-                    <i class="fas fa-trash-alt"></i>
-                    Delete Section
-                  </button>
-                </div>
-                
-              </form>
-            </td>
-        </tr>
-      {% endfor %}
-    </tbody>
+    {% endfor %}
+  </tbody>
 </table>

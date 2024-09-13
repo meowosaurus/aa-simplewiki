@@ -1,58 +1,67 @@
-  <div class="form-group">
-    <label for="exampleInputPassword1">Title:</label>
-    <input type="text" class="form-control" name="title" placeholder="For example: Moon Mining Policies" required>
-    <p class="help-block">Required: The navbar title for the menu.</p>
-  </div>
-  <div class="form-group">
-    <label for="exampleInputPassword1">Icon:</label>
-    <input type="text" class="form-control" name="icon" placeholder="For example: fas fa-hand-spock">
-    <p class="help-block">Optional: Go to <a href="https://fontawesome.com/v5/search?o=r&m=free" target="_blank">https://fontawesome.com/v5/search?o=r&m=free</a> to find matching icons. We only support free icons. Format example: fas fa-hand-spock</p>
-  </div>
-  {% if False %}
-  <div class="form-group">
-    <label for="menuPathSelect">Parent:</label>
-    <select class="form-control" name="parent_select" id="menuParentSelect">
-      <option value="none">None</option>
-      {% for menu_item in menu_items %}
-        {% if not menu_item.parent %}
-          <option value="{{ menu_item.path }}">{{ menu_item.title }}</option>
-        {% endif %}
-      {% endfor %}
-    </select>
-    <p class="help-block">Optional: Select the parent menu here. If you leave it at 'None' it will be the parent. For example: welcome</p>
-  </div>
-  {% endif %}
-  <div class="form-group">
-    <label for="menuPathSelect">Groups:</label>
-    <select multiple class="form-control" name="group_select" id="menuGroupSelect">
-      <option value="" selected>None</option>
-      {% for group_item in all_groups %}
-        <option value="{{ group_item.name }}">{{ group_item.name }}</option>
-      {% endfor %}
-    </select>
-    <p class="help-block">Optional: Select the groups who are able to access this menu. You can select multiple.</p>
-  </div>
-  <div class="form-group">
-    <label for="menuPathSelect">States:</label>
-    <select multiple class="form-control" name="state_select" id="menuStateSelect">
-      <option value="" selected>None</option>
-      {% for state_item in all_states %}
-        <option value="{{ state_item.name }}">{{ state_item.name }}</option>
-      {% endfor %}
-    </select>
-    <p class="help-block">Optional: Select the states who are able to access this menu. You can select multiple.</p>
-  </div>
-  <div class="row">
-    <div class="col d-grid">
-      <button type="submit" name="confirm_create" value="0" class="btn btn-primary">
-      <i class="fas fa-times-circle"></i>
-      Cancel
+<!-- Title Input Field -->
+<div class="form-group">
+  <label for="titleInput">Title:</label>
+  <input type="text" class="form-control" name="title" id="titleInput" placeholder="For example: Moon Mining Policies" required>
+  <p class="help-block">Required: The navbar title for the menu.</p>
+</div>
+
+<!-- Icon Input Field -->
+<div class="form-group">
+  <label for="iconInput">Icon:</label>
+  <input type="text" class="form-control" name="icon" id="iconInput" placeholder="For example: fas fa-hand-spock">
+  <p class="help-block">Optional: Go to <a href="https://fontawesome.com/v5/search?o=r&m=free" target="_blank">Font Awesome Icons</a> to find matching icons. We only support free icons. Format example: fas fa-hand-spock</p>
+</div>
+
+<!-- Parent Menu Selection -->
+{% if False %}
+<div class="form-group">
+  <label for="menuParentSelect">Parent:</label>
+  <select class="form-control" name="parent_select" id="menuParentSelect">
+    <option value="none">None</option>
+    {% for menu_item in menu_items %}
+      {% if not menu_item.parent %}
+        <option value="{{ menu_item.path }}">{{ menu_item.title }}</option>
+      {% endif %}
+    {% endfor %}
+  </select>
+  <p class="help-block">Optional: Select the parent menu here. If you leave it at 'None', it will be the top-level menu. For example: welcome</p>
+</div>
+{% endif %}
+
+<!-- Groups Selection -->
+<div class="form-group">
+  <label for="menuGroupSelect">Groups:</label>
+  <select multiple class="form-control" name="group_select" id="menuGroupSelect">
+    <option value="" selected>None</option>
+    {% for group_item in all_groups %}
+      <option value="{{ group_item.name }}">{{ group_item.name }}</option>
+    {% endfor %}
+  </select>
+  <p class="help-block">Optional: Select the groups who are able to access this menu. You can select multiple.</p>
+</div>
+
+<!-- States Selection -->
+<div class="form-group">
+  <label for="menuStateSelect">States:</label>
+  <select multiple class="form-control" name="state_select" id="menuStateSelect">
+    <option value="" selected>None</option>
+    {% for state_item in all_states %}
+      <option value="{{ state_item.name }}">{{ state_item.name }}</option>
+    {% endfor %}
+  </select>
+  <p class="help-block">Optional: Select the states who are able to access this menu. You can select multiple.</p>
+</div>
+
+<!-- Submit and Cancel Buttons -->
+<div class="row">
+  <div class="col d-grid">
+    <button type="submit" name="confirm_create" value="0" class="btn btn-primary">
+      <i class="fas fa-times-circle"></i> Cancel
     </button>
   </div>
   <div class="col d-grid">
     <button type="submit" name="confirm_create" value="1" class="btn btn-success">
-      <i class="fas fa-plus-square"></i>
-      Create
+      <i class="fas fa-plus-square"></i> Create
     </button>
   </div>
-  </div>
+</div>

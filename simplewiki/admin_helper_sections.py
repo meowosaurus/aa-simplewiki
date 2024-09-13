@@ -150,6 +150,7 @@ def edit_existing_section(request: WSGIRequest, context: dict, edit: str) -> Htt
             except (KeyError, ValueError, TypeError) as e:
                 context.update({'error_code': 'EDITOR_SECTION_EDIT_VALUES'})
                 context.update({'error_django': str(e)})
+                print(request.POST)
                 return render(request, 'simplewiki/error.html', context)
             except Exception as e:
                 return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_SECTION_EDIT_VALUES_UNKNOWN', e))

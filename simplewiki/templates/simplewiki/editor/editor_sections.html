@@ -4,301 +4,76 @@
 {% load static %}
 
 {% block details %}
-{% if user_action == 'none' %}
-<div class="d-flex justify-content-between" style="margin-bottom: 1rem; margin-left: 0.1rem; margin-right: 0.1rem;">
-  <form method="GET" action="{% url 'simplewiki:editor_sections' %}">
-    <button type="submit" name="create" value="1" class="btn btn-success btn-sm">
-      <i class="fas fa-plus-square"></i>
-      Create new section
-    </button>
-  </form>
-  <form method="GET" action="{% url 'simplewiki:editor_sections' %}">
-    <button type="submit" name="create" value="1" class="btn btn-success btn-sm">
-      <i class="fas fa-plus-square"></i>
-      Create new section
-    </button>
-  </form>
-</div>
-{% endif %}
+  {% if user_action == 'none' %}
+    <div class="d-flex justify-content-between" style="margin-bottom: 1rem; margin-left: 0.1rem; margin-right: 0.1rem;">
+      <form method="GET" action="{% url 'simplewiki:editor_sections' %}">
+        <button type="submit" name="create" value="1" class="btn btn-success btn-sm">
+          <i class="fas fa-plus-square"></i> Create new section
+        </button>
+      </form>
+      <form method="GET" action="{% url 'simplewiki:editor_sections' %}">
+        <button type="submit" name="create" value="1" class="btn btn-success btn-sm">
+          <i class="fas fa-plus-square"></i> Create new section
+        </button>
+      </form>
+    </div>
+  {% endif %}
 
-    <div class="card card-primary">
-      <div class="card-header">
-          <div class="text-center">
-            {% translate "Section Administration" %}  
-          </div>
+  <div class="card card-primary">
+    <div class="card-header">
+      <div class="text-center">
+        {% translate "Section Administration" %}
       </div>
+    </div>
 
-      <div class="card-body">
+    <div class="card-body">
       {% if user_action == 'none' %}
-      {% include 'simplewiki/editor/partials/sections/_list_sections.html' %}
+        {% include 'simplewiki/editor/partials/sections/_list_sections.html' %}
       {% elif user_action == 'create' %}
-      {% include 'simplewiki/editor/partials/sections/_create_section.html' %}
+        {% include 'simplewiki/editor/partials/sections/_create_section.html' %}
       {% elif user_action == 'edit' %}
-      {% include 'simplewiki/editor/partials/sections/_edit_section.html' %}
+        {% include 'simplewiki/editor/partials/sections/_edit_section.html' %}
       {% elif user_action == 'delete' %}
-      {% include 'simplewiki/editor/partials/sections/_delete_section.html' %}
+        {% include 'simplewiki/editor/partials/sections/_delete_section.html' %}
       {% endif %}
     </div>
-</div>
+  </div>
 {% endblock %}
 
 {% block extra_javascript %}
-{% if user_action == 'edit' %}
-  <script>
-    document.getElementById("indexInput").value = '{{ selectedSection.index|escapejs }}';
-    document.getElementById("iconInput").value = '{{ selectedSection.icon|escapejs }}';
-    document.getElementById("titleInput").value = '{{ selectedSection.title|escapejs }}';
-    document.getElementById("menuPathInput").value = '{{ selectedSection.menu.path|escapejs }}';
-  </script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
+  {% if user_action == 'edit' %}
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById("indexInput").value = '{{ selectedSection.index|escapejs }}';
+        document.getElementById("iconInput").value = '{{ selectedSection.icon|escapejs }}';
+        document.getElementById("titleInput").value = '{{ selectedSection.title|escapejs }}';
+        
         const menuPathSelect = document.getElementById('menuPathSelect');
         const selectedPath = "{{ selectedSection.menu.path }}";
 
         for (let i = 0; i < menuPathSelect.options.length; i++) {
-            if (menuPathSelect.options[i].value == selectedPath) {
-                menuPathSelect.options[i].selected = true;
-                break;
-            }
+          if (menuPathSelect.options[i].value === selectedPath) {
+            menuPathSelect.options[i].selected = true;
+            break;
+          }
         }
-    });
-</script>
-{% endif %}
-<script>
-  let savedSelection;
+      });
+    </script>
+  {% endif %}
 
-  function saveSelection() {
-    if (window.getSelection) {
-      const selection = window.getSelection();
-      if (selection.rangeCount > 0) {
-        savedSelection = selection.getRangeAt(0);
+  {% if user_action == 'edit' or user_action == 'create' %}
+    {% include 'simplewiki/editor/partials/wysiwyg/_editor_scripts.html' %}
+    <script>
+      function prepareContentForSubmit() {
+        // Get the content of the contenteditable div
+        const content = document.getElementById('contentInput').innerHTML;
+
+        // Set the content in the hidden input
+        document.getElementById('hiddenContentInput').value = content;
       }
-    }
-  }
-
-  function restoreSelection() {
-    if (savedSelection) {
-      const selection = window.getSelection();
-      selection.removeAllRanges();
-      selection.addRange(savedSelection);
-    }
-  }
-
-  function format(command) {
-    if (command === 'createLink') {
-      const url = prompt("Enter the link URL:");
-      document.execCommand(command, false, url);
-    } else {
-      document.execCommand(command, false, null);
-    }
-  }
-
-  function insertLink() {
-    restoreSelection();
-
-    console.log("Hello");
-
-    const url = document.getElementById('link-url').value;   
-    
-    document.execCommand('createLink', false, url);
-
-    const modal = bootstrap.Modal.getInstance(document.getElementById('insertLinkModal'));
-    modal.hide();
-  }
-
-  function removeLink() {
-    document.execCommand('unlink', false, null);
-  }
-
-  function alignText(command) {
-      document.execCommand(command, false, null);
-  }
-
-  function indent() {
-    document.execCommand('indent', false, null);
-  }
-
-  function outdent() {
-    document.execCommand('outdent', false, null);
-  }
-
-  function insertAlert(alert) {
-    const alertHTML = `
-      <div class="alert alert-${alert} alert-dismissible fade show" role="alert">
-        This is a Bootstrap alert—check it out!
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-      <p></p>`;
-      document.execCommand('insertHTML', false, alertHTML);
-  }
-
-  function insertHorizontalLine() {
-    const horizontalLineHTML = `
-      <hr>
-      <p></p>`;
-    document.execCommand('insertHTML', false, horizontalLineHTML);
-  }
-
-  function insertBlockquote() {
-    const alertHTML = `
-      <blockquote class="blockquote">
-        <p>A well-known quote, contained in a blockquote element.</p>
-      </blockquote>
-      <p></p>`;
-    document.execCommand('insertHTML', false, alertHTML);
-  }
-
-  function insertAccordion() {
-    restoreSelection();
-
-    const title = document.getElementById('accordion-title').value;
-
-    const alertHTML = `
-      <div class="accordion accordion-flush">
-        <div class="accordion-item">
-          <h2 class="accordion-header">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-              ${title}
-            </button>
-          </h2>
-          <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-            <div class="accordion-body">
-            This is a test
-            </div>
-          </div>
-        </div>
-      </div>
-      <p></p>`;
-
-    document.execCommand('insertHTML', false, alertHTML);
-
-    const modal = bootstrap.Modal.getInstance(document.getElementById('insertAccordionModal'));
-    modal.hide();
-  }
-
-  function insertImage() {
-    restoreSelection();
-
-    const imageUrl = document.getElementById('image-url').value;
-    const imageWidth = document.getElementById('image-width').value;
-    const imageHeight = document.getElementById('image-height').value;
-
-    const imageHTML = `
-      <img src="${imageUrl}" width="${imageWidth}" height="${imageHeight}">
-      <p></p>`;
-
-    document.execCommand('insertHTML', false, imageHTML);
-
-    const modal = bootstrap.Modal.getInstance(document.getElementById('insertImageModal'));
-    modal.hide();
-  }
-
-  function insertVideo() {
-    restoreSelection();
-
-    const video_id = document.getElementById('video-id').value;
-    const video_width = document.getElementById('video-width').value;
-    const video_height = document.getElementById('video-height').value;
-
-    if (video_id) {
-      const videoHTML = `
-      <iframe width="${video_width}" height="${video_height}" src="https://www.youtube.com/embed/${video_id}" frameborder="0" allowfullscreen></iframe>
-      <p></p>`;
-      document.execCommand('insertHTML', false, videoHTML);
-    }
-
-    const modal = bootstrap.Modal.getInstance(document.getElementById('insertVideoModal'));
-    modal.hide();
-  }
-
-  function insertGDriveList() {
-    restoreSelection();
-    
-    const gdriveListID = document.getElementById('gdrive-list-url').value;
-    const gdriveListWidth = document.getElementById('gdrive-list-width').value;
-    const gdriveListHeight = document.getElementById('gdrive-list-height').value;
-
-    if (gdriveListID) {
-      const gdriveListHTML = `
-      <iframe src="https://drive.google.com/embeddedfolderview?id=${gdriveListID}#list" width="${gdriveListWidth}" height="${gdriveListHeight}" style="border:0px;"></iframe>
-      <p></p>`;
-      document.execCommand('insertHTML', false, gdriveListHTML);
-    }
-
-    const modal = bootstrap.Modal.getInstance(document.getElementById('insertGDriveListModal'));
-    modal.hide();
-  }
-
-  function insertGDriveGrid() {
-    restoreSelection();
-    
-    const gdriveGridID = document.getElementById('gdrive-grid-url').value;
-    const gdriveGridWidth = document.getElementById('gdrive-grid-width').value;
-    const gdriveGridHeight = document.getElementById('gdrive-grid-height').value;
-
-    if (gdriveGridID) {
-      const gdriveGridHTML = `
-      <iframe src="https://drive.google.com/embeddedfolderview?id=${gdriveGridID}#grid" width="${gdriveGridWidth}" height="${gdriveGridHeight}" style="border:0px;"></iframe>
-      <p></p>`;
-      document.execCommand('insertHTML', false, gdriveGridHTML);
-    }
-
-    const modal = bootstrap.Modal.getInstance(document.getElementById('insertGDriveGridModal'));
-    modal.hide();
-  }
-
-  function insertTable() {
-    restoreSelection();
-    
-    const tableColumns = document.getElementById('table-columns').value;
-    const tableRows = document.getElementById('table-rows').value;
-
-    if (tableColumns && tableRows) {
-        let tableHTML = `<table class="table bg-dark"><tbody>`;
-
-        // Loop to create the rows and columns dynamically based on user input
-        for (let i = 0; i < tableRows; i++) {
-            tableHTML += `<tr>`;
-            for (let j = 0; j < tableColumns; j++) {
-                tableHTML += `<td contenteditable="true">Edit me</td>`;
-            }
-            tableHTML += `</tr>`;
-        }
-
-        tableHTML += `</tbody></table><p></p>`;
-
-        // Use Range API to insert HTML
-        const selection = window.getSelection();
-        if (selection.rangeCount > 0) {
-            const range = selection.getRangeAt(0);
-            const div = document.createElement("div");
-            div.innerHTML = tableHTML;
-            const frag = document.createDocumentFragment();
-            let child;
-            while ((child = div.firstChild)) {
-                frag.appendChild(child);
-            }
-            range.deleteContents();
-            range.insertNode(frag);
-        }
-    }
-
-    // Close the modal after inserting the table
-    const modal = bootstrap.Modal.getInstance(document.getElementById('insertTableModal'));
-    modal.hide();
-  }
-
-  function setHeader(header) {
-      document.execCommand('formatBlock', false, header);
-  }
-
-  function unformat() {
-    document.execCommand('removeFormat', false, null);
-    document.execCommand('formatBlock', false, 'p');
-  }
-</script>
+    </script>
+  {% endif %}
 {% endblock %}
 
 {% block extra_script %}
-
 {% endblock %}

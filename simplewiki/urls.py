@@ -19,7 +19,4 @@ urlpatterns = [
 
     # rest api
     path("editor/sort/post/", views.editor_sort_post, name="editor_sort_post"),
-
-    # Markdown guide
-    path("guides/markdown/", views.editor_markdown_guide, name="editor_markdown_guide"),
 ]

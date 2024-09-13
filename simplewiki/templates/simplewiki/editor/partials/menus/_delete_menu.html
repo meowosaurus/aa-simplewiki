@@ -1,25 +1,31 @@
 <div class="panel-body">
-    <div class="text-center h4">
-      Are you sure you want to delete the following menu?
-      <br />
-      <br />
-      <i class="{{ selectedMenu.icon }}"></i> {{ selectedMenu.title }}
-    </div>
-    <form method="post">
-      {% csrf_token %}
-      <div class="row" style="margin-top: 2rem; margin-bottom: 1rem; margin-left: 0.5rem; margin-right: 0.5rem;">
-        <div class="col d-grid">
-      <button type="submit" name="confirm_delete" value="0" class="btn btn-primary">
-        <i class="fas fa-times-circle"></i>
-        Cancel
-    </button>
-    </div>
+  <!-- Delete Confirmation Message -->
+  <div class="text-center h4">
+    Are you sure you want to delete the following menu?
+    <br /><br />
+    <i class="{{ selectedMenu.icon }}"></i> {{ selectedMenu.title }}
+  </div>
+  
+  <!-- Delete Confirmation Form -->
+  <form method="post">
+    {% csrf_token %}
+    
+    <div class="row" style="margin-top: 2rem; margin-bottom: 1rem; margin-left: 0.5rem; margin-right: 0.5rem;">
+      
+      <!-- Cancel Button -->
       <div class="col d-grid">
-        <button type="submit" name="confirm_delete" value="1" class="btn btn-danger">
-            <i class="fas fa-trash-alt"></i>
-            Delete
+        <button type="submit" name="confirm_delete" value="0" class="btn btn-primary">
+          <i class="fas fa-times-circle"></i> Cancel
         </button>
       </div>
+      
+      <!-- Delete Button -->
+      <div class="col d-grid">
+        <button type="submit" name="confirm_delete" value="1" class="btn btn-danger">
+          <i class="fas fa-trash-alt"></i> Delete
+        </button>
       </div>
-    </form>  
+      
+    </div>
+  </form>
 </div>

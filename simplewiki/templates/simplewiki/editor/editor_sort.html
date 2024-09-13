@@ -5,66 +5,62 @@
 {% load custom_filters %}
 
 {% block details %}
-<div id="success-alert" class="alert alert-success" role="alert" style="display:none;">
+  <div id="success-alert" class="alert alert-success" role="alert" style="display:none;">
     Successfully saved menu layout! Reloading page in 3 seconds.
-</div>  
-<div id="error-alert" class="alert alert-danger" role="alert" style="display:none;">
+  </div>  
+  <div id="error-alert" class="alert alert-danger" role="alert" style="display:none;">
     Unable to save menu!
-</div>  
+  </div>  
 
-<div class="card card-primary">
+  <div class="card card-primary">
     <div class="card-header">
-        <div class="text-center">
-          {% translate "Menu Layout Administration" %}  
-        </div>
+      <div class="text-center">
+        {% translate "Menu Layout Administration" %}
+      </div>
     </div>
 
     <div class="card-body">
-        <div class="dd" id="editmenus" style="padding-bottom: 1rem;">
+      <div class="dd" id="editmenus" style="padding-bottom: 1rem;">
         <ol class="dd-list list-group">
-            {% for menu_item in menu_items %}
-                {% if not menu_item.parent %}
-                <li class="dd-item list-group-item" data-id="{{ menu_item.title }}">
-                    <div class="dd-handle" style="margin-bottom: 1rem; user-select: none;">
-                        <i class="{{ menu_item.icon }}"></i>
-                        {{ menu_item.title }}
-                    </div>
-                    {% if menu_item.children %}
-                    <ol class="dd-list" style="margin-bottom: 1rem;">
-                        {% with submenu_paths=menu_item.path|get_submenu_paths %}
-                            {% for sub_menu_item in menu_item|children_order_by %}
-                            <li class="dd-item list-group-item" data-id="{{ sub_menu_item.title }}">
-                                <div class="dd-handle" style="margin-bottom: 1rem;">
-                                    <i class="{{ sub_menu_item.icon }}"></i>
-                                    {{ sub_menu_item.title }}
-                                </div>
-                            </li>
-                            {% endfor %}
-                        {% endwith %}
-                    </ol>
-                    {% endif %}
-                </li>
+          {% for menu_item in menu_items %}
+            {% if not menu_item.parent %}
+              <li class="dd-item list-group-item" data-id="{{ menu_item.title }}">
+                <div class="dd-handle" style="margin-bottom: 1rem; user-select: none;">
+                  <i class="{{ menu_item.icon }}"></i> {{ menu_item.title }}
+                </div>
+                {% if menu_item.children %}
+                  <ol class="dd-list" style="margin-bottom: 1rem;">
+                    {% with submenu_paths=menu_item.path|get_submenu_paths %}
+                      {% for sub_menu_item in menu_item|children_order_by %}
+                        <li class="dd-item list-group-item" data-id="{{ sub_menu_item.title }}">
+                          <div class="dd-handle" style="margin-bottom: 1rem;">
+                            <i class="{{ sub_menu_item.icon }}"></i> {{ sub_menu_item.title }}
+                          </div>
+                        </li>
+                      {% endfor %}
+                    {% endwith %}
+                  </ol>
                 {% endif %}
-            {% endfor %}
+              </li>
+            {% endif %}
+          {% endfor %}
         </ol>
-        </div>
+      </div>
 
-        <div class="row" style="margin-top: 2rem;">
-            <div class="col d-grid">
-                <button type="submit" name="confirm_create" value="0" class="btn btn-primary">
-                    <i class="fas fa-times-circle"></i>
-                    Cancel
-                </button>
-            </div>
-            <div class="col d-grid">
-                <button type="submit" name="confirm_save" id="confirm_save" value="1" class="btn btn-success">
-                    <i class="fas fa-save"></i>
-                    Save
-                </button>
-            </div>
+      <div class="row" style="margin-top: 2rem;">
+        <div class="col d-grid">
+          <button type="button" name="cancel" class="btn btn-primary">
+            <i class="fas fa-times-circle"></i> Cancel
+          </button>
         </div>
+        <div class="col d-grid">
+          <button type="button" id="confirm_save" class="btn btn-success">
+            <i class="fas fa-save"></i> Save
+          </button>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
 {% endblock %}
 
 {% block extra_javascript %}
@@ -74,25 +70,14 @@
 <meta name="csrf-token" content="{{ csrf_token }}">
 <style type="text/css">
   .dd { position: relative; display: block; margin: 0; padding: 0; max-width: 100%; list-style: none; line-height: 20px; }
-  
-  .dd-list { display: block; position: relative; margin: 0; padding: 0px; padding-block: 1rem; padding-block-end: 0px; list-style: none; }
+  .dd-list { display: block; position: relative; margin: 0; padding: 0; padding-block: 1rem; padding-block-end: 0; list-style: none; }
   .dd-list .dd-list { padding-left: 4rem; }
-  .dd-list .dd-handle { margin-bottom: 0px; }
-
-  .dd-placeholder,
-  .dd-empty { margin: 5px 0; padding: 0; min-height: 50px; background: #f2fbff; border: 1px dashed #b6bcbf; box-sizing: border-box; -moz-box-sizing: border-box; }
-  .dd-empty { border: 1px dashed #bbb; min-height: 100px; background-color: #e5e5e5;
-      background-size: 60px 60px;
-      background-position: 0 0, 30px 30px;
-  }
-  
+  .dd-list .dd-handle { margin-bottom: 0; }
+  .dd-placeholder, .dd-empty { margin: 5px 0; padding: 0; min-height: 50px; background: #f2fbff; border: 1px dashed #b6bcbf; box-sizing: border-box; }
+  .dd-empty { border: 1px dashed #bbb; min-height: 100px; background-color: #e5e5e5; background-size: 60px 60px; background-position: 0 0, 30px 30px; }
   .dd-dragel { position: absolute; pointer-events: none; z-index: 9999; }
   .dd-dragel > .dd-item .dd-handle { margin-top: 0; }
-  .dd-dragel .dd-handle {
-      -webkit-box-shadow: 2px 4px 6px 0 rgba(0,0,0,.1);
-              box-shadow: 2px 4px 6px 0 rgba(0,0,0,.1);
-  }
-  
+  .dd-dragel .dd-handle { box-shadow: 2px 4px 6px rgba(0,0,0,.1); }
   .dd-hover > .dd-handle { background: #e52eb7 !important; }
 </style>
 {% endblock %}
@@ -102,71 +87,52 @@
 <script src="{% static 'simplewiki/jquery.nestable.js' %}"></script>
 
 <script>
+  function getCSRFToken() {
+    return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+  }
 
-    function getCSRFToken() {
-        return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+  var outputJSON;
+
+  $(document).ready(function() {
+    // Update menu list JSON data
+    function updateOutput(e) {
+      var list = e.length ? e : $(e.target),
+          output = list.data('output');
+      if (window.JSON) {
+        outputJSON = window.JSON.stringify(list.nestable('serialize'));
+      } else {
+        console.log('JSON browser support required.');
+      }
     }
 
-    var outputJSON;
+    // Activate Nestable
+    $('#editmenus').nestable({
+      group: 1
+    }).on('change', updateOutput);
 
-    $(document).ready(function()
-    {
-        // Update menu list JSON data 
-        var updateOutput = function(e)
-        {
-            var list   = e.length ? e : $(e.target),
-                output = list.data('output');
-            if (window.JSON) {
-                outputJSON = window.JSON.stringify(list.nestable('serialize'));
-                
-            } else {
-                console.log('JSON browser support required.');
-            }
-        };
-  
-        // Activate Nestable 
-        $('#editmenus').nestable({
-            group: 1
-        })
-        .on('change', updateOutput);
-        
-        updateOutput($('#editmenus').data('output', $('#editmenus-output')));
+    updateOutput($('#editmenus').data('output', $('#editmenus-output')));
+
+    // Save button click event
+    $('#confirm_save').click(function() {
+      $.ajax({
+        type: 'POST',
+        url: '/wiki/editor/sort/post/',
+        data: {
+          'data': outputJSON,
+          'csrfmiddlewaretoken': getCSRFToken()
+        },
+        success: function(response) {
+          console.log("Success");
+          $('#success-alert').show().delay(3000).fadeOut(function() {
+            location.reload();
+          });
+        },
+        error: function(error) {
+          console.log("Error");
+          $('#error-alert').show().delay(3000).fadeOut();
+        }
+      });
     });
-
-    document.getElementById('confirm_save').addEventListener('click', function() {
-        var csrfToken = getCSRFToken();
-
-        $.ajax({
-            type: 'POST',
-            url: '/wiki/editor/sort/post/',
-            data: {
-                'data': outputJSON,
-                'csrfmiddlewaretoken': csrfToken
-            },
-            success: function(response) {
-                console.log("Success");
-
-                var alertElem = document.getElementById('success-alert');
-    
-                alertElem.style.display = 'block';
-    
-                setTimeout(function() {
-                    alertElem.style.display = 'none';
-                    location.reload();
-                }, 3000);
-            },
-            error: function(error) {
-                console.log("Error");
-
-                var alertElem = document.getElementById('error-alert');
-    
-                alertElem.style.display = 'block';
-    
-                setTimeout(function() {
-                    alertElem.style.display = 'none';
-                }, 3000);
-            }
-        });
-    });
+  });
 </script>
 {% endblock %}

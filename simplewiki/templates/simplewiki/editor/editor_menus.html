@@ -5,166 +5,141 @@
 {% load custom_filters %}
 
 {% block details %}
-{% if user_action == 'none' %}
-<div class="d-flex justify-content-between" style="margin-bottom: 1rem; margin-left: 0.1rem; margin-right: 0.1rem;">
-  <form method="GET" action="{% url 'simplewiki:editor_menus' %}">
-    <button type="submit" name="create" value="1" class="btn btn-success btn-sm">
-      <i class="fas fa-plus-square"></i>
-      Create new menu
-    </button>
-  </form>
-  <form method="GET" action="{% url 'simplewiki:editor_menus' %}">
-    <button type="submit" name="create" value="1" class="btn btn-success btn-sm">
-      <i class="fas fa-plus-square"></i>
-      Create new menu
-    </button>
-  </form>
-</div>
-              
-    {% endif %}
-    <div class="card card-primary">
-        <div class="card-header">
-              <div class="text-center">
-                Menu Administration
-              </div>
-        </div>
-
-        {% if user_action == 'none' %}
-        <div class="card-body">
-            <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th width="17%">Menu Title</th>
-                    <th width="17%">URL</th>
-                    <th width="17%">Parent Menu</th>
-                    <th width="17%">Groups</th>
-                    <th width="16%">States</th>
-                    <th width="16%">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for menu_item in menu_items %}
-                    <tr>
-                      <td>
-                        <i class="{{ menu_item.icon }}"></i>
-                        {{ menu_item.title }}
-                      </td>
-                      <td>
-                        <a href="{% url 'simplewiki:dynamic_menu' menu_path=menu_item.path %}" style="text-decoration: none;">
-                          {% url 'simplewiki:dynamic_menu' menu_path=menu_item.path %}
-                        </a>
-                      </td>
-                      <td>
-                        {% if not menu_item.parent %}
-                          None
-                        {% else %}
-                          <a href="{% url 'simplewiki:dynamic_menu' menu_path=menu_item.parent.path %}" style="text-decoration: none;">
-                            <i class="{{ menu_item.parent.icon }}"></i>
-                            {{ menu_item.parent }}
-                          </a>
-                        {% endif %}
-                      </td>
-                      <td>
-                        {% if menu_item.groups %}
-                          {{ menu_item.groups|add_group_space }}
-                        {% else %}
-                          None
-                        {% endif %}
-                      </td>
-                      <td>
-                        {% if menu_item.states %}
-                          {{ menu_item.states|add_group_space }}
-                        {% else %}
-                          None
-                        {% endif %}
-                      </td>
-                      <td>
-                        <form method="GET" action="{% url 'simplewiki:editor_menus' %}">
-                          <div class="d-grid gap-2">
-                            <button type="submit" name="edit" value="{{ menu_item.path }}" class="btn btn-primary btn-sm btn-block">
-                              <i class="fas fa-edit"></i>
-                              Edit Menu
-                            </button>
-                            <button type="submit" name="delete" value="{{ menu_item.path }}" class="btn btn-danger btn-sm btn-block">
-                              <i class="fas fa-trash-alt"></i>
-                              Delete Menu
-                            </button>
-                          </div>
-                      </form>
-                      </td>
-                    </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-        </div>
-        {% elif user_action == 'edit' %}
-        <div class="card-body">
-          <div class="text-center h4">
-            Edit menu 
-            <br />
-            <br />
-            <i class="{{ selectedMenu.icon }}"></i> {{ selectedMenu.title }}
-          </div>
-          <hr>
-          <div class="text-center">
-            Leave text-fields blank if you don't want any changes.
-          </div>
-          <form method="post" id="my_form">
-            {% csrf_token %}
-            {% include 'simplewiki/editor/partials/menus/_edit_menu.html' %}
-          </form>
-        </div>
-        {% elif user_action == 'delete' %}
-        {% include 'simplewiki/editor/partials/menus/_delete_menu.html' %}
-        {% elif user_action == 'create' %}
-        <div class="card-body">
-          <div class="text-center h4">
-            Create a new menu <i class="fas fa-thumbs-up"></i>
-          </div>
-          <hr>
-          <form method="post" id="my_form">
-            {% csrf_token %}
-            {% include 'simplewiki/editor/partials/menus/_create_menu.html' %}
-          </form>
-        </div>
-        {% endif %}
+  {% if user_action == 'none' %}
+    <div class="d-flex justify-content-between" style="margin-bottom: 1rem; margin-left: 0.1rem; margin-right: 0.1rem;">
+      <form method="GET" action="{% url 'simplewiki:editor_menus' %}">
+        <button type="submit" name="create" value="1" class="btn btn-success btn-sm">
+          <i class="fas fa-plus-square"></i> Create new menu
+        </button>
+      </form>
+      <form method="GET" action="{% url 'simplewiki:editor_menus' %}">
+        <button type="submit" name="create" value="1" class="btn btn-success btn-sm">
+          <i class="fas fa-plus-square"></i> Create new menu
+        </button>
+      </form>
     </div>
+  {% endif %}
+
+  <div class="card card-primary">
+    <div class="card-header">
+      <div class="text-center">Menu Administration</div>
+    </div>
+
+    {% if user_action == 'none' %}
+      <div class="card-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th width="17%">Menu Title</th>
+              <th width="17%">URL</th>
+              <th width="17%">Parent Menu</th>
+              <th width="17%">Groups</th>
+              <th width="16%">States</th>
+              <th width="16%">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for menu_item in menu_items %}
+              <tr>
+                <td>
+                  <i class="{{ menu_item.icon }}"></i> {{ menu_item.title }}
+                </td>
+                <td>
+                  <a href="{% url 'simplewiki:dynamic_menu' menu_path=menu_item.path %}" style="text-decoration: none;">
+                    {% url 'simplewiki:dynamic_menu' menu_path=menu_item.path %}
+                  </a>
+                </td>
+                <td>
+                  {% if not menu_item.parent %}
+                    None
+                  {% else %}
+                    <a href="{% url 'simplewiki:dynamic_menu' menu_path=menu_item.parent.path %}" style="text-decoration: none;">
+                      <i class="{{ menu_item.parent.icon }}"></i> {{ menu_item.parent }}
+                    </a>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if menu_item.groups %}
+                    {{ menu_item.groups|add_group_space }}
+                  {% else %}
+                    None
+                  {% endif %}
+                </td>
+                <td>
+                  {% if menu_item.states %}
+                    {{ menu_item.states|add_group_space }}
+                  {% else %}
+                    None
+                  {% endif %}
+                </td>
+                <td>
+                  <form method="GET" action="{% url 'simplewiki:editor_menus' %}">
+                    <div class="d-grid gap-2">
+                      <button type="submit" name="edit" value="{{ menu_item.path }}" class="btn btn-primary btn-sm btn-block">
+                        <i class="fas fa-edit"></i> Edit Menu
+                      </button>
+                      <button type="submit" name="delete" value="{{ menu_item.path }}" class="btn btn-danger btn-sm btn-block">
+                        <i class="fas fa-trash-alt"></i> Delete Menu
+                      </button>
+                    </div>
+                  </form>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% elif user_action == 'edit' %}
+      <div class="card-body">
+        <div class="text-center h4">
+          Edit menu <br /><br />
+          <i class="{{ selectedMenu.icon }}"></i> {{ selectedMenu.title }}
+        </div>
+        <hr>
+        <div class="text-center">
+          Leave text-fields blank if you don't want any changes.
+        </div>
+        <form method="post" id="my_form">
+          {% csrf_token %}
+          {% include 'simplewiki/editor/partials/menus/_edit_menu.html' %}
+        </form>
+      </div>
+    {% elif user_action == 'delete' %}
+      {% include 'simplewiki/editor/partials/menus/_delete_menu.html' %}
+    {% elif user_action == 'create' %}
+      <div class="card-body">
+        <div class="text-center h4">
+          Create a new menu <i class="fas fa-thumbs-up"></i>
+        </div>
+        <hr>
+        <form method="post" id="my_form">
+          {% csrf_token %}
+          {% include 'simplewiki/editor/partials/menus/_create_menu.html' %}
+        </form>
+      </div>
+    {% endif %}
+  </div>
 {% endblock %}
 
 {% block extra_javascript %}
-{% if user_action == 'edit' %}
-{# groupInput needs to be seperated, otherwise it won't find the input #}
-{% if False %}
-<script>
-  const selectElement = document.getElementById("menuParentSelect");
-  const selectedPath = "{{ selectedMenu.parent.path }}";
+  {% if user_action == 'edit' %}
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const menuParentSelect = document.getElementById('menuParentSelect');
+        const selectedPath = "{{ selectedMenu.parent.path }}";
 
-  for (let i = 0; i < menuParentSelect.options.length; i++) {
-          if (menuParentSelect.options[i].value == selectedPath) {
-              menuParentSelect.options[i].selected = true;
-              break;
+        for (let i = 0; i < menuParentSelect.options.length; i++) {
+          if (menuParentSelect.options[i].value === selectedPath) {
+            menuParentSelect.options[i].selected = true;
+            break;
           }
-      }
+        }
 
-  document.addEventListener('DOMContentLoaded', function() {
-      const menuParentSelect = document.getElementById('menuParentSelect');
-      const selectedPath = "{{ selectedMenu.parent.path }}";
-
-      for (let i = 0; i < menuParentSelect.options.length; i++) {
-          if (menuParentSelect.options[i].value == selectedPath) {
-              menuParentSelect.options[i].selected = true;
-              break;
-          }
-      }
-  });
-</script>
-{% endif %}
-<script>
-  document.getElementById("titleInput").value = '{{ selectedMenu.title|escapejs }}';
-  document.getElementById("iconInput").value = '{{ selectedMenu.icon|escapejs }}';
-</script>
-
-{% endif %}
+        document.getElementById("titleInput").value = '{{ selectedMenu.title|escapejs }}';
+        document.getElementById("iconInput").value = '{{ selectedMenu.icon|escapejs }}';
+      });
+    </script>
+  {% endif %}
 {% endblock %}
 
 {% block extra_script %}
