@@ -156,10 +156,10 @@ def edit_existing_section(request: WSGIRequest, context: dict, edit: str) -> Htt
 
         try:
             content = request.POST['content']
-
-            # Accordion 
+            
             content = re.sub(r'aria-expanded="true"', 'aria-expanded="false"', content)
             content = re.sub(r'class="accordion-collapse collapse show"', 'class="accordion-collapse collapse"', content)
+            content = re.sub(r'class="accordion-button(?!"collapsed")', 'class="accordion-button collapsed"', content)
 
             selected_section.content = content
         except Exception as e:
