@@ -123,6 +123,6 @@ class SimpleWikiRenderer(mistune.HTMLRenderer):
 
     # Overwriting table plugin output to include bootstrap
     def table(self, content):
-        table_html = '<table class="table table-striped">\n' + content + '</table>'
+        table_html = '<table class="table bg-dark">\n' + content + '</table>'
 
         return table_html

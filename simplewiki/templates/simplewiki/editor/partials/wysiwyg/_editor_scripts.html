@@ -120,7 +120,7 @@
       }
 
       const imageHTML = `
-        <img src="${imageUrl}" width="${imageWidth}" height="${imageHeight}">
+        <img class="img-fluid" src="${imageUrl}" width="${imageWidth}" height="${imageHeight}">
         <p></p>`;
       document.execCommand('insertHTML', false, imageHTML);
       const modal = bootstrap.Modal.getInstance(document.getElementById('insertImageModal'));
