@@ -17,6 +17,10 @@
         selection.addRange(savedSelection);
       }
     }
+
+    function format(command) {
+        document.execCommand(command, false, null);
+    }
   
     function insertLink() {
       restoreSelection();
@@ -45,7 +49,7 @@
     function insertAlert(alert) {
       const alertHTML = `
         <div class="alert alert-${alert} alert-dismissible fade show" role="alert">
-          This is a Bootstrap alert—check it out!
+          A neat alert box, great to highlight important information.
         </div>
         <p></p>`;
       document.execCommand('insertHTML', false, alertHTML);
@@ -90,7 +94,7 @@
             </h2>
             <div id="flush-collapse${accordionID}" class="accordion-collapse collapse">
               <div class="accordion-body">
-                This is a test
+                This is a collapsible text box.
               </div>
             </div>
           </div>
