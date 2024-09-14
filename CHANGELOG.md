@@ -8,6 +8,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Released
 
+## [2.1.0]
+New features:
+- Added WYSIWYG editor 
+
+Changes:
+- The section modal now stores the HTML code, instead of markdown text.
+
+Fixed bugs:
+- Fixed a bug where creating a section without an index would result in an error.
+
 ## [2.0.3]
 Fixed bugs:
 - Fixed an internal error bug

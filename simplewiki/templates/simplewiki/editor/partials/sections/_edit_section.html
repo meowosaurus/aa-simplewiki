@@ -12,7 +12,7 @@
   <!-- Title Input -->
   <div class="form-group">
     <label for="titleInput">Title:</label>
-    <input type="text" class="form-control" name="title" id="titleInput" placeholder="{{ selectedSection.title }}">
+    <input type="text" class="form-control" name="title" id="titleInput" placeholder="{{ selectedSection.title }}" required>
     <p class="help-block">Required: This title will be displayed above the content.</p>
   </div>
 
@@ -51,7 +51,7 @@
     <label>Content:</label>
     {% include 'simplewiki/editor/partials/wysiwyg/_toolbar.html' %}
     <div class="form-control" name="content" id="contentInput" contenteditable="true" spellcheck="false"
-         style="height: 300px; max-height: none; margin-bottom: 1rem; overflow: auto; resize: vertical;">
+         style="height: 500px; max-height: none; overflow: auto; resize: vertical;">
       {{ selectedSection.content|safe }}
     </div>
     <p class="help-block">Optional: This will be displayed as your main content of the section.</p>

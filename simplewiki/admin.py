@@ -12,5 +12,5 @@ admin.site.register(Menu)
 admin.site.register(Section)
 
 # v1.0
-admin.site.register(MenuItem)
-admin.site.register(SectionItem)
+#admin.site.register(MenuItem)
+#admin.site.register(SectionItem)

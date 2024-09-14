@@ -11,7 +11,7 @@
   <!-- Title Input -->
   <div class="form-group">
     <label for="titleInput">Title:</label>
-    <input type="text" class="form-control" name="title" id="titleInput" placeholder="">
+    <input type="text" class="form-control" name="title" id="titleInput" placeholder="" required>
     <p class="help-block">Required: This title will be displayed above the content.</p>
   </div>
 
@@ -56,7 +56,7 @@
          name="content" 
          contenteditable="true" 
          spellcheck="false"
-         style="height:300px; max-height:none; margin-bottom:1rem; overflow:auto; resize:vertical;">
+         style="height:500px; max-height:none; margin-bottom:1rem; overflow:auto; resize:vertical;">
       {{ selectedSection.content|safe }}
     </div>
     <p class="help-block">Optional: This will be displayed as your main content of the section.</p>

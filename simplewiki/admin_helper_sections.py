@@ -142,7 +142,7 @@ def edit_existing_section(request: WSGIRequest, context: dict, edit: str) -> Htt
             logger.error("Unable to find user who tries to edit an existing section")
 
         # Check if user changed a value. If they did, save the new one.
-        keys = ['title', 'icon', 'content']
+        keys = ['title', 'icon']
         for key in keys:
             try:
                 if request.POST[key]:
@@ -150,10 +150,20 @@ def edit_existing_section(request: WSGIRequest, context: dict, edit: str) -> Htt
             except (KeyError, ValueError, TypeError) as e:
                 context.update({'error_code': 'EDITOR_SECTION_EDIT_VALUES'})
                 context.update({'error_django': str(e)})
-                print(request.POST)
                 return render(request, 'simplewiki/error.html', context)
             except Exception as e:
                 return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_SECTION_EDIT_VALUES_UNKNOWN', e))
+
+        try:
+            content = request.POST['content']
+
+            # Accordion 
+            content = re.sub(r'aria-expanded="true"', 'aria-expanded="false"', content)
+            content = re.sub(r'class="accordion-collapse collapse show"', 'class="accordion-collapse collapse"', content)
+
+            selected_section.content = content
+        except Exception as e:
+            return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_SECTION_EDIT_ICON', e))
 
         # Check if user changed the icon. If they did, save the new one.
         try:

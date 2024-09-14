@@ -18,15 +18,6 @@
       }
     }
   
-    function format(command) {
-      if (command === 'createLink') {
-        const url = prompt("Enter the link URL:");
-        document.execCommand(command, false, url);
-      } else {
-        document.execCommand(command, false, null);
-      }
-    }
-  
     function insertLink() {
       restoreSelection();
       const url = document.getElementById('link-url').value;
@@ -85,16 +76,19 @@
   
     function insertAccordion() {
       restoreSelection();
+
+      accordionID = Math.floor(Math.random() * 1e12) + Date.now();
+
       const title = document.getElementById('accordion-title').value;
       const accordionHTML = `
         <div class="accordion accordion-flush">
           <div class="accordion-item">
             <h2 class="accordion-header">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse${accordionID}" aria-expanded="false" aria-controls="flush-collapse${accordionID}">
                 ${title}
               </button>
             </h2>
-            <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+            <div id="flush-collapse${accordionID}" class="accordion-collapse collapse">
               <div class="accordion-body">
                 This is a test
               </div>
@@ -110,8 +104,17 @@
     function insertImage() {
       restoreSelection();
       const imageUrl = document.getElementById('image-url').value;
-      const imageWidth = document.getElementById('image-width').value;
-      const imageHeight = document.getElementById('image-height').value;
+      let imageWidth = document.getElementById('image-width').value;
+      let imageHeight = document.getElementById('image-height').value;
+
+      if (imageWidth && !imageWidth.endsWith('px')) {
+        imageWidth += 'px';
+      }
+
+      if (imageHeight && !imageHeight.endsWith('px')) {
+        imageHeight += 'px';
+      }
+
       const imageHTML = `
         <img src="${imageUrl}" width="${imageWidth}" height="${imageHeight}">
         <p></p>`;
@@ -119,12 +122,39 @@
       const modal = bootstrap.Modal.getInstance(document.getElementById('insertImageModal'));
       modal.hide();
     }
+
+    function getVideoId(input) {
+        if (/^[a-zA-Z0-9_-]{11}$/.test(input)) {
+            return input;
+        }
+
+        let match = input.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
+        if (match) {
+            return match[1];
+        }
+
+        match = input.match(/youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/);
+        if (match) {
+            return match[1];
+        }
+
+        return null;
+    }
   
     function insertVideo() {
       restoreSelection();
-      const videoId = document.getElementById('video-id').value;
-      const videoWidth = document.getElementById('video-width').value;
-      const videoHeight = document.getElementById('video-height').value;
+      const videoInput = document.getElementById('video-id').value;
+      const videoId = getVideoId(videoInput);
+      let videoWidth = document.getElementById('video-width').value;
+      let videoHeight = document.getElementById('video-height').value;
+
+      if (videoWidth && !videoWidth.endsWith('px')) {
+        videoWidth += 'px';
+      }
+
+      if (videoHeight && !videoHeight.endsWith('px')) {
+        videoHeight += 'px';
+      }
   
       if (videoId) {
         const videoHTML = `
@@ -136,12 +166,34 @@
       const modal = bootstrap.Modal.getInstance(document.getElementById('insertVideoModal'));
       modal.hide();
     }
+
+    function getDriveFolderId(input) {
+        if (/^[a-zA-Z0-9_-]{33}$/.test(input)) {
+            return input;
+        }
+
+        let match = input.match(/drive\.google\.com\/drive\/folders\/([a-zA-Z0-9_-]{33})/);
+        if (match) {
+            return match[1];
+        }
+
+        return null;
+    }
   
     function insertGDriveList() {
       restoreSelection();
-      const gdriveListID = document.getElementById('gdrive-list-url').value;
-      const gdriveListWidth = document.getElementById('gdrive-list-width').value;
-      const gdriveListHeight = document.getElementById('gdrive-list-height').value;
+      const gdriveListInput = document.getElementById('gdrive-list-url').value;
+      const gdriveListID = getDriveFolderId(gdriveListInput);
+      let gdriveListWidth = document.getElementById('gdrive-list-width').value;
+      let gdriveListHeight = document.getElementById('gdrive-list-height').value;
+
+      if (gdriveListWidth && !gdriveListWidth.endsWith('px')) {
+        gdriveListWidth += 'px';
+      }
+
+      if (gdriveListHeight && !gdriveListHeight.endsWith('px')) {
+        gdriveListHeight += 'px';
+      }
   
       if (gdriveListID) {
         const gdriveListHTML = `
@@ -156,9 +208,18 @@
   
     function insertGDriveGrid() {
       restoreSelection();
-      const gdriveGridID = document.getElementById('gdrive-grid-url').value;
-      const gdriveGridWidth = document.getElementById('gdrive-grid-width').value;
-      const gdriveGridHeight = document.getElementById('gdrive-grid-height').value;
+      const gdriveGridInput = document.getElementById('gdrive-grid-url').value;
+      const gdriveGridID = getDriveFolderId(gdriveGridInput);
+      let gdriveGridWidth = document.getElementById('gdrive-grid-width').value;
+      let gdriveGridHeight = document.getElementById('gdrive-grid-height').value;
+
+      if (gdriveGridWidth && !gdriveGridWidth.endsWith('px')) {
+        gdriveGridWidth += 'px';
+      }
+
+      if (gdriveGridHeight && !gdriveGridHeight.endsWith('px')) {
+        gdriveGridHeight += 'px';
+      }
   
       if (gdriveGridID) {
         const gdriveGridHTML = `
@@ -177,12 +238,12 @@
       const tableRows = document.getElementById('table-rows').value;
   
       if (tableColumns && tableRows) {
-        let tableHTML = `<table class="table bg-dark"><tbody>`;
+        let tableHTML = `<table class="table table-responsive bg-dark"><tbody>`;
   
         for (let i = 0; i < tableRows; i++) {
           tableHTML += `<tr>`;
           for (let j = 0; j < tableColumns; j++) {
-            tableHTML += `<td contenteditable="true">Edit me</td>`;
+            tableHTML += `<td>Edit me</td>`;
           }
           tableHTML += `</tr>`;
         }
