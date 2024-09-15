@@ -19,7 +19,7 @@
         <div class="card-header">
             <div class="card-title">
                 <i class="{{ item.icon }}"></i>
-                <a href="#{{ item.title }}" style="text-decoration: none;">{{ item.title }}</a>
+                <a class="" href="#{{ item.title }}">{{ item.title }}</a>
             </div>
         </div>
         <div class="card-body">
@@ -50,7 +50,7 @@
             <ul class="nav nav-pills flex-column">
                 {% for item in available_sections %}
                 
-                <li class="nav-item" style="margin-bottom: 1rem;">
+                <li class="nav-item" style="margin-bottom: 1rem; word-break: break-word; overflow-wrap: break-word;">
                     <a class="h5" href="#{{ item.title }}" style="text-decoration: none;">
                         <i class="fas fa-chevron-right" style="padding-right: 0.5rem;"></i>
                         <i class="{{ item.icon }}"></i>
