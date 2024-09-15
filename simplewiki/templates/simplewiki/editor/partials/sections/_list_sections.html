@@ -36,12 +36,12 @@
           <form method="GET" action="{% url 'simplewiki:editor_sections' %}">
             <div class="d-grid gap-2">
               <!-- Edit Button -->
-              <button type="submit" name="edit" value="{{ section_item.title }}" class="btn btn-primary btn-sm btn-block">
+              <button type="submit" name="edit" value="{{ section_item.title }}" class="btn btn-primary btn-sm btn-block shadow">
                 <i class="fas fa-edit"></i> Edit Section
               </button>
 
               <!-- Delete Button -->
-              <button type="submit" name="delete" value="{{ section_item.title }}" class="btn btn-danger btn-sm btn-block">
+              <button type="submit" name="delete" value="{{ section_item.title }}" class="btn btn-danger btn-sm btn-block shadow">
                 <i class="fas fa-trash-alt"></i> Delete Section
               </button>
             </div>

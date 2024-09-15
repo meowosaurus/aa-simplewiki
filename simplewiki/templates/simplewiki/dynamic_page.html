@@ -15,11 +15,13 @@
 <div class=""></div>
 {% endif %}
     {% for item in available_sections %}
-    <div id="{{ item.title }}" class="card card-primary" style="margin-bottom: 1rem;">
-        <div class="card-header">
-            <div class="card-title">
-                <i class="{{ item.icon }}"></i>
-                <a class="" href="#{{ item.title }}">{{ item.title }}</a>
+    <div id="{{ item.title }}" class="card card-primary shadow" style="margin-bottom: 1rem;">
+        <div class="card-header" style="background: linear-gradient(135deg, #1e3c72 0%, #192a56 100%)">
+            <div class="card-title d-flex align-items-center" style="margin-bottom: 0rem;">
+                {% if item.icon %}
+                    <i style="margin-right: 0.3rem;" class="{{ item.icon }}"></i>
+                {% endif %}
+                <a class="text-white text-decoration-none" href="#{{ item.title }}">{{ item.title }}</a>
             </div>
         </div>
         <div class="card-body">
@@ -40,17 +42,16 @@
 {% if available_sections_count > 0 and display_page_contents %}
 <!-- Page Contents Side View -->
 <div class="col-md-3" style="padding-right: 0px;">
-    <div class="card card-primary">
-        <div class="card-header">
-            <div class="card-title">
+    <div class="card card-primary shadow">
+        <div class="card-header" style="background: linear-gradient(135deg, #1e3c72 0%, #192a56 100%);">
+            <div class="text-white card-title" style="margin-bottom: 0rem;">
                 Page Contents
             </div>
         </div>
         <div class="card-body">
             <ul class="nav nav-pills flex-column">
                 {% for item in available_sections %}
-                
-                <li class="nav-item" style="margin-bottom: 1rem; word-break: break-word; overflow-wrap: break-word;">
+                <li class="nav-item" style="margin-bottom: 0.5rem; word-break: break-word; overflow-wrap: break-word;">
                     <a class="h5" href="#{{ item.title }}" style="text-decoration: none;">
                         <i class="fas fa-chevron-right" style="padding-right: 0.5rem;"></i>
                         <i class="{{ item.icon }}"></i>
@@ -61,7 +62,7 @@
             </ul>
         </div>
         {% if latest and latest_section.last_edit != "" %}
-        <div class="card-footer">
+        <div class="card-footer text-white" style="background: linear-gradient(135deg, #282d33 0%, #212122 100%);">
             {% if latest_section.last_edit_id != 0 %}
             Last edited by <a target="_blank" href="https://evewho.com/character/{{ latest_section.last_edit_id }}" style="text-decoration: none;">{{ latest_section.last_edit }}</a> on {{ latest_section.last_edit_date }}
             {% else %}

@@ -18,6 +18,7 @@ Changes:
 Fixed bugs:
 - Fixed a bug where creating a section without an index would result in an error.
 - Fixed a bug where page contents texts wouldn't scale correctly with the window.
+- Fixed a bug where you had to re-enter the menu title when editing it.
 - Fxied a bug where images wouldn't scale correctly with the window.
 
 ## [2.0.3]

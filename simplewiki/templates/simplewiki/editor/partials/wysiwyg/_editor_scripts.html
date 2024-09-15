@@ -25,8 +25,13 @@
     function insertLink() {
       restoreSelection();
       const url = document.getElementById('link-url').value;
+      const tab = document.getElementById('link-tab').value;
+
       document.execCommand('createLink', false, url);
+
       const modal = bootstrap.Modal.getInstance(document.getElementById('insertLinkModal'));
+      document.getElementById('link-url').value = '';
+      document.getElementById('link-tab').value = true;
       modal.hide();
     }
   
@@ -101,7 +106,9 @@
         </div>
         <p></p>`;
       document.execCommand('insertHTML', false, accordionHTML);
+
       const modal = bootstrap.Modal.getInstance(document.getElementById('insertAccordionModal'));
+      document.getElementById('accordion-title').value = '';
       modal.hide();
     }
   
@@ -123,7 +130,11 @@
         <img class="img-fluid" src="${imageUrl}" width="${imageWidth}" height="${imageHeight}">
         <p></p>`;
       document.execCommand('insertHTML', false, imageHTML);
+
       const modal = bootstrap.Modal.getInstance(document.getElementById('insertImageModal'));
+      document.getElementById('image-url').value = '';
+      document.getElementById('image-width').value = '';
+      document.getElementById('image-height').value = '';
       modal.hide();
     }
 
@@ -168,6 +179,9 @@
       }
   
       const modal = bootstrap.Modal.getInstance(document.getElementById('insertVideoModal'));
+      document.getElementById('video-id').value = '';
+      document.getElementById('video-width').value = '';
+      document.getElementById('video-height').value = '';
       modal.hide();
     }
 
@@ -207,6 +221,9 @@
       }
   
       const modal = bootstrap.Modal.getInstance(document.getElementById('insertGDriveListModal'));
+      document.getElementById('gdrive-list-url').value = '';
+      document.getElementById('gdrive-list-width').value = '';
+      document.getElementById('gdrive-list-height').value = '';
       modal.hide();
     }
   
@@ -233,6 +250,9 @@
       }
   
       const modal = bootstrap.Modal.getInstance(document.getElementById('insertGDriveGridModal'));
+      document.getElementById('gdrive-grid-url').value = '';
+      document.getElementById('gdrive-grid-width').value = '';
+      document.getElementById('gdrive-grid-height').value = '';
       modal.hide();
     }
   
@@ -270,6 +290,8 @@
       }
   
       const modal = bootstrap.Modal.getInstance(document.getElementById('insertTableModal'));
+      document.getElementById('table-columns').value = '';
+      document.getElementById('table-rows').value = '';
       modal.hide();
     }
   

@@ -7,21 +7,21 @@
   {% if user_action == 'none' %}
     <div class="d-flex justify-content-between" style="margin-bottom: 1rem; margin-left: 0.1rem; margin-right: 0.1rem;">
       <form method="GET" action="{% url 'simplewiki:editor_sections' %}">
-        <button type="submit" name="create" value="1" class="btn btn-success btn-sm">
+        <button type="submit" name="create" value="1" class="btn btn-success btn-sm shadow">
           <i class="fas fa-plus-square"></i> Create new section
         </button>
       </form>
       <form method="GET" action="{% url 'simplewiki:editor_sections' %}">
-        <button type="submit" name="create" value="1" class="btn btn-success btn-sm">
+        <button type="submit" name="create" value="1" class="btn btn-success btn-sm shadow">
           <i class="fas fa-plus-square"></i> Create new section
         </button>
       </form>
     </div>
   {% endif %}
 
-  <div class="card card-primary">
-    <div class="card-header">
-      <div class="text-center">
+  <div class="card card-primary shadow">
+    <div class="card-header" style="background: linear-gradient(135deg, #1e3c72 0%, #192a56 100%);">
+      <div class="text-center text-white">
         {% translate "Section Administration" %}
       </div>
     </div>

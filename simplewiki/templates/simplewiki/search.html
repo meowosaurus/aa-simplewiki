@@ -17,15 +17,13 @@
     </div>
 </form>
 
-<br />
-
 {% if available_results %}
     {% for item in available_results %}
     <div class="card card-primary" style="margin-bottom: 1rem;">
-        <div class="card-header">
-            <div class="card-title">
+        <div class="card-header" style="background: linear-gradient(135deg, #1e3c72 0%, #192a56 100%)">
+            <div class="card-title" style="margin-bottom: 0rem;">
                 <i class="{{ item.icon }}"></i>
-                <a href="{% url 'simplewiki:dynamic_menu' menu_path=item.menu.path %}" style="text-decoration: none;">
+                <a class="text-white text-decoration-none" href="{% url 'simplewiki:dynamic_menu' menu_path=item.menu.path %}">
                     {{ item.title }}
                 </a>
             </div>

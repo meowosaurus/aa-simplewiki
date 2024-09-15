@@ -8,21 +8,21 @@
   {% if user_action == 'none' %}
     <div class="d-flex justify-content-between" style="margin-bottom: 1rem; margin-left: 0.1rem; margin-right: 0.1rem;">
       <form method="GET" action="{% url 'simplewiki:editor_menus' %}">
-        <button type="submit" name="create" value="1" class="btn btn-success btn-sm">
+        <button type="submit" name="create" value="1" class="btn btn-success btn-sm shadow">
           <i class="fas fa-plus-square"></i> Create new menu
         </button>
       </form>
       <form method="GET" action="{% url 'simplewiki:editor_menus' %}">
-        <button type="submit" name="create" value="1" class="btn btn-success btn-sm">
+        <button type="submit" name="create" value="1" class="btn btn-success btn-sm shadow">
           <i class="fas fa-plus-square"></i> Create new menu
         </button>
       </form>
     </div>
   {% endif %}
 
-  <div class="card card-primary">
-    <div class="card-header">
-      <div class="text-center">Menu Administration</div>
+  <div class="card card-primary shadow">
+    <div class="card-header" style="background: linear-gradient(135deg, #1e3c72 0%, #192a56 100%);">
+      <div class="text-center text-white">Menu Administration</div>
     </div>
 
     {% if user_action == 'none' %}
@@ -75,10 +75,10 @@
                 <td>
                   <form method="GET" action="{% url 'simplewiki:editor_menus' %}">
                     <div class="d-grid gap-2">
-                      <button type="submit" name="edit" value="{{ menu_item.path }}" class="btn btn-primary btn-sm btn-block">
+                      <button type="submit" name="edit" value="{{ menu_item.path }}" class="btn btn-primary btn-sm btn-block shadow">
                         <i class="fas fa-edit"></i> Edit Menu
                       </button>
-                      <button type="submit" name="delete" value="{{ menu_item.path }}" class="btn btn-danger btn-sm btn-block">
+                      <button type="submit" name="delete" value="{{ menu_item.path }}" class="btn btn-danger btn-sm btn-block shadow">
                         <i class="fas fa-trash-alt"></i> Delete Menu
                       </button>
                     </div>
@@ -125,17 +125,8 @@
   {% if user_action == 'edit' %}
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-        const menuParentSelect = document.getElementById('menuParentSelect');
-        const selectedPath = "{{ selectedMenu.parent.path }}";
-
-        for (let i = 0; i < menuParentSelect.options.length; i++) {
-          if (menuParentSelect.options[i].value === selectedPath) {
-            menuParentSelect.options[i].selected = true;
-            break;
-          }
-        }
-
         document.getElementById("titleInput").value = '{{ selectedMenu.title|escapejs }}';
+        console.log(document.getElementById("titleInput"));
         document.getElementById("iconInput").value = '{{ selectedMenu.icon|escapejs }}';
       });
     </script>
