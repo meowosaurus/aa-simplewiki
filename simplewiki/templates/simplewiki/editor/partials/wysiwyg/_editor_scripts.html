@@ -25,13 +25,11 @@
     function insertLink() {
       restoreSelection();
       const url = document.getElementById('link-url').value;
-      const tab = document.getElementById('link-tab').value;
 
       document.execCommand('createLink', false, url);
 
       const modal = bootstrap.Modal.getInstance(document.getElementById('insertLinkModal'));
       document.getElementById('link-url').value = '';
-      document.getElementById('link-tab').value = true;
       modal.hide();
     }
   
@@ -53,7 +51,7 @@
   
     function insertAlert(alert) {
       const alertHTML = `
-        <div class="alert alert-${alert} alert-dismissible fade show" role="alert">
+        <div class="alert alert-${alert} alert-dismissible fade show shadow" role="alert">
           A neat alert box, great to highlight important information.
         </div>
         <p></p>`;
@@ -90,7 +88,7 @@
 
       const title = document.getElementById('accordion-title').value;
       const accordionHTML = `
-        <div class="accordion accordion-flush">
+        <div class="accordion accordion-flush shadow">
           <div class="accordion-item">
             <h2 class="accordion-header">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse${accordionID}" aria-expanded="false" aria-controls="flush-collapse${accordionID}">
@@ -126,11 +124,19 @@
         imageHeight += 'px';
       }
 
-      const imageHTML = `
-        <img class="img-fluid" src="${imageUrl}" width="${imageWidth}" height="${imageHeight}">
-        <p></p>`;
-      document.execCommand('insertHTML', false, imageHTML);
+      let imageHTML = "";
 
+      if (imageWidth && imageHeight) {
+        imageHTML = `
+        <img class="img-fluid shadow" src="${imageUrl}" width="${imageWidth}" height="${imageHeight}">
+        <p></p>`;
+      } else {
+        imageHTML = `
+        <img class="img-fluid shadow" src="${imageUrl}">
+        <p></p>`;
+      }
+      document.execCommand('insertHTML', false, imageHTML);
+      
       const modal = bootstrap.Modal.getInstance(document.getElementById('insertImageModal'));
       document.getElementById('image-url').value = '';
       document.getElementById('image-width').value = '';
