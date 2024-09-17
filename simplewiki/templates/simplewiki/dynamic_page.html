@@ -16,11 +16,20 @@
     {% for item in available_sections %}
     <div id="{{ item.title }}" class="card card-primary shadow" {% if not forloop.last %}style="margin-bottom: 1rem;"{% endif %}>
         <div class="card-header" style="background: linear-gradient(135deg, #1e3c72 0%, #192a56 100%)">
-            <div class="card-title d-flex align-items-center" style="margin-bottom: 0rem;">
-                {% if item.icon %}
-                    <i style="margin-right: 0.3rem;" class="{{ item.icon }}"></i>
+            <div class="card-title d-flex align-items-center justify-content-between" style="margin-bottom: 0rem;">
+                <div class="d-flex align-items-center">
+                    {% if item.icon %}
+                        <i style="margin-right: 0.3rem;" class="{{ item.icon }}"></i>
+                    {% endif %}
+                    <a class="text-white text-decoration-none" href="#{{ item.title }}">{{ item.title }}</a>
+                </div>
+                {% if is_editor %}
+                <span class="text-white ms-auto">
+                    <a href="{% url 'simplewiki:editor_sections' %}?edit={{ item.title }}">
+                        <i class="fas fa-edit" style="color: #f7fffd;"></i>
+                    </a>
+                </span>
                 {% endif %}
-                <a class="text-white text-decoration-none" href="#{{ item.title }}">{{ item.title }}</a>
             </div>
         </div>
         <div class="card-body">
