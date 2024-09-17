@@ -14,7 +14,7 @@
         Search
     </a>
 </li>
-{% if is_editor is True %}
+{% if is_editor %}
 <li class="nav-item dropdown">
     <a class="nav-link dropdown-toggle {% if '/wiki/editor/' in current_path or '/wiki/guides/' in current_path %}active{% endif %}" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="fas fa-user-cog"></i>
@@ -22,33 +22,12 @@
         <span class="caret"></span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-        <li>
-            <a class="dropdown-item {% navactive request 'simplewiki:editor_menus' %}" href="{% url 'simplewiki:editor_menus' %}">
-                Edit Menus
-            </a>
-        </li>
-        <li>
-            <a class="dropdown-item {% navactive request 'simplewiki:editor_sections' %}" href="{% url 'simplewiki:editor_sections' %}">
-                Edit Sections
-            </a>
-        </li>
+        <li><a class="dropdown-item {% navactive request 'simplewiki:editor_menus' %}" href="{% url 'simplewiki:editor_menus' %}">Edit Menus</a></li>
+        <li><a class="dropdown-item {% navactive request 'simplewiki:editor_sections' %}" href="{% url 'simplewiki:editor_sections' %}">Edit Sections</a></li>
         <li><hr class="dropdown-divider"></li>
-        <li>
-            <a class="dropdown-item {% navactive request 'simplewiki:editor_sort' %}" href="{% url 'simplewiki:editor_sort' %}">
-                Edit Menu Layout
-            </a>
-        </li>
+        <li><a class="dropdown-item {% navactive request 'simplewiki:editor_sort' %}" href="{% url 'simplewiki:editor_sort' %}">Edit Menu Layout</a></li>
         <li><hr class="dropdown-divider"></li>
-        <li>
-            <a class="dropdown-item" target="_blank" href="https://github.com/meowosaurus/aa-simplewiki/wiki">
-                Documentation
-            </a>
-        </li>
-        <li>
-            <a class="dropdown-item {% navactive request 'simplewiki:editor_markdown_guide' %}" target="_blank" href="{% url 'simplewiki:editor_markdown_guide' %}">
-                Markdown Guide
-            </a>
-        </li>
+        <li><a class="dropdown-item" target="_blank" href="https://github.com/meowosaurus/aa-simplewiki/wiki">Documentation</a></li>
     </ul>
 </li>
 {% endif %}
@@ -60,7 +39,7 @@
         {% with submenu_paths=item.path|get_submenu_paths %}
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle {% if current_path|any_paths_current:submenu_paths %}active{% endif %}" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                {% if item.icon|length > 0 %}
+                {% if item.icon %}
                     <i class="{{ item.icon }}" style="display: inline-block;"></i>
                 {% endif %}
                 {{ item.title }}
@@ -70,8 +49,8 @@
                 {% for submenu in item.submenus %}
                 <li>
                     <a class="{% if submenu.path in current_path %}active{% endif %} dropdown-item" href="{% url 'simplewiki:dynamic_menu' menu_path=submenu.path %}">
-                        {% if item.icon|length > 0 %}
-                        <i class="{{ submenu.icon }}" style="display: inline-block;"></i>
+                        {% if submenu.icon %}
+                            <i class="{{ submenu.icon }}" style="display: inline-block;"></i>
                         {% endif %}
                         {{ submenu.title }}
                     </a>
@@ -83,7 +62,7 @@
     {% else %}
     <li class="nav-item">
         <a class="nav-link {% if item.path in current_path %}active{% endif %}" aria-current="page" href="{% url 'simplewiki:dynamic_menu' menu_path=item.path %}">
-            {% if item.icon|length > 0 %}
+            {% if item.icon %}
                 <i class="{{ item.icon }}" style="display: inline-block;"></i>
             {% endif %}
             {{ item.title }}
@@ -94,9 +73,7 @@
 {% endblock header_nav_collapse_left %}
 
 {% block content %}
-
-{% block details %}{% endblock %}
-
+  {% block details %}{% endblock %}
 {% endblock %}
 
 {% block extra_css %}

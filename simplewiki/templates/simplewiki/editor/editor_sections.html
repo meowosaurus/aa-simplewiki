@@ -4,62 +4,75 @@
 {% load static %}
 
 {% block details %}
-{% if user_action == 'none' %}
-  <div class="container-fluid" style="margin-bottom: 1rem;">
-    <div class="row">
+  {% if user_action == 'none' %}
+    <div class="d-flex justify-content-between" style="margin-bottom: 1rem; margin-left: 0.1rem; margin-right: 0.1rem;">
       <form method="GET" action="{% url 'simplewiki:editor_sections' %}">
-        <button type="submit" name="create" value="1" class="btn btn-success btn-sm">
-          <i class="fas fa-plus-square"></i>
-          Create new section
+        <button type="submit" name="create" value="1" class="btn btn-success btn-sm shadow">
+          <i class="fas fa-plus-square"></i> Create new section
+        </button>
+      </form>
+      <form method="GET" action="{% url 'simplewiki:editor_sections' %}">
+        <button type="submit" name="create" value="1" class="btn btn-success btn-sm shadow">
+          <i class="fas fa-plus-square"></i> Create new section
         </button>
       </form>
     </div>
-  </div>    
-{% endif %}
+  {% endif %}
 
-    <div class="card card-primary">
-      <div class="card-header">
-          <div class="text-center">
-            {% translate "Section Administration" %}  
-          </div>
+  <div class="card card-primary shadow">
+    <div class="card-header" style="background: linear-gradient(135deg, #1e3c72 0%, #192a56 100%);">
+      <div class="text-center text-white">
+        {% translate "Section Administration" %}
       </div>
+    </div>
 
-      <div class="card-body">
+    <div class="card-body">
       {% if user_action == 'none' %}
-      {% include 'simplewiki/editor/partials/sections/_list_sections.html' %}
+        {% include 'simplewiki/editor/partials/sections/_list_sections.html' %}
       {% elif user_action == 'create' %}
-      {% include 'simplewiki/editor/partials/sections/_create_section.html' %}
+        {% include 'simplewiki/editor/partials/sections/_create_section.html' %}
       {% elif user_action == 'edit' %}
-      {% include 'simplewiki/editor/partials/sections/_edit_section.html' %}
+        {% include 'simplewiki/editor/partials/sections/_edit_section.html' %}
       {% elif user_action == 'delete' %}
-      {% include 'simplewiki/editor/partials/sections/_delete_section.html' %}
+        {% include 'simplewiki/editor/partials/sections/_delete_section.html' %}
       {% endif %}
     </div>
-</div>
+  </div>
 {% endblock %}
 
 {% block extra_javascript %}
-{% if user_action == 'edit' %}
-  <script>
-    document.getElementById("indexInput").value = '{{ selectedSection.index|escapejs }}';
-    document.getElementById("iconInput").value = '{{ selectedSection.icon|escapejs }}';
-    document.getElementById("titleInput").value = '{{ selectedSection.title|escapejs }}';
-    document.getElementById("menuPathInput").value = '{{ selectedSection.menu.path|escapejs }}';
-  </script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
+  {% if user_action == 'edit' %}
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById("indexInput").value = '{{ selectedSection.index|escapejs }}';
+        document.getElementById("iconInput").value = '{{ selectedSection.icon|escapejs }}';
+        document.getElementById("titleInput").value = '{{ selectedSection.title|escapejs }}';
+        
         const menuPathSelect = document.getElementById('menuPathSelect');
         const selectedPath = "{{ selectedSection.menu.path }}";
 
         for (let i = 0; i < menuPathSelect.options.length; i++) {
-            if (menuPathSelect.options[i].value == selectedPath) {
-                menuPathSelect.options[i].selected = true;
-                break;
-            }
+          if (menuPathSelect.options[i].value === selectedPath) {
+            menuPathSelect.options[i].selected = true;
+            break;
+          }
         }
-    });
-</script>
-{% endif %}
+      });
+    </script>
+  {% endif %}
+
+  {% if user_action == 'edit' or user_action == 'create' %}
+    {% include 'simplewiki/editor/partials/wysiwyg/_editor_scripts.html' %}
+    <script>
+      function prepareContentForSubmit() {
+        // Get the content of the contenteditable div
+        const content = document.getElementById('contentInput').innerHTML;
+
+        // Set the content in the hidden input
+        document.getElementById('hiddenContentInput').value = content;
+      }
+    </script>
+  {% endif %}
 {% endblock %}
 
 {% block extra_script %}

@@ -1,4 +1,5 @@
 {% extends 'simplewiki/base.html' %}
+
 {% load i18n %}
 {% load humanize %}
 {% load static %}
@@ -8,37 +9,39 @@
 {% block details %}
 <form method="GET" action="{% url 'simplewiki:search' %}">
     <div class="input-group mb-3">
-      <input type="text" class="form-control" type="search" name="query" placeholder="Search.." id="searchInput">
+        <input type="text" class="form-control" name="query" placeholder="Search.." id="searchInput" value="{% if oldQuery %}{{ oldQuery|escapejs }}{% endif %}">
         <button class="btn btn-success" type="submit">
             <i class="fas fa-search"></i>
             Go!
         </button>
     </div>
-  </form>
-    <br />
+</form>
+
+{% if available_results %}
     {% for item in available_results %}
     <div class="card card-primary" style="margin-bottom: 1rem;">
-        <div class="card-header">
-            <div class="card-title">
+        <div class="card-header" style="background: linear-gradient(135deg, #1e3c72 0%, #192a56 100%)">
+            <div class="card-title" style="margin-bottom: 0rem;">
                 <i class="{{ item.icon }}"></i>
-                <a href="{% url 'simplewiki:dynamic_menu' menu_path=item.menu.path %}" style="text-decoration: none;">
+                <a class="text-white text-decoration-none" href="{% url 'simplewiki:dynamic_menu' menu_path=item.menu.path %}">
                     {{ item.title }}
                 </a>
             </div>
         </div>
         <div class="card-body">
             <p>
-                {{ item.content|markdown|safe }}
+                {{ item.content|safe }}
             </p>
         </div>
     </div>
-    {% empty %}
-        {% if oldQuery %}
-            <div class="alert alert-warning" role="alert">
-                Nothing found for "<b>{{ oldQuery }}</b>"
-            </div>
-        {% endif %}
     {% endfor %}
+{% else %}
+    {% if oldQuery %}
+    <div class="alert alert-warning" role="alert">
+        Nothing found for "<b>{{ oldQuery }}</b>"
+    </div>
+    {% endif %}
+{% endif %}
 {% endblock %}
 
 {% block extra_javascript %}
@@ -49,5 +52,4 @@
 {% endif %}
 {% endblock %}
 
-{% block extra_script %}
-{% endblock %}
+{% block extra_script %}{% endblock %}

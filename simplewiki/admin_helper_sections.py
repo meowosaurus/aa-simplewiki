@@ -85,7 +85,11 @@ def create_new_section(request: WSGIRequest, context: dict) -> HttpResponse:
 
         # Check if user changed the index. If they did, save the new one.
         try:
-            new_section.index = int(request.POST['index'])
+            index = request.POST['index']
+            if re.match(r'^-?\d+$', index):
+                new_section.index = int(request.POST['index'])
+            else:
+                new_section.index = 0
         except Exception as e:
             return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_SECTION_CREATE_INDEX', e))
 
@@ -138,7 +142,7 @@ def edit_existing_section(request: WSGIRequest, context: dict, edit: str) -> Htt
             logger.error("Unable to find user who tries to edit an existing section")
 
         # Check if user changed a value. If they did, save the new one.
-        keys = ['title', 'icon', 'content']
+        keys = ['title', 'icon']
         for key in keys:
             try:
                 if request.POST[key]:
@@ -150,6 +154,17 @@ def edit_existing_section(request: WSGIRequest, context: dict, edit: str) -> Htt
             except Exception as e:
                 return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_SECTION_EDIT_VALUES_UNKNOWN', e))
 
+        try:
+            content = request.POST['content']
+            
+            content = re.sub(r'aria-expanded="true"', 'aria-expanded="false"', content)
+            content = re.sub(r'class="accordion-collapse collapse show"', 'class="accordion-collapse collapse"', content)
+            content = re.sub(r'class="accordion-button(?!"collapsed")', 'class="accordion-button collapsed"', content)
+
+            selected_section.content = content
+        except Exception as e:
+            return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_SECTION_EDIT_ICON', e))
+
         # Check if user changed the icon. If they did, save the new one.
         try:
             setattr(selected_section, 'icon', format_icon(request.POST['icon']))
@@ -158,7 +173,11 @@ def edit_existing_section(request: WSGIRequest, context: dict, edit: str) -> Htt
 
         # Check if user changed the index. If they did, save the new one.
         try:
-            selected_section.index = int(request.POST['index'])
+            index = request.POST['index']
+            if re.match(r'^-?\d+$', index):
+                selected_section.index = int(request.POST['index'])
+            else:
+                selected_section.index = 0
         except Exception as e:
             return render(request, 'simplewiki/error.html', gen_error_context(context, 'EDITOR_SECTION_EDIT_INDEX', e))
 

@@ -1,0 +1,189 @@
+<!-- Link Modal -->
+<div class="modal fade" id="insertLinkModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">Insert Link</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group mb-3">
+            <span class="input-group-text">URL:</span>
+            <input type="text" class="form-control" id="link-url">
+          </div>         
+        </div>
+        <div class="modal-footer d-flex justify-content-between">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" onclick="insertLink()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Accordion Modal -->
+  <div class="modal fade" id="insertAccordionModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">Insert Accordion</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group mb-3">
+            <span class="input-group-text">Title:</span>
+            <input type="text" class="form-control" id="accordion-title">
+          </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-between">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" onclick="insertAccordion()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Image Modal -->
+  <div class="modal fade" id="insertImageModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">Insert Image</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group mb-3">
+            <span class="input-group-text">Image URL:</span>
+            <input type="text" class="form-control" id="image-url">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">Width:</span>
+            <input type="text" class="form-control" id="image-width">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">Height:</span>
+            <input type="text" class="form-control" id="image-height">
+          </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-between">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" onclick="insertImage()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Video Modal -->
+  <div class="modal fade" id="insertVideoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">Insert Video</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group mb-3">
+            <span class="input-group-text">Video URL:</span>
+            <input type="text" class="form-control" id="video-id">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">Width:</span>
+            <input type="text" class="form-control" id="video-width">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">Height:</span>
+            <input type="text" class="form-control" id="video-height">
+          </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-between">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" onclick="insertVideo()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Insert Table Modal -->
+  <div class="modal fade" id="insertTableModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">Insert Table</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group mb-3">
+            <span class="input-group-text">Columns:</span>
+            <input type="text" class="form-control" id="table-columns">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">Rows:</span>
+            <input type="text" class="form-control" id="table-rows">
+          </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-between">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" onclick="insertTable()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Google Drive List Modal -->
+  <div class="modal fade" id="insertGDriveListModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">Insert Google Drive List</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group mb-3">
+            <span class="input-group-text">Google Drive URL:</span>
+            <input type="text" class="form-control" id="gdrive-list-url">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">Width:</span>
+            <input type="text" class="form-control" id="gdrive-list-width">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">Height:</span>
+            <input type="text" class="form-control" id="gdrive-list-height">
+          </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-between">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" onclick="insertGDriveList()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Google Drive Grid Modal -->
+  <div class="modal fade" id="insertGDriveGridModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">Insert Google Drive Grid</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group mb-3">
+            <span class="input-group-text">Google Drive URL:</span>
+            <input type="text" class="form-control" id="gdrive-grid-url">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">Width:</span>
+            <input type="text" class="form-control" id="gdrive-grid-width">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">Height:</span>
+            <input type="text" class="form-control" id="gdrive-grid-height">
+          </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-between">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" onclick="insertGDriveGrid()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>

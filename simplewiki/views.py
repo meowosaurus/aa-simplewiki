@@ -357,25 +357,6 @@ def editor_sort(request: WSGIRequest) -> HttpResponse:
 
     return render(request, "simplewiki/editor/editor_sort.html", context)
 
-### Guides
-
-@login_required
-@permission_required("simplewiki.editor_access")
-def editor_markdown_guide(request: WSGIRequest) -> HttpResponse:
-    """
-    Renders the markdown guide for the editor.
-
-    Args:
-        request (WSGIRequest): The HTTP request.
-
-    Returns:
-        HttpResponse: The HTTP response containing the rendered markdown guide.
-    """
-
-    context = gen_context(request)
-
-    return render(request, "simplewiki/guides/markdown.html", context)
-
 ### JSON post 
 
 @login_required

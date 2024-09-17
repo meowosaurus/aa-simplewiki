@@ -2,26 +2,37 @@
 A simple wiki plugin for alliance auth. It supports multiple pages with different sections. Every page and every section can have their own icon. Written in Python with Django.
 
 # Contents
-* [Current Features](#current-features)
-  * [TODO](#todo)
-  * [Planned](#planned)
-* [Screenshots](#screenshots)
-* [Installation](#installation)
-  * [Alliance Auth Production](#alliance-auth-production)
-    * [Non-Docker Version](#non-docker-version)
-    * [Docker Version](#docker-version)
-  * [Alliance Auth Development](#alliance-auth-development)
-* [Usage](#usage)
-* [Permissions](#permissions)
-* [Support](#support)
+- [SimpleWiki](#simplewiki)
+- [Contents](#contents)
+- [Current Features](#current-features)
+  - [TODO:](#todo)
+  - [Planned](#planned)
+    - [Active devs:](#active-devs)
+  - [Screenshots](#screenshots)
+    - [Admin Panel](#admin-panel)
+  - [Installation](#installation)
+    - [Alliance Auth Production](#alliance-auth-production)
+      - [Non-Docker Version](#non-docker-version)
+      - [Docker Version](#docker-version)
+    - [Alliance Auth Development](#alliance-auth-development)
+  - [Usage](#usage)
+  - [Permissions](#permissions)
+  - [Commands](#commands)
+  - [Dependencies](#dependencies)
+  - [Support](#support)
 
 # Current Features
 * Create custom wiki menus with dropdowns plus different sections on each menu
 * Add an icon next to menus or sections
-* Edit pages on the admin panel with [markdown](https://www.markdownguide.org/cheat-sheet/)
-  * Support for all major GitHub markdown features
-  * Support for videos (YouTube and Vimeo)
-  * Support for alerts and Google Drive
+* Edit pages on the admin panel with a WYSIWYG editor
+  * Support for different header sizes.
+  * Support for bold, italic, underline and strikethrough text.
+  * Support for aligning text to the left, center or right.
+  * Support for ordered and unordered lists.
+  * Add links, remove links, add horizontal lines, add quotes and spoilers.
+  * Add images (url only), add videos (YouTube only) and tables.
+  * Add alerts and Google Drive folders.
+  * Remove formatting.
 * Search function: Search across all wiki menus and sections
 * Permission system:
   * Editor permissions can be added to single users or groups via the admin panel
@@ -36,8 +47,6 @@ A simple wiki plugin for alliance auth. It supports multiple pages with differen
 * Quality-of-life updates
 * Implement better logging
 * Improve code documentation
-* Markdown
-  * Buttons
 
 ## Planned
 * Add translations for 

@@ -1,0 +1,313 @@
+<script>
+    let savedSelection;
+  
+    function saveSelection() {
+      if (window.getSelection) {
+        const selection = window.getSelection();
+        if (selection.rangeCount > 0) {
+          savedSelection = selection.getRangeAt(0);
+        }
+      }
+    }
+  
+    function restoreSelection() {
+      if (savedSelection) {
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(savedSelection);
+      }
+    }
+
+    function format(command) {
+        document.execCommand(command, false, null);
+    }
+  
+    function insertLink() {
+      restoreSelection();
+      const url = document.getElementById('link-url').value;
+
+      document.execCommand('createLink', false, url);
+
+      const modal = bootstrap.Modal.getInstance(document.getElementById('insertLinkModal'));
+      document.getElementById('link-url').value = '';
+      modal.hide();
+    }
+  
+    function removeLink() {
+      document.execCommand('unlink', false, null);
+    }
+  
+    function alignText(command) {
+      document.execCommand(command, false, null);
+    }
+  
+    function indent() {
+      document.execCommand('indent', false, null);
+    }
+  
+    function outdent() {
+      document.execCommand('outdent', false, null);
+    }
+  
+    function insertAlert(alert) {
+      const alertHTML = `
+        <div class="alert alert-${alert} alert-dismissible fade show shadow" role="alert">
+          A neat alert box, great to highlight important information.
+        </div>
+        <p></p>`;
+      document.execCommand('insertHTML', false, alertHTML);
+    }
+  
+    function insertHorizontalLine() {
+      const horizontalLineHTML = `
+        <hr>
+        <p></p>`;
+      document.execCommand('insertHTML', false, horizontalLineHTML);
+    }
+  
+    function insertBlockquote() {
+      const blockquoteHTML = `
+        <figure>
+          <blockquote class="blockquote">
+            <p>
+              My ascendance is inevitable. A day, a year, a millennium -- it matters not. I hold the patience of stone and the will of stars.
+            </p>
+          </blockquote>
+          <figcaption class="blockquote-footer">
+            Emperor Vitiate, Star Wars The Old Republic
+          </figcaption>
+        </figure>
+        <p></p>`;
+      document.execCommand('insertHTML', false, blockquoteHTML);
+    }
+  
+    function insertAccordion() {
+      restoreSelection();
+
+      accordionID = Math.floor(Math.random() * 1e12) + Date.now();
+
+      const title = document.getElementById('accordion-title').value;
+      const accordionHTML = `
+        <div class="accordion accordion-flush shadow">
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse${accordionID}" aria-expanded="false" aria-controls="flush-collapse${accordionID}">
+                ${title}
+              </button>
+            </h2>
+            <div id="flush-collapse${accordionID}" class="accordion-collapse collapse">
+              <div class="accordion-body">
+                This is a collapsible text box.
+              </div>
+            </div>
+          </div>
+        </div>
+        <p></p>`;
+      document.execCommand('insertHTML', false, accordionHTML);
+
+      const modal = bootstrap.Modal.getInstance(document.getElementById('insertAccordionModal'));
+      document.getElementById('accordion-title').value = '';
+      modal.hide();
+    }
+  
+    function insertImage() {
+      restoreSelection();
+      const imageUrl = document.getElementById('image-url').value;
+      let imageWidth = document.getElementById('image-width').value;
+      let imageHeight = document.getElementById('image-height').value;
+
+      if (imageWidth && !imageWidth.endsWith('px')) {
+        imageWidth += 'px';
+      }
+
+      if (imageHeight && !imageHeight.endsWith('px')) {
+        imageHeight += 'px';
+      }
+
+      let imageHTML = "";
+
+      if (imageWidth && imageHeight) {
+        imageHTML = `
+        <img class="img-fluid shadow" src="${imageUrl}" width="${imageWidth}" height="${imageHeight}">
+        <p></p>`;
+      } else {
+        imageHTML = `
+        <img class="img-fluid shadow" src="${imageUrl}">
+        <p></p>`;
+      }
+      document.execCommand('insertHTML', false, imageHTML);
+      
+      const modal = bootstrap.Modal.getInstance(document.getElementById('insertImageModal'));
+      document.getElementById('image-url').value = '';
+      document.getElementById('image-width').value = '';
+      document.getElementById('image-height').value = '';
+      modal.hide();
+    }
+
+    function getVideoId(input) {
+        if (/^[a-zA-Z0-9_-]{11}$/.test(input)) {
+            return input;
+        }
+
+        let match = input.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
+        if (match) {
+            return match[1];
+        }
+
+        match = input.match(/youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/);
+        if (match) {
+            return match[1];
+        }
+
+        return null;
+    }
+  
+    function insertVideo() {
+      restoreSelection();
+      const videoInput = document.getElementById('video-id').value;
+      const videoId = getVideoId(videoInput);
+      let videoWidth = document.getElementById('video-width').value;
+      let videoHeight = document.getElementById('video-height').value;
+
+      if (videoWidth && !videoWidth.endsWith('px')) {
+        videoWidth += 'px';
+      }
+
+      if (videoHeight && !videoHeight.endsWith('px')) {
+        videoHeight += 'px';
+      }
+  
+      if (videoId) {
+        const videoHTML = `
+        <iframe width="${videoWidth}" height="${videoHeight}" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
+        <p></p>`;
+        document.execCommand('insertHTML', false, videoHTML);
+      }
+  
+      const modal = bootstrap.Modal.getInstance(document.getElementById('insertVideoModal'));
+      document.getElementById('video-id').value = '';
+      document.getElementById('video-width').value = '';
+      document.getElementById('video-height').value = '';
+      modal.hide();
+    }
+
+    function getDriveFolderId(input) {
+        if (/^[a-zA-Z0-9_-]{33}$/.test(input)) {
+            return input;
+        }
+
+        let match = input.match(/drive\.google\.com\/drive\/folders\/([a-zA-Z0-9_-]{33})/);
+        if (match) {
+            return match[1];
+        }
+
+        return null;
+    }
+  
+    function insertGDriveList() {
+      restoreSelection();
+      const gdriveListInput = document.getElementById('gdrive-list-url').value;
+      const gdriveListID = getDriveFolderId(gdriveListInput);
+      let gdriveListWidth = document.getElementById('gdrive-list-width').value;
+      let gdriveListHeight = document.getElementById('gdrive-list-height').value;
+
+      if (gdriveListWidth && !gdriveListWidth.endsWith('px')) {
+        gdriveListWidth += 'px';
+      }
+
+      if (gdriveListHeight && !gdriveListHeight.endsWith('px')) {
+        gdriveListHeight += 'px';
+      }
+  
+      if (gdriveListID) {
+        const gdriveListHTML = `
+        <iframe src="https://drive.google.com/embeddedfolderview?id=${gdriveListID}#list" width="${gdriveListWidth}" height="${gdriveListHeight}" style="border:0px;"></iframe>
+        <p></p>`;
+        document.execCommand('insertHTML', false, gdriveListHTML);
+      }
+  
+      const modal = bootstrap.Modal.getInstance(document.getElementById('insertGDriveListModal'));
+      document.getElementById('gdrive-list-url').value = '';
+      document.getElementById('gdrive-list-width').value = '';
+      document.getElementById('gdrive-list-height').value = '';
+      modal.hide();
+    }
+  
+    function insertGDriveGrid() {
+      restoreSelection();
+      const gdriveGridInput = document.getElementById('gdrive-grid-url').value;
+      const gdriveGridID = getDriveFolderId(gdriveGridInput);
+      let gdriveGridWidth = document.getElementById('gdrive-grid-width').value;
+      let gdriveGridHeight = document.getElementById('gdrive-grid-height').value;
+
+      if (gdriveGridWidth && !gdriveGridWidth.endsWith('px')) {
+        gdriveGridWidth += 'px';
+      }
+
+      if (gdriveGridHeight && !gdriveGridHeight.endsWith('px')) {
+        gdriveGridHeight += 'px';
+      }
+  
+      if (gdriveGridID) {
+        const gdriveGridHTML = `
+        <iframe src="https://drive.google.com/embeddedfolderview?id=${gdriveGridID}#grid" width="${gdriveGridWidth}" height="${gdriveGridHeight}" style="border:0px;"></iframe>
+        <p></p>`;
+        document.execCommand('insertHTML', false, gdriveGridHTML);
+      }
+  
+      const modal = bootstrap.Modal.getInstance(document.getElementById('insertGDriveGridModal'));
+      document.getElementById('gdrive-grid-url').value = '';
+      document.getElementById('gdrive-grid-width').value = '';
+      document.getElementById('gdrive-grid-height').value = '';
+      modal.hide();
+    }
+  
+    function insertTable() {
+      restoreSelection();
+      const tableColumns = document.getElementById('table-columns').value;
+      const tableRows = document.getElementById('table-rows').value;
+  
+      if (tableColumns && tableRows) {
+        let tableHTML = `<table class="table table-responsive bg-dark"><tbody>`;
+  
+        for (let i = 0; i < tableRows; i++) {
+          tableHTML += `<tr>`;
+          for (let j = 0; j < tableColumns; j++) {
+            tableHTML += `<td>Edit me</td>`;
+          }
+          tableHTML += `</tr>`;
+        }
+  
+        tableHTML += `</tbody></table><p></p>`;
+  
+        const selection = window.getSelection();
+        if (selection.rangeCount > 0) {
+          const range = selection.getRangeAt(0);
+          const div = document.createElement("div");
+          div.innerHTML = tableHTML;
+          const frag = document.createDocumentFragment();
+          let child;
+          while ((child = div.firstChild)) {
+            frag.appendChild(child);
+          }
+          range.deleteContents();
+          range.insertNode(frag);
+        }
+      }
+  
+      const modal = bootstrap.Modal.getInstance(document.getElementById('insertTableModal'));
+      document.getElementById('table-columns').value = '';
+      document.getElementById('table-rows').value = '';
+      modal.hide();
+    }
+  
+    function setHeader(header) {
+      document.execCommand('formatBlock', false, header);
+    }
+  
+    function unformat() {
+      document.execCommand('removeFormat', false, null);
+      document.execCommand('formatBlock', false, 'p');
+    }
+  </script>
+  

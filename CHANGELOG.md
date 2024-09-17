@@ -8,6 +8,26 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Released
 
+## [2.1.0]
+New features:
+- Added WYSIWYG editor.
+  - Added collapsable text sections.
+  - Added text and element alignment options.
+  - Added primary, secondary, light, and dark alerts.
+  - Added an option to create nested ordered and unordered lists.
+- Added a button to edit section next to the title.
+
+Changes:
+- Removed the markdown guide.
+- The section modal now stores the HTML code, instead of markdown text.
+- Small design changes to the header and footer to work better with alternative styles and themes.
+
+Fixed bugs:
+- Fixed a bug where images wouldn't scale correctly with the window.
+- Fixed a bug where you had to re-enter the menu title when editing it.
+- Fixed a bug where page content texts wouldn't scale correctly with the window.
+- Fixed a bug where creating a section without an index would result in an error.
+
 ## [2.0.3]
 Fixed bugs:
 - Fixed an internal error bug

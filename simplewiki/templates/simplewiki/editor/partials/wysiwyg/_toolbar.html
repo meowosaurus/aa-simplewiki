@@ -1,0 +1,155 @@
+<div class="form-group">
+    <div class="card rounded-0 rounded-top">
+      <div class="card-header" style="background: linear-gradient(135deg, #282d33 0%, #212122 100%);">
+        <div class="d-flex justify-content-between">
+          <!-- Header Options -->
+          <div class="btn-group me-2" role="group">
+            <div class="btn-group">
+              <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-heading"></i>
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#" onclick="setHeader('h1')">Header 1</a></li>
+                <li><a class="dropdown-item" href="#" onclick="setHeader('h2')">Header 2</a></li>
+                <li><a class="dropdown-item" href="#" onclick="setHeader('h3')">Header 3</a></li>
+                <li><a class="dropdown-item" href="#" onclick="setHeader('h4')">Header 4</a></li>
+                <li><a class="dropdown-item" href="#" onclick="setHeader('h5')">Header 5</a></li>
+                <li><a class="dropdown-item" href="#" onclick="setHeader('h6')">Normal</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Text Formatting -->
+          <div class="btn-group me-2" role="group">
+            <button onclick="format('bold')" type="button" class="btn btn-primary">
+              <i class="fas fa-bold"></i>
+            </button>
+            <button onclick="format('italic')" type="button" class="btn btn-primary">
+              <i class="fas fa-italic"></i>
+            </button>
+            <button onclick="format('underline')" type="button" class="btn btn-primary">
+              <i class="fas fa-underline"></i>
+            </button>
+            <button onclick="format('strikethrough')" type="button" class="btn btn-primary">
+              <i class="fas fa-strikethrough"></i>
+            </button>
+          </div>
+
+          <!-- Text Alignment -->
+          <div class="btn-group me-2" role="group">
+            <button onclick="alignText('justifyLeft')" type="button" class="btn btn-primary">
+              <i class="fas fa-align-left"></i>
+            </button>
+            <button onclick="alignText('justifyCenter')" type="button" class="btn btn-primary">
+              <i class="fas fa-align-center"></i>
+            </button>
+            <button onclick="alignText('justifyRight')" type="button" class="btn btn-primary">
+              <i class="fas fa-align-right"></i>
+            </button>
+          </div>
+
+          <!-- Lists and Indentation -->
+          <div class="btn-group me-2" role="group">
+            <button onclick="format('insertUnorderedList')" type="button" class="btn btn-primary">
+              <i class="fas fa-list"></i>
+            </button>
+            <button onclick="format('insertOrderedList')" type="button" class="btn btn-primary">
+              <i class="fas fa-list-ol"></i>
+            </button>
+            <button onclick="outdent()" type="button" class="btn btn-primary">
+              <i class="fas fa-arrow-left"></i>
+            </button>
+            <button onclick="indent()" type="button" class="btn btn-primary">
+              <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+
+          <!-- Links, Horizontal Line, Blockquote, and Accordion -->
+          <div class="btn-group me-2" role="group">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#insertLinkModal" onclick="saveSelection()">
+              <i class="fas fa-link"></i>
+            </button>
+            <button onclick="removeLink()" type="button" class="btn btn-primary">
+              <i class="fas fa-unlink"></i>
+            </button>
+            <button onclick="insertHorizontalLine()" type="button" class="btn btn-primary">
+              <i class="fas fa-minus"></i>
+            </button>
+            <button onclick="insertBlockquote()" type="button" class="btn btn-primary">
+              <i class="fas fa-quote-right"></i>
+            </button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#insertAccordionModal" onclick="saveSelection()">
+              <i class="fas fa-window-maximize"></i>
+            </button>
+          </div>
+
+          <!-- Images, Video, and Table -->
+          <div class="btn-group me-2" role="group">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#insertImageModal" onclick="saveSelection()">
+              <i class="fas fa-image"></i>
+            </button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#insertVideoModal" onclick="saveSelection()">
+              <i class="fas fa-video"></i>
+            </button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#insertTableModal" onclick="saveSelection()">
+              <i class="fas fa-table"></i>
+            </button>
+          </div>
+
+          <!-- Alerts and Cloud Integration -->
+          <div class="btn-group me-2" role="group">
+            <div class="btn-group">
+              <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-exclamation-triangle"></i>
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#" onclick="insertAlert('info')">Info</a></li>
+                <li><a class="dropdown-item" href="#" onclick="insertAlert('success')">Success</a></li>
+                <li><a class="dropdown-item" href="#" onclick="insertAlert('warning')">Warning</a></li>
+                <li><a class="dropdown-item" href="#" onclick="insertAlert('danger')">Danger</a></li>
+                <li><a class="dropdown-item" href="#" onclick="insertAlert('primary')">Primary</a></li>
+                <li><a class="dropdown-item" href="#" onclick="insertAlert('secondary')">Secondary</a></li>
+                <li><a class="dropdown-item" href="#" onclick="insertAlert('light')">Light</a></li>
+                <li><a class="dropdown-item" href="#" onclick="insertAlert('dark')">Dark</a></li>
+              </ul>
+            </div>
+            <div class="btn-group">
+              <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" onclick="saveSelection()">
+                <i class="fas fa-cloud"></i>
+              </button>
+              <ul class="dropdown-menu">
+                <li>
+                  <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#insertGDriveListModal">
+                    Insert Google Cloud List
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#insertGDriveGridModal">
+                    Insert Google Cloud Grid
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Formatting Removal -->
+          <div class="btn-group me-2" role="group">
+            <button onclick="unformat()" type="button" class="btn btn-primary">
+              <i class="fas fa-remove-format"></i>
+            </button>
+          </div>
+          
+          {% if False %}
+          <!-- Code -->
+          <div class="btn-group me-2" role="group">
+            <button type="button" class="btn btn-primary">
+              <i class="fas fa-code"></i>
+            </button>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+</div>
+
+{% include 'simplewiki/editor/partials/wysiwyg/_toolbar_modals.html' %}

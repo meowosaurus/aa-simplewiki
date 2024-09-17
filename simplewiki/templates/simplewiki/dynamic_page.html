@@ -5,7 +5,6 @@
 {% load markdown_filters %}
 
 {% block details %}
-
 <div class="container-fluid">
 <div class="row">
 <!-- Wiki Section View -->
@@ -15,16 +14,27 @@
 <div class=""></div>
 {% endif %}
     {% for item in available_sections %}
-    <div id="{{ item.title }}" class="card card-primary" style="margin-bottom: 1rem;">
-        <div class="card-header">
-            <div class="card-title">
-                <i class="{{ item.icon }}"></i>
-                <a href="#{{ item.title }}" style="text-decoration: none;">{{ item.title }}</a>
+    <div id="{{ item.title }}" class="card card-primary shadow" {% if not forloop.last %}style="margin-bottom: 1rem;"{% endif %}>
+        <div class="card-header" style="background: linear-gradient(135deg, #1e3c72 0%, #192a56 100%)">
+            <div class="card-title d-flex align-items-center justify-content-between" style="margin-bottom: 0rem;">
+                <div class="d-flex align-items-center">
+                    {% if item.icon %}
+                        <i style="margin-right: 0.3rem;" class="{{ item.icon }}"></i>
+                    {% endif %}
+                    <a class="text-white text-decoration-none" href="#{{ item.title }}">{{ item.title }}</a>
+                </div>
+                {% if is_editor %}
+                <span class="text-white ms-auto">
+                    <a href="{% url 'simplewiki:editor_sections' %}?edit={{ item.title }}">
+                        <i class="fas fa-edit" style="color: #f7fffd;"></i>
+                    </a>
+                </span>
+                {% endif %}
             </div>
         </div>
         <div class="card-body">
             <p>
-                {{ item.content|markdown|safe }}
+                {{ item.content|safe }}
             </p>
         </div>
     </div>
@@ -41,8 +51,8 @@
 <!-- Page Contents Side View -->
 <div class="col-md-3" style="padding-right: 0px;">
     <div class="card card-primary">
-        <div class="card-header">
-            <div class="card-title">
+        <div class="card-header" style="background: linear-gradient(135deg, #1e3c72 0%, #192a56 100%);">
+            <div class="text-white card-title" style="margin-bottom: 0px;">
                 Page Contents
             </div>
         </div>
@@ -61,7 +71,57 @@
             </ul>
         </div>
         {% if latest and latest_section.last_edit != "" %}
-        <div class="card-footer">
+        <div class="text-white card-footer" style="background: linear-gradient(135deg, #282d33 0%, #212122 100%);">
+            {% if latest_section.last_edit_id != 0 %}
+            Last edited by <a target="_blank" href="https://evewho.com/character/{{ latest_section.last_edit_id }}" style="text-decoration: none;">{{ latest_section.last_edit }}</a> on {{ latest_section.last_edit_date }}
+            {% else %}
+            Last edited by {{ latest_section.last_edit }} on {{ latest_section.last_edit_date }}
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div> 
+
+</div>
+</div>
+{% endif %}
+
+{% if available_sections_count > 0 and display_page_contents and false %}
+<!-- Page Contents Side View -->
+<div class="col-md-3" style="padding-right: 0px;">
+    <div class="card card-primary shadow" id="scrolltest">
+        <div class="card-header" style="background: linear-gradient(135deg, #1e3c72 0%, #192a56 100%);">
+            <div class="text-white card-title" style="margin-bottom: 0rem;">
+                Page Contents
+            </div>
+        </div>
+        <div class="card-body">
+            <nav id="navbar-example3" class="h-100 flex-column align-items-stretch">
+                <nav class="nav nav-pills flex-column">
+                    {% for item in available_sections %}
+                        <a class="nav-link" href="#{{ item.title }}">
+                            <i class="{{ item.icon }}"></i>
+                            {{ item.title }}
+                        </a>
+                    {% endfor %}
+                </nav>
+            </nav>
+            {% if False %}
+            <ul class="nav nav-pills flex-column">
+                {% for item in available_sections %}
+                <li class="nav-item" style="margin-bottom: 0.5rem; word-break: break-word; overflow-wrap: break-word;">
+                    <a class="h5" href="#{{ item.title }}" style="text-decoration: none;">
+                        <i class="fas fa-chevron-right" style="padding-right: 0.5rem;"></i>
+                        <i class="{{ item.icon }}"></i>
+                        {{ item.title }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        {% if latest and latest_section.last_edit != "" %}
+        <div class="card-footer text-white" style="background: linear-gradient(135deg, #282d33 0%, #212122 100%);">
             {% if latest_section.last_edit_id != 0 %}
             Last edited by <a target="_blank" href="https://evewho.com/character/{{ latest_section.last_edit_id }}" style="text-decoration: none;">{{ latest_section.last_edit }}</a> on {{ latest_section.last_edit_date }}
             {% else %}
@@ -78,6 +138,13 @@
 {% endblock %}
 
 {% block extra_javascript %}
+<script>
+    console.log("hello");
+
+    $(window).scroll(function(){
+        $("#scrolltest").css({"margin-top": ($(window).scrollTop()) + "px", "margin-left":($(window).scrollLeft()) + "px"});
+    });
+</script>
 {% endblock %}
 
 {% block extra_script %}
